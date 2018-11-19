@@ -1,0 +1,162 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 27
+    buildToolsVersion '27.0.3'
+    publishNonDefault true
+
+    defaultConfig {
+        minSdkVersion 17
+        targetSdkVersion 27
+        versionCode 50000
+        versionName "5.0.0"
+        consumerProguardFiles 'consumer-proguard-rules.pro'
+
+        buildConfigField "String", "LINE_APP_PACKAGE_NAME", "\"jp.naver.line.android\""
+        buildConfigField "String", "OPENID_DISCOVERY_DOCUMENT_URL", "\"https://access.line.me/.well-known/openid-configuration\""
+        buildConfigField "String", "API_SERVER_BASE_URI", "\"https://api.line.me/\""
+        buildConfigField "String", "WEB_LOGIN_PAGE_URL", "\"https://access.line.me/oauth2/v2.1/login\""
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+        }
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    libraryVariants.all { variant ->
+        variant.outputs.all { output ->
+            def fileName = "line-sdk-${defaultConfig.versionName}"
+            if (buildType.name == 'debug') {
+                fileName += '-debug'
+            }
+            fileName += '.aar'
+            outputFileName = fileName
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    lintOptions {
+        lintConfig file("lint.xml")
+    }
+}
+
+configurations {
+    doclava
+}
+
+dependencies {
+    implementation 'com.android.support:appcompat-v7:27.0.2'
+    implementation 'com.android.support:customtabs:27.0.2'
+    implementation('com.madgag.spongycastle:prov:1.58.0.0') {
+        exclude group: 'junit', module: 'junit'
+    }
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.robolectric:robolectric:3.1.2'
+    testImplementation 'org.mockito:mockito-core:1.10.19'
+
+    api 'io.jsonwebtoken:jjwt-api:0.10.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.10.5'
+    runtimeOnly ('io.jsonwebtoken:jjwt-orgjson:0.10.5') {
+        exclude group: 'org.json', module: 'json' //provided by Android natively
+    }
+
+    // for @hide annotation on functions to hide it from javadoc
+    doclava 'com.google.doclava:doclava:1.0.6'
+}
+
+ext {
+    javadocParams = [
+            taskGroup    : "javadoc",
+            title        : "LINE SDK v${android.defaultConfig.versionName} for Android",
+            locale       : "en_US",
+            encoding     : "UTF-8",
+            source       : android.sourceSets.main.java.srcDirs,
+            classpath    : project.files(android.getBootClasspath().join(File.pathSeparator)),
+            destDir      : [
+                    public  : new File(project.buildDir, "docs/javadoc_public"),
+                    internal: new File(project.buildDir, "docs/javadoc_internal")
+            ],
+            includes     : [
+                    public  : [
+                            "**/com/linecorp/linesdk/*.java",
+                            "**/com/linecorp/linesdk/api/*.java",
+                            "**/com/linecorp/linesdk/auth/*.java",
+                            "**/com/linecorp/linesdk/widget/*.java"
+                    ],
+                    internal: [
+                            "**/com/linecorp/linesdk/*.java",
+                            "**/com/linecorp/linesdk/api/*.java",
+                            "**/com/linecorp/linesdk/auth/*.java",
+                            "**/com/linecorp/linesdk/widget/*.java",
+                            "**/com/linecorp/linesdk/message/**/*.java"
+                    ]
+            ],
+            externalLinks: [
+                    "https://docs.oracle.com/javase/8/docs/api/",
+                    "https://developer.android.com/reference/"
+            ]
+    ]
+}
+
+task javadoc_public(type: Javadoc) {
+    group javadocParams.taskGroup
+    destinationDir = javadocParams.destDir.public
+
+    // doclava doesn't support `title`
+    title = null
+
+    source = javadocParams.source
+    classpath += javadocParams.classpath
+    include javadocParams.includes.public
+
+    failOnError false
+
+    options {
+        doclet "com.google.doclava.Doclava"
+        docletpath = configurations.doclava.files.asType(List)
+
+        locale javadocParams.locale
+        encoding javadocParams.encoding
+
+        // doclava supports `-title ${title}`
+        addStringOption("title", "${javadocParams.title}")
+        addStringOption("templatedir", "${rootDir}/templates")
+        addMultilineMultiValueOption("federate").with {
+            javadocParams.externalLinks.each {
+                value.add(["name", it])
+            }
+        }
+    }
+
+}
+
+task javadoc_internal(type: Javadoc) {
+    group javadocParams.taskGroup
+    destinationDir = javadocParams.destDir.internal
+
+    source = javadocParams.source
+    classpath += javadocParams.classpath
+    include javadocParams.includes.internal
+
+    failOnError false
+
+    options {
+        docTitle "${javadocParams.title}"
+        windowTitle "${javadocParams.title}"
+
+        locale javadocParams.locale
+        encoding javadocParams.encoding
+
+        links = javadocParams.externalLinks
+    }
+}

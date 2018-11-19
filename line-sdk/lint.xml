@@ -1,0 +1,7 @@
+<lint>
+  <issue id="InvalidPackage">
+    <!-- ignore lint check for spongycastle -->
+    <!-- because of this issue: https://github.com/rtyley/spongycastle/issues/7 -->
+    <ignore path="**/*spongycastle*.jar"/>
+  </issue>
+</lint>

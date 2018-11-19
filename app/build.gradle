@@ -1,0 +1,77 @@
+apply plugin: 'com.android.application'
+
+repositories {
+    flatDir {
+        dir 'libs'
+    }
+}
+
+android {
+    compileSdkVersion 27
+    buildToolsVersion '27.0.3'
+
+    defaultConfig {
+        applicationId "com.linecorp.linesdktest"
+        minSdkVersion 17
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        buildConfigField "String", "OPENID_DISCOVERY_DOCUMENT_URL", "\"https://access.line.me/.well-known/openid-configuration\""
+        buildConfigField "String", "API_SERVER_BASE_URI", "\"https://api.line.me/\""
+        buildConfigField "String", "WEB_LOGIN_PAGE_URL", "\"https://access.line.me/oauth2/v2.1/login\""
+        buildConfigField "boolean", "INCLUDE_INTERNAL_API_TEST", "false"
+    }
+    signingConfigs {
+        debug {
+            storeFile file("debug.keystore")
+        }
+    }
+    buildTypes {
+        debug {
+            debuggable true
+            minifyEnabled false
+        }
+        release {
+            debuggable true
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    implementation project(':line-sdk')
+    //releaseImplementation(name: 'line-sdk-5.0.0', ext: 'aar')
+
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support:customtabs:27.1.1'
+
+    implementation 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.1'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+
+    implementation 'org.apache.commons:commons-lang3:3.7'
+
+    implementation('com.madgag.spongycastle:prov:1.58.0.0') {
+        exclude group: 'junit', module: 'junit'
+    }
+    api 'io.jsonwebtoken:jjwt-api:0.10.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.10.5'
+    runtimeOnly ('io.jsonwebtoken:jjwt-orgjson:0.10.5') {
+        exclude group: 'org.json', module: 'json' //provided by Android natively
+    }
+
+    testImplementation'junit:junit:4.12'
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+}
