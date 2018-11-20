@@ -37,3 +37,9 @@ To have a quick look at the features of the LINE SDK, try our starter app by fol
     `./gradlew app:assembleDebug`
 
 The starter app apk file will be built as `app/build/outputs/apk/debug/app-debug.apk`.
+
+## Contributing
+
+If you believe you have discovered a vulnerability or have an issue related to security, please **DO NOT** open a public issue. Instead, send us a mail to [dl_oss_dev@linecorp.com](mailto:dl_oss_dev@linecorp.com).
+
+For contributing to this project, please see [CONTRIBUTING.md](https://github.com/line/line-sdk-android/blob/master/CONTRIBUTING.md).
