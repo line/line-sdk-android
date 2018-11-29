@@ -76,14 +76,14 @@ public class MenuFragment extends Fragment {
         lineLoginButton.setChannelId(channelIdEditText.getText().toString());
         lineLoginButton.enableLineAppAuthentication(true);
         lineLoginButton.setAuthenticationParams(new LineAuthenticationParams.Builder()
-                .scopes(Arrays.asList(Scope.PROFILE))
+                .scopes(Arrays.asList(Scope.PROFILE,Scope.OPENID_CONNECT,Scope.OC_EMAIL))
                 .build()
         );
         lineLoginButton.setLoginDelegate(loginDelegate);
         lineLoginButton.addLoginListener(new LoginListener() {
             @Override
             public void onLoginSuccess(@NonNull LineLoginResult result) {
-                Toast.makeText(getContext(), "Login success", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), result.getLineIdToken().getEmail(), Toast.LENGTH_SHORT).show();
             }
 
             @Override

@@ -163,6 +163,7 @@ public class LineAuthenticationConfig implements Parcelable {
             this.channelId = channelId;
             apiBaseUrl = Uri.parse(BuildConfig.API_SERVER_BASE_URI);
             webLoginPageUrl = Uri.parse(BuildConfig.WEB_LOGIN_PAGE_URL);
+            openidDiscoveryDocumentUrl = Uri.parse(BuildConfig.OPENID_DISCOVERY_DOCUMENT_URL);
         }
 
         @NonNull
