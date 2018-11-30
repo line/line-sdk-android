@@ -161,6 +161,7 @@ public class LineAuthenticationConfig implements Parcelable {
                 throw new IllegalArgumentException("channelId is empty.");
             }
             this.channelId = channelId;
+            openidDiscoveryDocumentUrl = Uri.parse(BuildConfig.OPENID_DISCOVERY_DOCUMENT_URL);
             apiBaseUrl = Uri.parse(BuildConfig.API_SERVER_BASE_URI);
             webLoginPageUrl = Uri.parse(BuildConfig.WEB_LOGIN_PAGE_URL);
         }
