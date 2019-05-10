@@ -3,6 +3,9 @@ package com.linecorp.linesdktest.settings;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import java.util.Locale;
 
 public class TestSetting implements Parcelable {
     public static final Parcelable.Creator<TestSetting> CREATOR = new Parcelable.Creator<TestSetting>() {
@@ -20,12 +23,17 @@ public class TestSetting implements Parcelable {
     @NonNull
     private final String channelId;
 
-    public TestSetting(@NonNull String channelId) {
+    @Nullable
+    private final Locale uiLocale;
+
+    public TestSetting(@NonNull String channelId, @Nullable Locale uiLocale) {
         this.channelId = channelId;
+        this.uiLocale = uiLocale;
     }
 
     private TestSetting(@NonNull Parcel in) {
         channelId = in.readString();
+        uiLocale = (Locale) in.readSerializable();
     }
 
     @Override
@@ -36,11 +44,17 @@ public class TestSetting implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(channelId);
+        dest.writeSerializable(uiLocale);
     }
 
     @NonNull
     public String getChannelId() {
         return channelId;
+    }
+
+    @Nullable
+    public Locale getUILocale() {
+        return uiLocale;
     }
 
     @Override
@@ -50,11 +64,14 @@ public class TestSetting implements Parcelable {
 
         TestSetting that = (TestSetting) o;
 
-        return channelId.equals(that.channelId);
+        if (!channelId.equals(that.channelId)) { return false; }
+        return uiLocale != null ? uiLocale.equals(that.uiLocale) : that.uiLocale == null;
     }
 
     @Override
     public int hashCode() {
-        return channelId.hashCode();
+        int result = channelId.hashCode();
+        result = 31 * result + (uiLocale != null ? uiLocale.hashCode() : 0);
+        return result;
     }
 }

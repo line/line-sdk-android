@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import com.linecorp.linesdk.Scope;
 
 import java.util.List;
+import java.util.Locale;
 
 import static com.linecorp.linesdk.utils.ParcelUtils.readEnum;
 import static com.linecorp.linesdk.utils.ParcelUtils.writeEnum;
@@ -47,14 +48,24 @@ public class LineAuthenticationParams implements Parcelable {
     @Nullable
     private final BotPrompt botPrompt;
 
+    /**
+     * OPTIONAL. <br></br>
+     * The language in which login pages be displayed in. <br></br>
+     * If it is not specified, login pages will use the language setting of user's web browser or LINE App
+     */
+    @Nullable
+    private final Locale uiLocale;
+
     private LineAuthenticationParams(final Builder builder) {
         scopes = builder.scopes;
         botPrompt = builder.botPrompt;
+        uiLocale = builder.uiLocale;
     }
 
     private LineAuthenticationParams(@NonNull final Parcel in) {
         scopes = Scope.convertToScopeList(in.createStringArrayList());
         botPrompt = readEnum(in, BotPrompt.class);
+        uiLocale = (Locale) in.readSerializable();
     }
 
     /**
@@ -66,6 +77,7 @@ public class LineAuthenticationParams implements Parcelable {
     public void writeToParcel(final Parcel dest, final int flags) {
         dest.writeStringList(Scope.convertToCodeList(scopes));
         writeEnum(dest, botPrompt);
+        dest.writeSerializable(uiLocale);
     }
 
     /**
@@ -97,6 +109,15 @@ public class LineAuthenticationParams implements Parcelable {
     }
 
     /**
+     * Gets the language in which login pages be displayed in.
+     * @return The language in which login pages be displayed in.
+     */
+    @Nullable
+    public Locale getUILocale() {
+        return uiLocale;
+    }
+
+    /**
      * Represents an option to determine how to prompt the user to add a bot as a friend during the
      * login process.
      */
@@ -119,6 +140,7 @@ public class LineAuthenticationParams implements Parcelable {
     public static final class Builder {
         private List<Scope> scopes;
         private BotPrompt botPrompt;
+        private Locale uiLocale;
 
         public Builder() {}
 
@@ -139,6 +161,17 @@ public class LineAuthenticationParams implements Parcelable {
          */
         public Builder botPrompt(final BotPrompt val) {
             botPrompt = val;
+            return this;
+        }
+
+        /**
+         * Sets the language in which login pages be displayed in. <br></br>
+         * If it is not specified, login pages will use the language setting of user's web browser or LINE App
+         * @param val The language in which login pages be displayed in.
+         * @return The builder itself.
+         */
+        public Builder uiLocale(final Locale val) {
+            uiLocale = val;
             return this;
         }
 

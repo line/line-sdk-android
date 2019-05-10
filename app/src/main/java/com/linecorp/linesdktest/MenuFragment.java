@@ -1,5 +1,6 @@
 package com.linecorp.linesdktest;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,10 +11,13 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.linecorp.linesdk.LoginDelegate;
@@ -25,15 +29,25 @@ import com.linecorp.linesdk.widget.LoginButton;
 import com.linecorp.linesdktest.settings.TestSetting;
 import com.linecorp.linesdktest.settings.TestSettingManager;
 
+import org.apache.commons.lang3.LocaleUtils;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
+import butterknife.OnItemSelected;
 import butterknife.OnTextChanged;
 
 public class MenuFragment extends Fragment {
+    private static final String LOCALE_USE_DEFAULT = "[Use Default]";
+
     @Nullable
     @BindView(R.id.setting_save_slot_radio)
     RadioGroup settingSaveSlotRadio;
@@ -43,12 +57,18 @@ public class MenuFragment extends Fragment {
     EditText channelIdEditText;
 
     @Nullable
+    @BindView(R.id.uiLocale_spinner)
+    Spinner uiLocaleSpinner;
+
+    @Nullable
     @BindView(R.id.line_login_btn)
     LoginButton lineLoginButton;
 
     @Nullable
     @BindView(R.id.internal_apis_btn)
     Button internalApisButton;
+
+    private final List<String> locales = new ArrayList<>();
 
     @NonNull
     private final LoginDelegate loginDelegate = LoginDelegate.Factory.create();
@@ -65,20 +85,26 @@ public class MenuFragment extends Fragment {
             internalApisButton.setVisibility(View.VISIBLE);
         }
 
-        settingSaveSlotRadio.check(R.id.setting_save_slot1);
+        setupUILocaleSpinner(container.getContext());
         setupLoginButton();
+
+        settingSaveSlotRadio.check(R.id.setting_save_slot1);
 
         return rootView;
     }
 
+    private void setupUILocaleSpinner(Context context) {
+        locales.clear();
+        locales.add(LOCALE_USE_DEFAULT);
+        locales.addAll(Arrays.asList(getResources().getStringArray(R.array.supportedLocales)));
+
+        ArrayAdapter<String> adapter = new ArrayAdapter(context, android.R.layout.simple_spinner_item, locales);
+        uiLocaleSpinner.setAdapter(adapter);
+    }
+
     private void setupLoginButton() {
         lineLoginButton.setFragment(this);
-        lineLoginButton.setChannelId(channelIdEditText.getText().toString());
         lineLoginButton.enableLineAppAuthentication(true);
-        lineLoginButton.setAuthenticationParams(new LineAuthenticationParams.Builder()
-                .scopes(Arrays.asList(Scope.PROFILE))
-                .build()
-        );
         lineLoginButton.setLoginDelegate(loginDelegate);
         lineLoginButton.addLoginListener(new LoginListener() {
             @Override
@@ -105,9 +131,29 @@ public class MenuFragment extends Fragment {
         }
     }
 
+    @Nullable
+    private Locale getSelectedUILocale() {
+        final String uiLocale = (String) uiLocaleSpinner.getSelectedItem();
+        if (StringUtils.equals(uiLocale, LOCALE_USE_DEFAULT)) {
+            // use default locale
+            return null;
+        } else {
+            return LocaleUtils.toLocale(uiLocale);
+        }
+    }
+
+    private void setSelectedUILocale(@Nullable Locale locale) {
+        String localeStr = ObjectUtils.toString(locale, null);
+        int index = locales.indexOf(localeStr);
+        if (index < 0) {
+            index = 0;
+        }
+        uiLocaleSpinner.setSelection(index);
+    }
+
     @NonNull
     private TestSetting createTestSettingByInputFields() {
-        return new TestSetting(channelIdEditText.getText().toString());
+        return new TestSetting(channelIdEditText.getText().toString(), getSelectedUILocale());
     }
 
     @OnCheckedChanged({R.id.setting_save_slot1, R.id.setting_save_slot2, R.id.setting_save_slot3})
@@ -123,6 +169,7 @@ public class MenuFragment extends Fragment {
                         convertRadioButtonIdToSaveSlotId(button.getId())
                 );
         channelIdEditText.setText(testSetting.getChannelId());
+        setSelectedUILocale(testSetting.getUILocale());
 
         updateLineLoginButton();
     }
@@ -132,7 +179,13 @@ public class MenuFragment extends Fragment {
         updateLineLoginButton();
     }
 
+    @OnItemSelected(R.id.uiLocale_spinner)
+    public void onUILocaleSpinnerItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        updateLineLoginButton();
+    }
+
     private void updateLineLoginButton() {
+        // set channel id
         String channelId = channelIdEditText.getText().toString();
         if (channelId.isEmpty()) {
             lineLoginButton.setEnabled(false);
@@ -140,6 +193,14 @@ public class MenuFragment extends Fragment {
             lineLoginButton.setEnabled(true);
             lineLoginButton.setChannelId(channelId);
         }
+
+        // set locale
+        lineLoginButton.setAuthenticationParams(
+                new LineAuthenticationParams.Builder()
+                        .scopes(Arrays.asList(Scope.PROFILE))
+                        .uiLocale(getSelectedUILocale())
+                        .build()
+        );
     }
 
     @OnClick(R.id.save_settings_btn)
