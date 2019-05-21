@@ -162,6 +162,9 @@ import static com.linecorp.linesdk.utils.UriUtils.buildParams;
                 "returnUri", returnUri,
                 "loginChannelId", config.getChannelId()
         );
+        if (params.getUILocale() != null) {
+            loginQueryParams.put("ui_locales", params.getUILocale().toString());
+        }
         final Uri loginUri = appendQueryParams(config.getWebLoginPageUrl(), loginQueryParams);
         return loginUri;
     }

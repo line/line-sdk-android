@@ -27,6 +27,7 @@ import com.linecorp.linesdktest.settings.TestSetting;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,6 +37,7 @@ public class SignInFragment extends Fragment {
     private static final int REQUEST_CODE = 1;
 
     private static final String ARG_KEY_CHANNEL_ID = "channelId";
+    private static final String ARG_KEY_UI_LOCALE = "uiLocale";
 
     private static final String LOG_SEPARATOR = System.getProperty("line.separator");
 
@@ -43,6 +45,9 @@ public class SignInFragment extends Fragment {
 
     @Nullable
     private String channelId;
+
+    @Nullable
+    private Locale uiLocale;
 
     @Nullable
     @BindView(R.id.signin_bot_prompt_normal_radio)
@@ -73,6 +78,7 @@ public class SignInFragment extends Fragment {
         SignInFragment fragment = new SignInFragment();
         Bundle arguments = new Bundle();
         arguments.putString(ARG_KEY_CHANNEL_ID, setting.getChannelId());
+        arguments.putSerializable(ARG_KEY_UI_LOCALE, setting.getUILocale());
         fragment.setArguments(arguments);
         return fragment;
     }
@@ -82,6 +88,7 @@ public class SignInFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Bundle arguments = getArguments();
         channelId = arguments.getString(ARG_KEY_CHANNEL_ID);
+        uiLocale = (Locale) arguments.getSerializable(ARG_KEY_UI_LOCALE);
     }
 
     @Nullable
@@ -151,6 +158,7 @@ public class SignInFragment extends Fragment {
         return new LineAuthenticationParams.Builder()
                 .scopes(getCheckedScopes())
                 .botPrompt(getBotPrompt())
+                .uiLocale(uiLocale)
                 .build();
     }
 
