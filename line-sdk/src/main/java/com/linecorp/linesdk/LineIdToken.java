@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.util.Date;
+import java.util.List;
 
 import static com.linecorp.linesdk.utils.ParcelUtils.readDate;
 import static com.linecorp.linesdk.utils.ParcelUtils.writeDate;
@@ -49,6 +50,10 @@ public class LineIdToken implements Parcelable {
     // the same value as in the authentication request
     @Nullable
     private final String nonce;
+    // Authentication Methods References
+    // List of strings that are identifiers for authentication methods used in the authentication.
+    @Nullable
+    private final List<String> amr;
     @Nullable
     private final String name;
     @Nullable
@@ -89,6 +94,7 @@ public class LineIdToken implements Parcelable {
         issuedAt = builder.issuedAt;
         authTime = builder.authTime;
         nonce = builder.nonce;
+        amr = builder.amr;
         name = builder.name;
         picture = builder.picture;
         phoneNumber = builder.phoneNumber;
@@ -111,6 +117,7 @@ public class LineIdToken implements Parcelable {
         issuedAt = readDate(in);
         authTime = readDate(in);
         nonce = in.readString();
+        amr = in.createStringArrayList();
         name = in.readString();
         picture = in.readString();
         phoneNumber = in.readString();
@@ -137,6 +144,7 @@ public class LineIdToken implements Parcelable {
         writeDate(dest, issuedAt);
         writeDate(dest, authTime);
         dest.writeString(nonce);
+        dest.writeStringList(amr);
         dest.writeString(name);
         dest.writeString(picture);
         dest.writeString(phoneNumber);
@@ -219,6 +227,16 @@ public class LineIdToken implements Parcelable {
     @Nullable
     public String getNonce() {
         return nonce;
+    }
+
+    /**
+     * Get the Authentication Methods References.
+     * @return the Authentication Methods References. <br></br>
+     * List of strings that are identifiers for authentication methods used in the authentication.
+     */
+    @Nullable
+    public List<String> getAmr() {
+        return amr;
     }
 
     /**
@@ -337,6 +355,7 @@ public class LineIdToken implements Parcelable {
         if (!issuedAt.equals(that.issuedAt)) { return false; }
         if (authTime != null ? !authTime.equals(that.authTime) : that.authTime != null) { return false; }
         if (nonce != null ? !nonce.equals(that.nonce) : that.nonce != null) { return false; }
+        if (amr != null ? !amr.equals(that.amr) : that.amr != null) { return false; }
         if (name != null ? !name.equals(that.name) : that.name != null) { return false; }
         if (picture != null ? !picture.equals(that.picture) : that.picture != null) { return false; }
         if (phoneNumber != null ? !phoneNumber.equals(that.phoneNumber) : that.phoneNumber != null) {
@@ -371,6 +390,7 @@ public class LineIdToken implements Parcelable {
         result = 31 * result + issuedAt.hashCode();
         result = 31 * result + (authTime != null ? authTime.hashCode() : 0);
         result = 31 * result + (nonce != null ? nonce.hashCode() : 0);
+        result = 31 * result + (amr != null ? amr.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (picture != null ? picture.hashCode() : 0);
         result = 31 * result + (phoneNumber != null ? phoneNumber.hashCode() : 0);
@@ -399,6 +419,7 @@ public class LineIdToken implements Parcelable {
                ", issuedAt=" + issuedAt +
                ", authTime=" + authTime +
                ", nonce='" + nonce + '\'' +
+               ", amr=" + amr +
                ", name='" + name + '\'' +
                ", picture='" + picture + '\'' +
                ", phoneNumber='" + phoneNumber + '\'' +
@@ -425,6 +446,7 @@ public class LineIdToken implements Parcelable {
         private Date issuedAt;
         private Date authTime;
         private String nonce;
+        private List<String> amr;
         private String name;
         private String picture;
         private String phoneNumber;
@@ -472,6 +494,11 @@ public class LineIdToken implements Parcelable {
 
         public Builder nonce(final String val) {
             nonce = val;
+            return this;
+        }
+
+        public Builder amr(final List<String> val) {
+            amr = val;
             return this;
         }
 

@@ -7,6 +7,7 @@ import android.util.Log;
 import com.linecorp.linesdk.LineIdToken;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -53,6 +54,7 @@ public final class IdTokenParser {
                 .issuedAt(claims.getIssuedAt())
                 .authTime(claims.get("auth_time", Date.class))
                 .nonce(claims.get("nonce", String.class))
+                .amr(claims.get("amr", List.class))
                 .name(claims.get("name", String.class))
                 .picture(claims.get("picture", String.class))
                 .phoneNumber(claims.get("phone_number", String.class))
