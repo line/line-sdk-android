@@ -23,7 +23,7 @@
     <string name="signin_scope_oc_birthdate">OC_BIRTHDATE</string>
     <string name="signin_scope_oc_address">OC_ADDRESS</string>
     <string name="signin_scope_oc_real_name">OC_REAL_NAME</string>
-    <string name="signin_line_app_auth_checkbox">use LINE App auth</string>
+    <string name="signin_line_app_auth_checkbox">use LINE app auth</string>
     <string name="signin_bot_prompt_title">Bot Prompt</string>
     <string name="signin_bot_prompt_none">None</string>
     <string name="signin_bot_prompt_normal">Normal</string>

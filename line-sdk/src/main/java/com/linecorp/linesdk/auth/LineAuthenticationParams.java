@@ -50,8 +50,8 @@ public class LineAuthenticationParams implements Parcelable {
 
     /**
      * OPTIONAL. <br></br>
-     * The language in which login pages be displayed in. <br></br>
-     * If it is not specified, login pages will use the language setting of user's web browser or LINE App
+     * The language in which to display login pages. <br></br>
+     * If not specified, login pages will use the language setting of user's web browser or LINE app.
      */
     @Nullable
     private final Locale uiLocale;
@@ -109,8 +109,8 @@ public class LineAuthenticationParams implements Parcelable {
     }
 
     /**
-     * Gets the language in which login pages be displayed in.
-     * @return The language in which login pages be displayed in.
+     * Gets the language in which login pages are displayed.
+     * @return The language in which login pages are displayed.
      */
     @Nullable
     public Locale getUILocale() {
@@ -165,9 +165,9 @@ public class LineAuthenticationParams implements Parcelable {
         }
 
         /**
-         * Sets the language in which login pages be displayed in. <br></br>
-         * If it is not specified, login pages will use the language setting of user's web browser or LINE App
-         * @param val The language in which login pages be displayed in.
+         * Sets the language in which to display login pages. <br></br>
+         * If not specified, login pages will use the language setting of user's web browser or LINE app.
+         * @param val The language in which to display login pages.
          * @return The builder itself.
          */
         public Builder uiLocale(final Locale val) {
