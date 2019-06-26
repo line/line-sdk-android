@@ -8,8 +8,8 @@ android {
     defaultConfig {
         minSdkVersion 17
         targetSdkVersion 27
-        versionCode 50000
-        versionName "5.0.1"
+        versionCode 50010
+        versionName "5.1"
         consumerProguardFiles 'consumer-proguard-rules.pro'
 
         buildConfigField "String", "LINE_APP_PACKAGE_NAME", "\"jp.naver.line.android\""
