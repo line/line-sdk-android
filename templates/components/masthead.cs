@@ -2,7 +2,9 @@
 <div id="header">
     <div id="headerLeft">
       <div class="d-flex align-items-center">
-        <div id="masthead-title">LINE SDK Docs</div>
+        <a id="masthead-title" href="https://developers.line.me/en/reference/">
+          LINE SDK Docs
+        </a>
         <nav class="GlobalHeaderNav">
           <ul>
             <li><a class="GlobalHeaderNavLink" href="/en/services/" data-navlink="services" data-translate="translate_header_menu_service">Products</a></li>

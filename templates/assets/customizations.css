@@ -8,6 +8,11 @@
   src: url(./fonts/icon-font/icon-font.eot?#iefix) format("eot"),url(./fonts/icon-font/icon-font.woff) format("woff"),url(./fonts/icon-font/icon-font.ttf) format("truetype");
 }
 
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 /* Util */
 .d-flex {
   display: flex;
@@ -76,6 +81,9 @@
   height: auto;
   font-weight: normal;
 }
+#header .GlobalHeaderNav {
+  font-family: 'Avenir Next W01,"ヒラギノ角ゴ Pro",Hiragino Kaku Gothic Pro,"游ゴシック体",Yu Gothic,YuGothic,"メイリオ",Meiryo,Arial Unicode MS,Tahoma,Helvetica,"ＭＳ Ｐゴシック",MS PGothic,sans-serif'
+}
 #header .GlobalHeaderNav > ul {
   display: flex;
   flex-wrap: nowrap;
@@ -84,17 +92,23 @@
   padding: 0 10px ;
   line-height: 1em;
 }
+#header .GlobalHeaderNav > ul > li a {
+    font-size: 13px;
+}
 #headerLeft {
   position: static;
   padding: 0;
   left: 0;
   bottom: 0;
+  font-family: 'Avenir Next W01,"ヒラギノ角ゴ Pro",Hiragino Kaku Gothic Pro,"游ゴシック体",Yu Gothic,YuGothic,"メイリオ",Meiryo,Arial Unicode MS,Tahoma,Helvetica,"ＭＳ Ｐゴシック",MS PGothic,sans-serif';
 }
 #masthead-title {
   color: #fff;
   font-size: 18px;
+  font-weight: bold;
   margin-right: 35px;
   white-space: nowrap;
+  text-decoration: none;
 }
 #headerRight {
   position: static;
