@@ -1,6 +1,6 @@
 package com.linecorp.linesdk.message.template;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 public enum ImageAspectRatio {
     // 1.51 : 1 (width : height)

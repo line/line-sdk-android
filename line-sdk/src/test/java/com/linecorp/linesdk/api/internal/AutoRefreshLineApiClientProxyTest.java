@@ -1,6 +1,6 @@
 package com.linecorp.linesdk.api.internal;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.linecorp.linesdk.BuildConfig;
 import com.linecorp.linesdk.LineApiError;

@@ -5,10 +5,10 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.AppCompatTextView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.widget.AppCompatTextView;
 import android.util.AttributeSet;
 import android.view.Gravity;
 
@@ -41,9 +41,9 @@ import java.util.Arrays;
  * <p>
  * Finally, call the {@link LoginDelegate#onActivityResult(int, int, Intent)} method using the
  * intent that you created with the <code>Activity#onActivityResult(int, int, Intent)</code> method.
- * If you use this button in a {@link Fragment} or an {@link android.support.v4.app.Fragment}
+ * If you use this button in a {@link Fragment} or an {@link androidx.fragment.app.Fragment}
  * instance, set the fragment to this button through the {@link #setFragment(Fragment)} method or
- * the {@link #setFragment(android.support.v4.app.Fragment)} method. By doing so, you can call the
+ * the {@link #setFragment(androidx.fragment.app.Fragment)} method. By doing so, you can call the
  * <code>onActivityResult</code> callback in your fragment after the login process is complete.
  * <p>
  * The following example shows how to set up the login button with the desired parameters.
@@ -183,11 +183,11 @@ public class LoginButton extends AppCompatTextView {
 
     /**
      * Specifies the <i>fragment</i> that contains this button so that its
-     * {@link android.support.v4.app.Fragment#onActivityResult(int, int, Intent)} method is properly called.
+     * {@link androidx.fragment.app.Fragment#onActivityResult(int, int, Intent)} method is properly called.
      *
-     * @param fragment The {@link android.support.v4.app.Fragment} that contains this button.
+     * @param fragment The {@link androidx.fragment.app.Fragment} that contains this button.
      */
-    public void setFragment(@NonNull android.support.v4.app.Fragment fragment) {
+    public void setFragment(@NonNull androidx.fragment.app.Fragment fragment) {
         fragmentWrapper = new FragmentWrapper(fragment);
     }
 

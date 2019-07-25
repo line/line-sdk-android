@@ -1,7 +1,7 @@
 package com.linecorp.linesdk.internal.nwclient.core;
 
 import android.net.Uri;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.linecorp.linesdk.BuildConfig;
 import com.linecorp.linesdk.LineApiError;

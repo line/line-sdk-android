@@ -54,8 +54,8 @@ configurations {
 }
 
 dependencies {
-    implementation 'com.android.support:appcompat-v7:27.0.2'
-    implementation 'com.android.support:customtabs:27.0.2'
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.browser:browser:1.0.0'
     implementation('com.madgag.spongycastle:prov:1.58.0.0') {
         exclude group: 'junit', module: 'junit'
     }
@@ -123,7 +123,8 @@ task javadoc_public(type: Javadoc) {
 
     options {
         doclet "com.google.doclava.Doclava"
-        docletpath = configurations.doclava.files.asType(List)
+        // FIXME: need to fix "doclet Class com.google.doclava.Doclava not found"
+        //docletpath = configurations.doclava.files as List
 
         locale javadocParams.locale
         encoding javadocParams.encoding

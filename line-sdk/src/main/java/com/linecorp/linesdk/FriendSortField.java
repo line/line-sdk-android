@@ -1,6 +1,6 @@
 package com.linecorp.linesdk;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * @hide

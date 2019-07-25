@@ -1,6 +1,6 @@
 package com.linecorp.linesdk.internal;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.linecorp.linesdk.BuildConfig;
 

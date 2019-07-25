@@ -1,7 +1,7 @@
 package com.linecorp.linesdk.message.flex.action;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.linecorp.linesdk.message.Jsonable;
 import com.linecorp.linesdk.message.Stringable;
