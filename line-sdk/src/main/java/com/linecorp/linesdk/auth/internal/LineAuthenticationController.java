@@ -27,6 +27,7 @@ import com.linecorp.linesdk.internal.AccessTokenCache;
 import com.linecorp.linesdk.internal.InternalAccessToken;
 import com.linecorp.linesdk.internal.IssueAccessTokenResult;
 import com.linecorp.linesdk.internal.OneTimePassword;
+import com.linecorp.linesdk.internal.OpenIdDiscoveryDocument;
 import com.linecorp.linesdk.internal.nwclient.IdTokenValidator;
 import com.linecorp.linesdk.internal.nwclient.IdTokenValidator.Builder;
 import com.linecorp.linesdk.internal.nwclient.LineAuthenticationApiClient;
@@ -252,7 +253,7 @@ import java.util.List;
             if (!accessTokenResponse.isSuccess()) {
                 return toErrorResult(accessTokenResponse);
             }
-            
+
             IssueAccessTokenResult issueAccessTokenResult = accessTokenResponse.getResponseData();
             InternalAccessToken accessToken = issueAccessTokenResult.getAccessToken();
             List<Scope> scopes = issueAccessTokenResult.getScopes();
@@ -273,17 +274,9 @@ import java.util.List;
             accessTokenCache.saveAccessToken(accessToken);
 
             final LineIdToken idToken = issueAccessTokenResult.getIdToken();
-
             if (idToken != null) {
-                IdTokenValidator idTokenValidator = new Builder()
-                        .idToken(idToken)
-                        .expectedUserId(userId)
-                        .expectedChannelId(config.getChannelId())
-                        .expectedNonce(authenticationStatus.getOpenIdNonce())
-                        .build();
-
                 try {
-                    idTokenValidator.validate();
+                    validateIdToken(idToken, userId);
                 } catch (final Exception e) {
                     return new LineLoginResult(LineApiResponseCode.INTERNAL_ERROR,
                                                new LineApiError(e.getMessage()));
@@ -301,6 +294,28 @@ import java.util.List;
                                     accessToken.getIssuedClientTimeMillis()),
                             scopes
                     ));
+        }
+
+        private void validateIdToken(final LineIdToken idToken, final String userId) {
+            final LineApiResponse<OpenIdDiscoveryDocument> response =
+                    authApiClient.getOpenIdDiscoveryDocument();
+            if (!response.isSuccess()) {
+                throw new RuntimeException("Failed to get OpenId Discovery Document. "
+                                           + " Response Code: " + response.getResponseCode()
+                                           + " Error Data: " + response.getErrorData());
+            }
+
+            final OpenIdDiscoveryDocument openIdDiscoveryDoc = response.getResponseData();
+
+            final IdTokenValidator idTokenValidator = new Builder()
+                    .idToken(idToken)
+                    .expectedIssuer(openIdDiscoveryDoc.getIssuer())
+                    .expectedUserId(userId)
+                    .expectedChannelId(config.getChannelId())
+                    .expectedNonce(authenticationStatus.getOpenIdNonce())
+                    .build();
+
+            idTokenValidator.validate();
         }
 
         @Override

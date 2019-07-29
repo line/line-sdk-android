@@ -282,8 +282,8 @@ public class LineAuthenticationApiClient {
                                                  discoveryDocResponse.getErrorData());
         }
 
-        final OpenIdDiscoveryDocument OpenIdDiscoveryDoc = discoveryDocResponse.getResponseData();
-        final Uri jwksUri = Uri.parse(OpenIdDiscoveryDoc.getJwksUri());
+        final OpenIdDiscoveryDocument openIdDiscoveryDoc = discoveryDocResponse.getResponseData();
+        final Uri jwksUri = Uri.parse(openIdDiscoveryDoc.getJwksUri());
 
         final LineApiResponse<JWKSet> jwkSetResponse =
                 httpClient.get(jwksUri,

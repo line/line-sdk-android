@@ -22,6 +22,7 @@ import com.linecorp.linesdk.internal.AccessTokenCache;
 import com.linecorp.linesdk.internal.InternalAccessToken;
 import com.linecorp.linesdk.internal.IssueAccessTokenResult;
 import com.linecorp.linesdk.internal.OneTimePassword;
+import com.linecorp.linesdk.internal.OpenIdDiscoveryDocument;
 import com.linecorp.linesdk.internal.nwclient.LineAuthenticationApiClient;
 import com.linecorp.linesdk.internal.nwclient.TalkApiClient;
 
@@ -52,6 +53,7 @@ import static org.mockito.Mockito.verify;
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = TestConfig.TARGET_SDK_VERSION)
 public class LineAuthenticationControllerTest {
+    private static final String ISSUER = "https://access.line.me";
     private static final String CHANNEL_ID = "testChannelId";
 
     private static final String USER_ID = "userId";
@@ -75,7 +77,7 @@ public class LineAuthenticationControllerTest {
     private static final Date ONE_HOUR_LATER = new Date(NOW.getTime() + 60 * 60 * 1000);
     private static final LineIdToken ID_TOKEN = new LineIdToken
             .Builder()
-            .issuer("https://access.line.me")
+            .issuer(ISSUER)
             .subject(USER_ID)
             .audience(CHANNEL_ID)
             .issuedAt(NOW)
@@ -97,8 +99,14 @@ public class LineAuthenticationControllerTest {
     private static final String DISPLAY_NAME = "displayName";
     private static final Uri PICTURE_URL = Uri.parse("http://line.me/test");
     private static final String STATUS_MESSAGE = "statusMessage";
+
     private static final LineProfile ACCOUNT_INFO = new LineProfile(
             USER_ID, DISPLAY_NAME, PICTURE_URL, STATUS_MESSAGE);
+
+    private static final OpenIdDiscoveryDocument OPEN_ID_DISCOVERY_DOCUMENT =
+            new OpenIdDiscoveryDocument.Builder()
+                    .issuer(ISSUER)
+                    .build();
 
     private static final Intent LOGIN_INTENT = new Intent();
 
@@ -343,6 +351,9 @@ public class LineAuthenticationControllerTest {
         doReturn(LineApiResponse.createAsSuccess(ACCOUNT_INFO))
                 .when(talkApiClient)
                 .getProfile(ACCESS_TOKEN);
+        doReturn(LineApiResponse.createAsSuccess(OPEN_ID_DISCOVERY_DOCUMENT))
+                .when(authApiClient)
+                .getOpenIdDiscoveryDocument();
 
         target.startLineAuthentication();
 
