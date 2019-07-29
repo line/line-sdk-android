@@ -6,12 +6,12 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 public class IdTokenValidator {
-    private static final String EXPECTED_ISSUER = "https://access.line.me";
-
     // allowed clock skew: 5 minutes
     private static final long ALLOWED_CLOCK_SKEW_MILLISECONDS = TimeUnit.MINUTES.toMillis(5);
 
     private final LineIdToken idToken;
+
+    private final String expectedIssuer;
 
     private final String expectedUserId;
 
@@ -21,6 +21,7 @@ public class IdTokenValidator {
 
     private IdTokenValidator(final Builder builder) {
         idToken = builder.idToken;
+        expectedIssuer = builder.expectedIssuer;
         expectedUserId = builder.expectedUserId;
         expectedChannelId = builder.expectedChannelId;
         expectedNonce = builder.expectedNonce;
@@ -43,11 +44,11 @@ public class IdTokenValidator {
     private void validateIssuer() {
         final String receivedIssuer = idToken.getIssuer();
 
-        if (EXPECTED_ISSUER.equals(receivedIssuer)) {
+        if (expectedIssuer.equals(receivedIssuer)) {
             return;
         }
 
-        notMatchedError("OpenId issuer does not match.", EXPECTED_ISSUER, receivedIssuer);
+        notMatchedError("OpenId issuer does not match.", expectedIssuer, receivedIssuer);
     }
 
     private void validateSubject() {
@@ -105,6 +106,7 @@ public class IdTokenValidator {
 
     public static final class Builder {
         private LineIdToken idToken;
+        private String expectedIssuer;
         private String expectedUserId;
         private String expectedChannelId;
         private String expectedNonce;
@@ -113,6 +115,11 @@ public class IdTokenValidator {
 
         public Builder idToken(final LineIdToken idToken) {
             this.idToken = idToken;
+            return this;
+        }
+
+        public Builder expectedIssuer(final String expectedIssuer) {
+            this.expectedIssuer = expectedIssuer;
             return this;
         }
 

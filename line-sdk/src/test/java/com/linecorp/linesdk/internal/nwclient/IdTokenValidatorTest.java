@@ -34,6 +34,7 @@ public class IdTokenValidatorTest {
     private static IdTokenValidator buildValidator(final LineIdToken idToken) {
         return new IdTokenValidator.Builder()
                 .idToken(idToken)
+                .expectedIssuer(ISSUER)
                 .expectedUserId(USER_ID)
                 .expectedChannelId(CHANNEL_ID)
                 .expectedNonce(NONCE)
