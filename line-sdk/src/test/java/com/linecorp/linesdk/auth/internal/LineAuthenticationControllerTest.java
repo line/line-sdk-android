@@ -75,8 +75,11 @@ public class LineAuthenticationControllerTest {
 
     private static final Date NOW = new Date();
     private static final Date ONE_HOUR_LATER = new Date(NOW.getTime() + 60 * 60 * 1000);
+
+    private static final String ID_TOKEN_RAW_STR = "ID_TOKEN_RAW_STR";
     private static final LineIdToken ID_TOKEN = new LineIdToken
             .Builder()
+            .rawString(ID_TOKEN_RAW_STR)
             .issuer(ISSUER)
             .subject(USER_ID)
             .audience(CHANNEL_ID)
@@ -163,7 +166,7 @@ public class LineAuthenticationControllerTest {
         Robolectric.getForegroundThreadScheduler().runOneTask();
 
         verify(activity, times(1)).onAuthenticationFinished(
-                new LineLoginResult(LineApiResponseCode.NETWORK_ERROR, LineApiError.DEFAULT));
+                LineLoginResult.error(LineApiResponseCode.NETWORK_ERROR, LineApiError.DEFAULT));
     }
 
     @Test
@@ -178,7 +181,7 @@ public class LineAuthenticationControllerTest {
         Robolectric.getForegroundThreadScheduler().runOneTask();
 
         verify(activity, times(1)).onAuthenticationFinished(
-                new LineLoginResult(LineApiResponseCode.INTERNAL_ERROR, LineApiError.DEFAULT));
+                LineLoginResult.error(LineApiResponseCode.INTERNAL_ERROR, LineApiError.DEFAULT));
     }
 
     @Test
@@ -202,7 +205,7 @@ public class LineAuthenticationControllerTest {
         target.handleIntentFromLineApp(newIntentData);
 
         verify(activity, times(1)).onAuthenticationFinished(
-                new LineLoginResult(LineApiResponseCode.INTERNAL_ERROR, any(LineApiError.class)));
+                LineLoginResult.error(LineApiResponseCode.INTERNAL_ERROR, any(LineApiError.class)));
     }
 
     @Test
@@ -233,7 +236,7 @@ public class LineAuthenticationControllerTest {
         Robolectric.getForegroundThreadScheduler().runOneTask();
 
         verify(activity, times(1)).onAuthenticationFinished(
-                new LineLoginResult(LineApiResponseCode.NETWORK_ERROR, LineApiError.DEFAULT));
+                LineLoginResult.error(LineApiResponseCode.NETWORK_ERROR, LineApiError.DEFAULT));
     }
 
     @Test
@@ -264,7 +267,7 @@ public class LineAuthenticationControllerTest {
         Robolectric.getForegroundThreadScheduler().runOneTask();
 
         verify(activity, times(1)).onAuthenticationFinished(
-                new LineLoginResult(LineApiResponseCode.INTERNAL_ERROR, LineApiError.DEFAULT));
+                LineLoginResult.error(LineApiResponseCode.INTERNAL_ERROR, LineApiError.DEFAULT));
     }
 
     @Test
@@ -298,7 +301,7 @@ public class LineAuthenticationControllerTest {
         Robolectric.getForegroundThreadScheduler().runOneTask();
 
         verify(activity, times(1)).onAuthenticationFinished(
-                new LineLoginResult(LineApiResponseCode.NETWORK_ERROR, LineApiError.DEFAULT));
+                LineLoginResult.error(LineApiResponseCode.NETWORK_ERROR, LineApiError.DEFAULT));
     }
 
     @Test
@@ -332,7 +335,7 @@ public class LineAuthenticationControllerTest {
         Robolectric.getForegroundThreadScheduler().runOneTask();
 
         verify(activity, times(1)).onAuthenticationFinished(
-                new LineLoginResult(LineApiResponseCode.INTERNAL_ERROR, LineApiError.DEFAULT));
+                LineLoginResult.error(LineApiResponseCode.INTERNAL_ERROR, LineApiError.DEFAULT));
     }
 
     @Test
@@ -369,13 +372,19 @@ public class LineAuthenticationControllerTest {
         Robolectric.getBackgroundThreadScheduler().runOneTask();
         Robolectric.getForegroundThreadScheduler().runOneTask();
 
-        verify(activity, times(1)).onAuthenticationFinished(new LineLoginResult(
-                new LineProfile(USER_ID, DISPLAY_NAME, PICTURE_URL, STATUS_MESSAGE),
-                ID_TOKEN,
-                null,
-                new LineCredential(
-                        new LineAccessToken(ACCESS_TOKEN_STR, EXPIRES_IN, ISSUED_CLIENT_TIME),
-                        SCOPE_LIST)));
+        verify(activity, times(1)).onAuthenticationFinished(
+                new LineLoginResult.Builder()
+                        .responseCode(LineApiResponseCode.SUCCESS)
+                        .nonce(NONCE)
+                        .lineProfile(new LineProfile(USER_ID, DISPLAY_NAME, PICTURE_URL, STATUS_MESSAGE))
+                        .lineIdToken(ID_TOKEN)
+                        .friendshipStatusChanged(null)
+                        .lineCredential(new LineCredential(
+                                new LineAccessToken(ACCESS_TOKEN_STR, EXPIRES_IN, ISSUED_CLIENT_TIME),
+                                SCOPE_LIST))
+                        .errorData(LineApiError.DEFAULT)
+                        .build()
+        );
 
         assertEquals(ACCESS_TOKEN, accessTokenCache.getAccessToken());
     }
@@ -400,6 +409,6 @@ public class LineAuthenticationControllerTest {
 
         Robolectric.getForegroundThreadScheduler().runOneTask();
 
-        verify(activity, times(1)).onAuthenticationFinished(LineLoginResult.CANCEL);
+        verify(activity, times(1)).onAuthenticationFinished(LineLoginResult.canceledError());
     }
 }

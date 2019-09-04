@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.linecorp.linesdk.LineApiError;
-import com.linecorp.linesdk.LineApiResponseCode;
 import com.linecorp.linesdk.auth.internal.LineAuthenticationActivity;
 import com.linecorp.linesdk.internal.EncryptorHolder;
 
@@ -106,9 +104,9 @@ public class LineLoginApi {
      * @return A {@link LineLoginResult} object.
      */
     @NonNull
-    public static LineLoginResult getLoginResultFromIntent(@Nullable Intent intent) {
+    public static LineLoginResult getLoginResultFromIntent(@Nullable final Intent intent) {
         return intent == null
-                ? new LineLoginResult(LineApiResponseCode.INTERNAL_ERROR, new LineApiError("Callback intent is null"))
-                : LineAuthenticationActivity.getResultFromIntent(intent);
+               ? LineLoginResult.internalError("Callback intent is null")
+               : LineAuthenticationActivity.getResultFromIntent(intent);
     }
 }
