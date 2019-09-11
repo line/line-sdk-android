@@ -31,6 +31,10 @@ public class LineIdToken implements Parcelable {
         }
     };
 
+    // raw string of ID Token
+    @NonNull
+    private final String rawString;
+
     @NonNull
     private final String issuer;
     // encrypted mid
@@ -87,6 +91,7 @@ public class LineIdToken implements Parcelable {
     private final String familyNamePronunciation;
 
     private LineIdToken(final Builder builder) {
+        rawString = builder.rawString;
         issuer = builder.issuer;
         subject = builder.subject;
         audience = builder.audience;
@@ -110,6 +115,7 @@ public class LineIdToken implements Parcelable {
     }
 
     private LineIdToken(@NonNull final Parcel in) {
+        rawString = in.readString();
         issuer = in.readString();
         subject = in.readString();
         audience = in.readString();
@@ -137,6 +143,7 @@ public class LineIdToken implements Parcelable {
      */
     @Override
     public void writeToParcel(final Parcel dest, final int flags) {
+        dest.writeString(rawString);
         dest.writeString(issuer);
         dest.writeString(subject);
         dest.writeString(audience);
@@ -165,6 +172,16 @@ public class LineIdToken implements Parcelable {
     @Override
     public int describeContents() {
         return 0;
+    }
+
+    /**
+     * Gets the raw string of ID Token.
+     *
+     * @return The raw string of ID Token.
+     */
+    @NonNull
+    public String getRawString() {
+        return rawString;
     }
 
     /**
@@ -348,6 +365,7 @@ public class LineIdToken implements Parcelable {
 
         final LineIdToken that = (LineIdToken) o;
 
+        if (!rawString.equals(that.rawString)) { return false; }
         if (!issuer.equals(that.issuer)) { return false; }
         if (!subject.equals(that.subject)) { return false; }
         if (!audience.equals(that.audience)) { return false; }
@@ -383,7 +401,8 @@ public class LineIdToken implements Parcelable {
      */
     @Override
     public int hashCode() {
-        int result = issuer.hashCode();
+        int result = rawString.hashCode();
+        result = 31 * result + issuer.hashCode();
         result = 31 * result + subject.hashCode();
         result = 31 * result + audience.hashCode();
         result = 31 * result + expiresAt.hashCode();
@@ -412,7 +431,8 @@ public class LineIdToken implements Parcelable {
     @Override
     public String toString() {
         return "LineIdToken{" +
-               "issuer='" + issuer + '\'' +
+               "rawString='" + rawString + '\'' +
+               ", issuer='" + issuer + '\'' +
                ", subject='" + subject + '\'' +
                ", audience='" + audience + '\'' +
                ", expiresAt=" + expiresAt +
@@ -439,6 +459,7 @@ public class LineIdToken implements Parcelable {
      * @hide
      */
     public static final class Builder {
+        private String rawString;
         private String issuer;
         private String subject;
         private String audience;
@@ -462,103 +483,108 @@ public class LineIdToken implements Parcelable {
 
         public Builder() {}
 
-        public Builder issuer(final String val) {
-            issuer = val;
+        public Builder rawString(final String rawString) {
+            this.rawString = rawString;
             return this;
         }
 
-        public Builder subject(final String val) {
-            subject = val;
+        public Builder issuer(final String issuer) {
+            this.issuer = issuer;
             return this;
         }
 
-        public Builder audience(final String val) {
-            audience = val;
+        public Builder subject(final String subject) {
+            this.subject = subject;
             return this;
         }
 
-        public Builder expiresAt(final Date val) {
-            expiresAt = val;
+        public Builder audience(final String audience) {
+            this.audience = audience;
             return this;
         }
 
-        public Builder issuedAt(final Date val) {
-            issuedAt = val;
+        public Builder expiresAt(final Date expiresAt) {
+            this.expiresAt = expiresAt;
             return this;
         }
 
-        public Builder authTime(final Date val) {
-            authTime = val;
+        public Builder issuedAt(final Date issuedAt) {
+            this.issuedAt = issuedAt;
             return this;
         }
 
-        public Builder nonce(final String val) {
-            nonce = val;
+        public Builder authTime(final Date authTime) {
+            this.authTime = authTime;
             return this;
         }
 
-        public Builder amr(final List<String> val) {
-            amr = val;
+        public Builder nonce(final String nonce) {
+            this.nonce = nonce;
             return this;
         }
 
-        public Builder name(final String val) {
-            name = val;
+        public Builder amr(final List<String> amr) {
+            this.amr = amr;
             return this;
         }
 
-        public Builder picture(final String val) {
-            picture = val;
+        public Builder name(final String name) {
+            this.name = name;
             return this;
         }
 
-        public Builder phoneNumber(final String val) {
-            phoneNumber = val;
+        public Builder picture(final String picture) {
+            this.picture = picture;
             return this;
         }
 
-        public Builder email(final String val) {
-            email = val;
+        public Builder phoneNumber(final String phoneNumber) {
+            this.phoneNumber = phoneNumber;
             return this;
         }
 
-        public Builder gender(final String val) {
-            gender = val;
+        public Builder email(final String email) {
+            this.email = email;
             return this;
         }
 
-        public Builder birthdate(final String val) {
-            birthdate = val;
+        public Builder gender(final String gender) {
+            this.gender = gender;
             return this;
         }
 
-        public Builder address(final Address val) {
-            address = val;
+        public Builder birthdate(final String birthdate) {
+            this.birthdate = birthdate;
             return this;
         }
 
-        public Builder givenName(final String val) {
-            givenName = val;
+        public Builder address(final Address address) {
+            this.address = address;
             return this;
         }
 
-        public Builder givenNamePronunciation(final String val) {
-            givenNamePronunciation = val;
+        public Builder givenName(final String givenName) {
+            this.givenName = givenName;
             return this;
         }
 
-        public Builder middleName(final String val) {
-            middleName = val;
+        public Builder givenNamePronunciation(final String givenNamePronunciation) {
+            this.givenNamePronunciation = givenNamePronunciation;
             return this;
         }
 
-        public Builder familyName(final String val) {
-            familyName = val;
+        public Builder middleName(final String middleName) {
+            this.middleName = middleName;
             return this;
         }
 
-        public Builder familyNamePronunciation(final String val) {
-            familyNamePronunciation = val;
+        public Builder familyName(final String familyName) {
+            this.familyName = familyName;
+            return this;
+        }
+
+        public Builder familyNamePronunciation(final String familyNamePronunciation) {
+            this.familyNamePronunciation = familyNamePronunciation;
             return this;
         }
 
@@ -669,7 +695,8 @@ public class LineIdToken implements Parcelable {
 
             final Address that = (Address) o;
 
-            if (streetAddress != null ? !streetAddress.equals(that.streetAddress) : that.streetAddress != null) {
+            if (streetAddress != null ? !streetAddress.equals(that.streetAddress) :
+                that.streetAddress != null) {
                 return false;
             }
             if (locality != null ? !locality.equals(that.locality) : that.locality != null) { return false; }
@@ -719,28 +746,28 @@ public class LineIdToken implements Parcelable {
 
             public Builder() {}
 
-            public Builder streetAddress(final String val) {
-                streetAddress = val;
+            public Builder streetAddress(final String streetAddress) {
+                this.streetAddress = streetAddress;
                 return this;
             }
 
-            public Builder locality(final String val) {
-                locality = val;
+            public Builder locality(final String locality) {
+                this.locality = locality;
                 return this;
             }
 
-            public Builder region(final String val) {
-                region = val;
+            public Builder region(final String region) {
+                this.region = region;
                 return this;
             }
 
-            public Builder postalCode(final String val) {
-                postalCode = val;
+            public Builder postalCode(final String postalCode) {
+                this.postalCode = postalCode;
                 return this;
             }
 
-            public Builder country(final String val) {
-                country = val;
+            public Builder country(final String country) {
+                this.country = country;
                 return this;
             }
 

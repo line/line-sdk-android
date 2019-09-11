@@ -37,7 +37,7 @@ public final class IdTokenParser {
                                       .parseClaimsJws(idTokenStr)
                                       .getBody();
 
-            return buildIdToken(claims);
+            return buildIdToken(idTokenStr, claims);
         } catch (final Exception e) {
             Log.e(TAG, "failed to parse IdToken: " + idTokenStr, e);
             throw e;
@@ -45,8 +45,9 @@ public final class IdTokenParser {
     }
 
     @NonNull
-    private static LineIdToken buildIdToken(final Claims claims) {
+    private static LineIdToken buildIdToken(final String idTokenStr, final Claims claims) {
         return new LineIdToken.Builder()
+                .rawString(idTokenStr)
                 .issuer(claims.getIssuer())
                 .subject(claims.getSubject())
                 .audience(claims.getAudience())

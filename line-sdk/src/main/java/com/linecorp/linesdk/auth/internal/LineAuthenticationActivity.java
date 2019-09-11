@@ -9,13 +9,10 @@ import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.linecorp.linesdk.LineApiError;
-import com.linecorp.linesdk.LineApiResponseCode;
 import com.linecorp.linesdk.R;
 import com.linecorp.linesdk.auth.LineAuthenticationConfig;
 import com.linecorp.linesdk.auth.LineAuthenticationParams;
 import com.linecorp.linesdk.auth.LineLoginResult;
-
 
 import static com.linecorp.linesdk.auth.internal.LineAuthenticationStatus.Status.INIT;
 import static com.linecorp.linesdk.auth.internal.LineAuthenticationStatus.Status.INTENT_HANDLED;
@@ -56,8 +53,8 @@ public class LineAuthenticationActivity extends Activity {
         LineLoginResult lineLoginResult =
                 intent.getParcelableExtra(RESPONSE_DATA_KEY_AUTHENTICATION_RESULT);
         return lineLoginResult == null
-                ? new LineLoginResult(LineApiResponseCode.INTERNAL_ERROR, new LineApiError("Authentication result is not found."))
-                : lineLoginResult;
+               ? LineLoginResult.internalError("Authentication result is not found.")
+               : lineLoginResult;
     }
 
     @Override
@@ -81,9 +78,9 @@ public class LineAuthenticationActivity extends Activity {
         LineAuthenticationParams params =
                 intent.getParcelableExtra(PARAM_KEY_AUTHENTICATION_PARAMS);
         if (config == null || params == null) {
-            onAuthenticationFinished(new LineLoginResult(
-                    LineApiResponseCode.INTERNAL_ERROR,
-                    new LineApiError("The requested parameter is illegal.")));
+            onAuthenticationFinished(
+                    LineLoginResult.internalError("The requested parameter is illegal.")
+            );
             return;
         }
         authenticationStatus = getAuthenticationStatus(savedInstanceState);
