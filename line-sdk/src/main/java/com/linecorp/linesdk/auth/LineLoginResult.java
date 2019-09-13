@@ -141,9 +141,9 @@ public class LineLoginResult implements Parcelable {
     }
 
     /**
-     * Gets the `nonce` value that used for performing LINE Login
+     * Gets the `nonce` value used for performing login in LINE
      *
-     * @return the `nonce` value that used for performing LINE Login
+     * @return The `nonce` value used for performing login in LINE
      */
     @Nullable
     public String getNonce() {
