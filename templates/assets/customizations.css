@@ -184,7 +184,7 @@ input.gsc-input:focus {
   font-size: 14px;
 }
 #resize-packages-nav {
-  background-color: #F7F8F9;
+  background-color: #fff;
 }
 .ui-resizable-s {
   border-bottom: 2px solid #DEE5EC;
