@@ -11,6 +11,7 @@
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-family: Avenir Next W01,"ヒラギノ角ゴ Pro",Hiragino Kaku Gothic Pro,"游ゴシック体",Yu Gothic,YuGothic,"メイリオ",Meiryo,Arial Unicode MS,Tahoma,Helvetica,"ＭＳ Ｐゴシック",MS PGothic,sans-serif;
 }
 
 /* Util */
@@ -47,7 +48,7 @@ body {
   content:"\EA33";
   position:absolute;
   line-height:inherit;
-  top:50%;
+  top: 7px;
   right:0;
   -webkit-transform:translateY(-50%);
   transform:translateY(-50%);
@@ -218,7 +219,7 @@ input.gsc-input:focus {
   background-color: #FFF;
 }
 #jd-header h1 {
-  font-size: 28px;
+  font-size: 24px;
   font-weight: normal;
   border-bottom: 1px solid #444;
   padding: 10px 0;
