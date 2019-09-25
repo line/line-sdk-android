@@ -9,8 +9,6 @@
 }
 
 body {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   font-family: Avenir Next W01,"ヒラギノ角ゴ Pro",Hiragino Kaku Gothic Pro,"游ゴシック体",Yu Gothic,YuGothic,"メイリオ",Meiryo,Arial Unicode MS,Tahoma,Helvetica,"ＭＳ Ｐゴシック",MS PGothic,sans-serif;
 }
 
@@ -61,7 +59,7 @@ body {
   background-color: #444444;
   color: #fff;
   display: flex;
-  justify-content: space-between; /* space-betweenよりflex-grow:1;を使って左右伸長した方がよさそう */
+  justify-content: space-between;
   align-items: center;
   padding: 0 20px;
   height: 60px;
@@ -76,15 +74,6 @@ body {
   margin: 0;
   padding: 0;
 }
-#header li a {
-  color: #D8D8D8;
-  width: auto;
-  height: auto;
-  font-weight: normal;
-}
-#header .GlobalHeaderNav {
-  font-family: 'Avenir Next W01,"ヒラギノ角ゴ Pro",Hiragino Kaku Gothic Pro,"游ゴシック体",Yu Gothic,YuGothic,"メイリオ",Meiryo,Arial Unicode MS,Tahoma,Helvetica,"ＭＳ Ｐゴシック",MS PGothic,sans-serif'
-}
 #header .GlobalHeaderNav > ul {
   display: flex;
   flex-wrap: nowrap;
@@ -94,14 +83,19 @@ body {
   line-height: 1em;
 }
 #header .GlobalHeaderNav > ul > li a {
-    font-size: 13px;
+  font-size: 13px;
+  font-family: Avenir Next W01,"ヒラギノ角ゴ Pro",Hiragino Kaku Gothic Pro,"游ゴシック体",Yu Gothic,YuGothic,"メイリオ",Meiryo,Arial Unicode MS,Tahoma,Helvetica,"ＭＳ Ｐゴシック",MS PGothic,sans-serif;
+  color: #fff;
+  width: auto;
+  height: auto;
+  font-weight: normal;
 }
 #headerLeft {
   position: static;
   padding: 0;
   left: 0;
   bottom: 0;
-  font-family: 'Avenir Next W01,"ヒラギノ角ゴ Pro",Hiragino Kaku Gothic Pro,"游ゴシック体",Yu Gothic,YuGothic,"メイリオ",Meiryo,Arial Unicode MS,Tahoma,Helvetica,"ＭＳ Ｐゴシック",MS PGothic,sans-serif';
+  font-family: Avenir Next W01,"ヒラギノ角ゴ Pro",Hiragino Kaku Gothic Pro,"游ゴシック体",Yu Gothic,YuGothic,"メイリオ",Meiryo,Arial Unicode MS,Tahoma,Helvetica,"ＭＳ Ｐゴシック",MS PGothic,sans-serif;
 }
 #masthead-title {
   color: #fff;
