@@ -253,3 +253,7 @@ h4.jd-details-title {
 .jd-sumtable {
   font-size: inherit;
 }
+
+p,ul,ol,dl,dd,dt,li {
+  line-height:1.7em;
+}
