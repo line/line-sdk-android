@@ -39,6 +39,7 @@
     <string name="apis_get_friends_approvers">getFriendsApprovers</string>
     <string name="apis_get_groups_approvers">getGroupsApprovers</string>
     <string name="apis_send_message">send all Messages</string>
+    <string name="apis_send_message_dialog">send message dialog</string>
     <string name="apis_send_template_message">send all Template Messages</string>
     <string name="apis_section_title_internal_apis">Internal APIs</string>
     <string name="apis_section_title_flex_message_apis">Flex Message APIs</string>

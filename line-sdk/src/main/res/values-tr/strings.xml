@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="btn_line_login">LINE ile oturum açın</string>
+    <string name="search_no_results">Sonuç Yok</string>
+    <string name="select_tab_friends">Arkadaşlar</string>
+    <string name="select_tab_groups">Gruplar</string>
+    <string name="select_target_title">Paylaş</string>
+    <string name="select_target_search_hint">İsme Göre Ara</string>
+    <string name="search_no_fiend">Seçebileceğiniz bir arkadaşınız yok.</string>
+    <string name="search_no_group">Seçebileceğiniz bir grup yok.</string>
 </resources>

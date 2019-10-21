@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="btn_line_login">Masuk dengan LINE</string>
+    <string name="search_no_results">Tak Ada Hasil</string>
+    <string name="select_tab_friends">Teman</string>
+    <string name="select_tab_groups">Grup</string>
+    <string name="select_target_title">Berbagi dengan…</string>
+    <string name="select_target_search_hint">Cari dengan Nama</string>
+    <string name="search_no_fiend">Tak ada teman untuk dipilih.</string>
+    <string name="search_no_group">Tak ada grup yang dapat dipilih.</string>
 </resources>

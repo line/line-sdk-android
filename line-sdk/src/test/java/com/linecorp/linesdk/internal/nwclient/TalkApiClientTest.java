@@ -7,9 +7,12 @@ import com.linecorp.linesdk.BuildConfig;
 import com.linecorp.linesdk.FriendSortField;
 import com.linecorp.linesdk.GetFriendsResponse;
 import com.linecorp.linesdk.GetGroupsResponse;
+import com.linecorp.linesdk.LineApiError;
 import com.linecorp.linesdk.LineApiResponse;
+import com.linecorp.linesdk.LineApiResponseCode;
 import com.linecorp.linesdk.LineFriendshipStatus;
 import com.linecorp.linesdk.LineProfile;
+import com.linecorp.linesdk.SendMessageResponse;
 import com.linecorp.linesdk.TestConfig;
 import com.linecorp.linesdk.TestJsonDataBuilder;
 import com.linecorp.linesdk.TestStringInputStream;
@@ -23,6 +26,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -32,16 +36,22 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyMapOf;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -67,7 +77,7 @@ public class TalkApiClientTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        target = new TalkApiClient(Uri.parse(API_BASE_URL), httpClient);
+        target = Mockito.spy(new TalkApiClient(Uri.parse(API_BASE_URL), httpClient));
     }
 
     @Test
@@ -186,7 +196,7 @@ public class TalkApiClientTest {
     }
 
     @Test
-    public void testGetFriends() {
+    public void testGetFriends_shareMessageWithOtt() {
         doReturn(EXPECTED_RESULT).when(httpClient).get(
                 any(Uri.class),
                 anyMapOf(String.class, String.class),
@@ -194,7 +204,33 @@ public class TalkApiClientTest {
                 any(ResponseDataParser.class));
 
         LineApiResponse<GetFriendsResponse> actualResult =
-                target.getFriends(ACCESS_TOKEN, FriendSortField.NAME, "pageToken01");
+                target.getFriends(ACCESS_TOKEN, FriendSortField.NAME, "pageToken01", true);
+
+        assertSame(EXPECTED_RESULT, actualResult);
+
+        Map<String, String> expectedQueryParams = new HashMap<>();
+        expectedQueryParams.put("sort", "name");
+        expectedQueryParams.put("pageToken", "pageToken01");
+
+        verify(httpClient, times(1)).get(
+                eq(Uri.parse(API_BASE_URL + "/graph/v1/friends")),
+                eq(Collections.singletonMap("Authorization", "Bearer " + ACCESS_TOKEN.getAccessToken())),
+                eq(expectedQueryParams),
+                responseParserCaptor.capture());
+
+        assertTrue(responseParserCaptor.getValue() instanceof TalkApiClient.FriendsParser);
+    }
+
+    @Test
+    public void testGetFriends_notShareMessageWithOtt() {
+        doReturn(EXPECTED_RESULT).when(httpClient).get(
+                any(Uri.class),
+                anyMapOf(String.class, String.class),
+                anyMapOf(String.class, String.class),
+                any(ResponseDataParser.class));
+
+        LineApiResponse<GetFriendsResponse> actualResult =
+                target.getFriends(ACCESS_TOKEN, FriendSortField.NAME, "pageToken01", false);
 
         assertSame(EXPECTED_RESULT, actualResult);
 
@@ -238,7 +274,7 @@ public class TalkApiClientTest {
     }
 
     @Test
-    public void testGetGroups() {
+    public void testGetGroups_shareMessageWithOtt() {
         doReturn(EXPECTED_RESULT).when(httpClient).get(
                 any(Uri.class),
                 anyMapOf(String.class, String.class),
@@ -246,7 +282,32 @@ public class TalkApiClientTest {
                 any(ResponseDataParser.class));
 
         LineApiResponse<GetGroupsResponse> actualResult =
-                target.getGroups(ACCESS_TOKEN, "pageToken01");
+                target.getGroups(ACCESS_TOKEN, "pageToken01", true);
+
+        assertSame(EXPECTED_RESULT, actualResult);
+
+        Map<String, String> expectedQueryParams = new HashMap<>();
+        expectedQueryParams.put("pageToken", "pageToken01");
+
+        verify(httpClient, times(1)).get(
+                eq(Uri.parse(API_BASE_URL + "/graph/v1/groups")),
+                eq(Collections.singletonMap("Authorization", "Bearer " + ACCESS_TOKEN.getAccessToken())),
+                eq(expectedQueryParams),
+                responseParserCaptor.capture());
+
+        assertTrue(responseParserCaptor.getValue() instanceof TalkApiClient.GroupParser);
+    }
+
+    @Test
+    public void testGetGroups_notShareMessageWithOtt() {
+        doReturn(EXPECTED_RESULT).when(httpClient).get(
+                any(Uri.class),
+                anyMapOf(String.class, String.class),
+                anyMapOf(String.class, String.class),
+                any(ResponseDataParser.class));
+
+        LineApiResponse<GetGroupsResponse> actualResult =
+                target.getGroups(ACCESS_TOKEN, "pageToken01", false);
 
         assertSame(EXPECTED_RESULT, actualResult);
 
@@ -285,6 +346,100 @@ public class TalkApiClientTest {
                 responseParserCaptor.capture());
 
         assertTrue(responseParserCaptor.getValue() instanceof TalkApiClient.FriendsParser);
+    }
+
+    @Test
+    public void testSendMessageToMultipleUsers_withoutIsOttUsedParameter() {
+        target.sendMessageToMultipleUsers(ACCESS_TOKEN, Collections.emptyList(), Collections.emptyList());
+        verify(target, times(1)).sendMessageToMultipleUsers(
+                eq(ACCESS_TOKEN),
+                eq(Collections.emptyList()),
+                eq(Collections.emptyList()),
+                eq(false));
+    }
+
+    @Test
+    public void testSendMessageToMultipleUsersUsingTargetUserIds() {
+        final LineApiResponse<?> mockResponse = LineApiResponse.createAsSuccess("");
+        givenPostWithJsonApiResponse(mockResponse);
+
+        LineApiResponse<List<SendMessageResponse>> actualResult =
+                target.sendMessageToMultipleUsers(
+                        ACCESS_TOKEN,
+                        Collections.emptyList(),
+                        Collections.emptyList(),
+                        false);
+
+        assertThat(actualResult, sameInstance(mockResponse));
+        verifyApiCallPostWithJson("/message/v3/multisend");
+        responseParserInstanceShouldBe(TalkApiClient.MultiSendResponseParser.class);
+    }
+
+    @Test
+    public void testSendMessageToMultipleUsersUsingOtt() {
+        final LineApiResponse<?> mockResponse = LineApiResponse.createAsSuccess("");
+        givenPostWithJsonApiResponse(mockResponse);
+
+        LineApiResponse<List<SendMessageResponse>> actualResult =
+                target.sendMessageToMultipleUsers(
+                        ACCESS_TOKEN,
+                        Collections.emptyList(),
+                        Collections.emptyList(),
+                        true);
+
+        assertThat(actualResult, sameInstance(mockResponse));
+
+        // Gets ott by target user ids
+        verifyApiCallPostWithJson("/message/v3/ott");
+        responseParserInstanceShouldBe(TalkApiClient.StringParser.class);
+
+        // Send the message using ott
+        verifyApiCallPostWithJson("/message/v3/multisend?type=ott");
+        responseParserInstanceShouldBe(TalkApiClient.MultiSendResponseParser.class);
+    }
+
+    @Test
+    public void testSendMessageToMultipleUsersUsingOtt_getOtt_failed() {
+        final LineApiResponse<?> mockResponse = LineApiResponse.createAsError(
+                LineApiResponseCode.NETWORK_ERROR, new LineApiError(""));
+        givenPostWithJsonApiResponse(mockResponse);
+
+        LineApiResponse<List<SendMessageResponse>> actualApiResponse =
+                target.sendMessageToMultipleUsers(
+                        ACCESS_TOKEN,
+                        Collections.emptyList(),
+                        Collections.emptyList(),
+                        true);
+
+        assertThat(actualApiResponse.getResponseCode(), sameInstance(mockResponse.getResponseCode()));
+        assertThat(actualApiResponse.getErrorData(), sameInstance(mockResponse.getErrorData()));
+
+        // Gets ott by target user ids
+        verifyApiCallPostWithJson("/message/v3/ott");
+        responseParserInstanceShouldBe(TalkApiClient.StringParser.class);
+
+        // Should not send message due to failure of getting ott
+        verify(target, never()).sendMessageToMultipleUsersUsingOtt(any(), any(), any());
+    }
+
+    private void givenPostWithJsonApiResponse(LineApiResponse<?> apiResponse) {
+        doReturn(apiResponse).when(httpClient).postWithJson(
+                any(Uri.class),
+                anyMapOf(String.class, String.class),
+                any(String.class),
+                any(ResponseDataParser.class));
+    }
+
+    private void verifyApiCallPostWithJson(String pathSegment) {
+        verify(httpClient, times(1)).postWithJson(
+                eq(Uri.parse(API_BASE_URL + pathSegment)),
+                eq(Collections.singletonMap("Authorization", "Bearer " + ACCESS_TOKEN.getAccessToken())),
+                anyString(),
+                responseParserCaptor.capture());
+    }
+
+    private void responseParserInstanceShouldBe(Class clazz) {
+        assertThat(responseParserCaptor.getValue(), instanceOf(clazz));
     }
 
     private static <T> void verifyResponseDataParser(

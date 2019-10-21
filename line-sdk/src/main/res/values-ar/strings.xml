@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="btn_line_login">تسجيل دخول باستخدام LINE</string>
+    <string name="search_no_results">لا توجد نتائج</string>
+    <string name="select_tab_friends">الأصدقاء</string>
+    <string name="select_tab_groups">المجموعات</string>
+    <string name="select_target_title">المشاركة مع...</string>
+    <string name="select_target_search_hint">بحث</string>
+    <string name="search_no_fiend">لا يوجد لديك أي أصدقاء للاختيار من بينهم.</string>
+    <string name="search_no_group">لا توجد لديك أي مجموعات للاختيار من بينها.</string>
 </resources>

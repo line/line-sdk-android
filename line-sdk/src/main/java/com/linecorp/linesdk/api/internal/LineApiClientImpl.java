@@ -99,7 +99,7 @@ public class LineApiClientImpl implements LineApiClient {
         // Otherwise, returns null.
         RefreshTokenResult refreshTokenResult = response.getResponseData();
         String refreshToken = TextUtils.isEmpty(refreshTokenResult.getRefreshToken())
-                              ? accessToken.getRefreshToken() : refreshTokenResult.getRefreshToken();
+                ? accessToken.getRefreshToken() : refreshTokenResult.getRefreshToken();
         InternalAccessToken newToken = new InternalAccessToken(
                 refreshTokenResult.getAccessToken(),
                 refreshTokenResult.getExpiresInMillis(),
@@ -177,8 +177,22 @@ public class LineApiClientImpl implements LineApiClient {
     @NonNull
     public LineApiResponse<GetFriendsResponse> getFriends(@NonNull FriendSortField sort,
                                                           @Nullable String nextPageRequestToken) {
+        return getFriends(sort, nextPageRequestToken, false);
+    }
+
+    @Override
+    @TokenAutoRefresh
+    @NonNull
+    public LineApiResponse<GetFriendsResponse> getFriends(@NonNull FriendSortField sort,
+                                                          @Nullable String nextPageRequestToken,
+                                                          boolean isForOttShareMessage) {
         return callWithAccessToken(
-                accessToken -> talkApiClient.getFriends(accessToken, sort, nextPageRequestToken)
+                accessToken -> talkApiClient.getFriends(
+                        accessToken,
+                        sort,
+                        nextPageRequestToken,
+                        isForOttShareMessage
+                )
         );
     }
 
@@ -196,8 +210,20 @@ public class LineApiClientImpl implements LineApiClient {
     @TokenAutoRefresh
     @NonNull
     public LineApiResponse<GetGroupsResponse> getGroups(@Nullable String nextPageRequestToken) {
+        return getGroups(nextPageRequestToken, false);
+    }
+
+    @Override
+    @TokenAutoRefresh
+    @NonNull
+    public LineApiResponse<GetGroupsResponse> getGroups(@Nullable String nextPageRequestToken,
+                                                        boolean isForOttShareMessage) {
         return callWithAccessToken(
-                accessToken -> talkApiClient.getGroups(accessToken, nextPageRequestToken)
+                accessToken -> talkApiClient.getGroups(
+                        accessToken,
+                        nextPageRequestToken,
+                        isForOttShareMessage
+                )
         );
     }
 
@@ -225,9 +251,23 @@ public class LineApiClientImpl implements LineApiClient {
     @TokenAutoRefresh
     @NonNull
     public LineApiResponse<List<SendMessageResponse>> sendMessageToMultipleUsers(
-            @NonNull List<String> targetUserIds, @NonNull List<MessageData> messages) {
+            @NonNull List<String> targetUserIds,
+            @NonNull List<MessageData> messages
+    ) {
+        return sendMessageToMultipleUsers(targetUserIds, messages, false);
+    }
+
+    @Override
+    @TokenAutoRefresh
+    @NonNull
+    public LineApiResponse<List<SendMessageResponse>> sendMessageToMultipleUsers(
+            @NonNull List<String> targetUserIds,
+            @NonNull List<MessageData> messages,
+            boolean isOttUsed
+    ) {
         return callWithAccessToken(
-                accessToken -> talkApiClient.sendMessageToMultipleUsers(accessToken, targetUserIds, messages)
+                accessToken -> talkApiClient.sendMessageToMultipleUsers(
+                        accessToken, targetUserIds, messages, isOttUsed)
         );
     }
 

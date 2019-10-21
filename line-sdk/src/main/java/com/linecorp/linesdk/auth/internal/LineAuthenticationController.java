@@ -311,6 +311,28 @@ import java.util.List;
             idTokenValidator.validate();
         }
 
+        private void validateIdToken(final LineIdToken idToken, final String userId) {
+            final LineApiResponse<OpenIdDiscoveryDocument> response =
+                    authApiClient.getOpenIdDiscoveryDocument();
+            if (!response.isSuccess()) {
+                throw new RuntimeException("Failed to get OpenId Discovery Document. "
+                                           + " Response Code: " + response.getResponseCode()
+                                           + " Error Data: " + response.getErrorData());
+            }
+
+            final OpenIdDiscoveryDocument openIdDiscoveryDoc = response.getResponseData();
+
+            final IdTokenValidator idTokenValidator = new Builder()
+                    .idToken(idToken)
+                    .expectedIssuer(openIdDiscoveryDoc.getIssuer())
+                    .expectedUserId(userId)
+                    .expectedChannelId(config.getChannelId())
+                    .expectedNonce(authenticationStatus.getOpenIdNonce())
+                    .build();
+
+            idTokenValidator.validate();
+        }
+
         @Override
         protected void onPostExecute(@NonNull LineLoginResult lineLoginResult) {
             authenticationStatus.authenticationIntentHandled();

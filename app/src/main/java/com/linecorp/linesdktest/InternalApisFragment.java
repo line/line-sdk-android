@@ -2,6 +2,7 @@ package com.linecorp.linesdktest;
 
 import android.R.layout;
 import android.R.string;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -27,6 +28,7 @@ import com.linecorp.linesdk.LineApiResponse;
 import com.linecorp.linesdk.LineApiResponseCode;
 import com.linecorp.linesdk.LineGroup;
 import com.linecorp.linesdk.LineProfile;
+import com.linecorp.linesdk.dialog.SendMessageDialog;
 import com.linecorp.linesdk.message.AudioMessage;
 import com.linecorp.linesdk.message.ImageMessage;
 import com.linecorp.linesdk.message.LocationMessage;
@@ -55,7 +57,7 @@ import butterknife.OnClick;
 
 import static java.util.Arrays.asList;
 
-public class InternalApisFragment extends BaseApisFragment {
+public class InternalApisFragment extends BaseApisFragment implements SendMessageDialog.OnSendListener {
     private final FlexMessageGenerator flexMessageGenerator = new FlexMessageGenerator();
 
     private final ReceiverList receivers = new ReceiverList();
@@ -277,6 +279,26 @@ public class InternalApisFragment extends BaseApisFragment {
     @OnClick(R.id.send_flex_carousel_container_message)
     void sendFlexCarouselContainerMessage() {
         sendMessages(flexMessageGenerator.createFlexCarouselContainerMessage());
+    }
+
+    @OnClick(R.id.send_message_dialog)
+    void sendMessageDialog() {
+        SendMessageDialog sendMessageDialog = new SendMessageDialog(getContext(), lineApiClient);
+        sendMessageDialog.setMessageData(flexMessageGenerator.createFlexCarouselContainerMessage());
+        sendMessageDialog.setOnSendListener(this);
+        sendMessageDialog.setOnCancelListener(
+                dialog -> Toast.makeText(getContext(), "Sending message is canceled.", Toast.LENGTH_LONG).show());
+        sendMessageDialog.show();
+    }
+
+    @Override
+    public void onSendSuccess(DialogInterface dialog) {
+        Toast.makeText(getContext(), "Message sent successfully.", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onSendFailure(DialogInterface dialog) {
+        Toast.makeText(getContext(), "Message sent failure.", Toast.LENGTH_LONG).show();
     }
 
     @NonNull
