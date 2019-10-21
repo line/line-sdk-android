@@ -14,7 +14,8 @@ public enum FriendSortField {
     /**
      * Sorts the user's friends by their display name. This is the default option.
      */
-    NAME("name");
+    NAME("name"),
+    RELATION("relation");
 
     @NonNull
     private final String serverKey;

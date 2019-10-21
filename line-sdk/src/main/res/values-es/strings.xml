@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="btn_line_login">Iniciar sesión con LINE</string>
+    <string name="search_no_results">No hay resultados.</string>
+    <string name="select_tab_friends">Amigos</string>
+    <string name="select_tab_groups">Grupos</string>
+    <string name="select_target_title">Compartir con…</string>
+    <string name="select_target_search_hint">Buscar por nombre</string>
+    <string name="search_no_fiend">No hay Amigos para elegir</string>
+    <string name="search_no_group">No hay grupos para elegir.</string>
 </resources>

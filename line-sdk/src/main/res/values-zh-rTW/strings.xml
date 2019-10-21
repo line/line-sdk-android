@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="btn_line_login">與LINE連動</string>
+    <string name="search_no_results">找不到</string>
+    <string name="select_tab_friends">好友</string>
+    <string name="select_tab_groups">群組</string>
+    <string name="select_target_title">選擇傳送對象</string>
+    <string name="select_target_search_hint">利用名稱搜尋</string>
+    <string name="search_no_fiend">尚無好友可供選擇</string>
+    <string name="search_no_group">尚無群組可供選擇</string>
 </resources>

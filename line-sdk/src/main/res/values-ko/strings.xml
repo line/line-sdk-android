@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="btn_line_login">LINE으로 로그인</string>
+    <string name="search_no_results">검색 결과가 없습니다.</string>
+    <string name="select_tab_friends">친구</string>
+    <string name="select_tab_groups">그룹</string>
+    <string name="select_target_title">대상 선택</string>
+    <string name="select_target_search_hint">이름 검색</string>
+    <string name="search_no_fiend">선택할 수 있는 친구가 없습니다.</string>
+    <string name="search_no_group">선택할 수 있는 그룹이 없습니다.</string>
 </resources>

@@ -104,20 +104,24 @@ public class SignInFragment extends Fragment {
     }
 
     private void buildScopeCheckBoxes() {
-        final List<Scope> scopes = (BuildConfig.INCLUDE_INTERNAL_API_TEST)?
-            Arrays.asList(Scope.PROFILE,
-                    Scope.FRIEND,
-                    Scope.GROUP,
-                    Scope.MESSAGE,
-                    Scope.OPENID_CONNECT,
-                    Scope.OC_EMAIL,
-                    Scope.OC_PHONE_NUMBER,
-                    Scope.OC_GENDER,
-                    Scope.OC_BIRTHDATE,
-                    Scope.OC_ADDRESS,
-                    Scope.OC_REAL_NAME)
-        :
-            Arrays.asList(Scope.PROFILE, Scope.OPENID_CONNECT);
+        final List<Scope> scopes = (BuildConfig.INCLUDE_INTERNAL_API_TEST) ?
+                Arrays.asList(
+                        Scope.PROFILE,
+                        Scope.OPENID_CONNECT,
+                        Scope.OC_EMAIL,
+                        Scope.OC_PHONE_NUMBER,
+                        Scope.OC_GENDER,
+                        Scope.OC_BIRTHDATE,
+                        Scope.OC_ADDRESS,
+                        Scope.OC_REAL_NAME,
+                        Scope.FRIEND,
+                        Scope.GROUP,
+                        Scope.MESSAGE
+                ) :
+                Arrays.asList(
+                        Scope.PROFILE,
+                        Scope.OPENID_CONNECT
+                );
 
 
         final FragmentActivity activity = getActivity();
@@ -143,14 +147,14 @@ public class SignInFragment extends Fragment {
             addLog("==========================");
         } else {
             addLog("Illegal response : onActivityResult("
-                   + requestCode + ", " + resultCode + ", " + data + ")");
+                    + requestCode + ", " + resultCode + ", " + data + ")");
         }
     }
 
     @NonNull
     private LineAuthenticationConfig createLineAuthenticationConfigForTest() {
         return LineAuthenticationTestConfigFactory.createTestConfig(channelId,
-                                                                    !useLineAppAuthCheckbox.isChecked());
+                !useLineAppAuthCheckbox.isChecked());
     }
 
     @NonNull
@@ -214,8 +218,8 @@ public class SignInFragment extends Fragment {
                     createAuthenticationParamsForTest());
             startActivityForResult(intent, REQUEST_CODE);
             addLog("Sign-in is started. [" + LOG_SEPARATOR
-                   + "    channelId : " + channelId + LOG_SEPARATOR
-                   + "]");
+                    + "    channelId : " + channelId + LOG_SEPARATOR
+                    + "]");
         } catch (Exception e) {
             addLog(e.toString());
         }

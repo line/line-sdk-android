@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="btn_line_login">ล็อกอินด้วย LINE</string>
+    <string name="search_no_results">ไม่พบผลการค้นหา</string>
+    <string name="select_tab_friends">เพื่อน</string>
+    <string name="select_tab_groups">กลุ่ม</string>
+    <string name="select_target_title">แชร์กับ...</string>
+    <string name="select_target_search_hint">ค้นหาด้วยชื่อ</string>
+    <string name="search_no_fiend">คุณยังไม่มีเพื่อน</string>
+    <string name="search_no_group">คุณยังไม่มีกลุ่ม</string>
 </resources>

@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="btn_line_login">Connexion avec LINE</string>
+    <string name="search_no_results">Aucun résultat</string>
+    <string name="select_tab_friends">Amis</string>
+    <string name="select_tab_groups">Groupes</string>
+    <string name="select_target_title">Partager avec...</string>
+    <string name="select_target_search_hint">Rechercher par nom</string>
+    <string name="search_no_fiend">Vous n\'avez aucun ami à choisir.</string>
+    <string name="search_no_group">Vous n\'avez aucun groupe à choisir.</string>
 </resources>

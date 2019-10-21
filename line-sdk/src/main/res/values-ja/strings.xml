@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="btn_line_login">LINEでログイン</string>
+    <string name="search_no_results">検索結果がありません。</string>
+    <string name="select_tab_friends">友だち</string>
+    <string name="select_tab_groups">グループ</string>
+    <string name="select_target_title">送信先を選択</string>
+    <string name="select_target_search_hint">名前で検索</string>
+    <string name="search_no_fiend">選択できる友だちがいません。</string>
+    <string name="search_no_group">選択できるグループがありません。</string>
 </resources>
