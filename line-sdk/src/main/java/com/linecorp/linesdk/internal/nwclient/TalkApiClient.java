@@ -109,8 +109,6 @@ public class TalkApiClient {
             @Nullable String pageToken,
             boolean isForOttShareMessage
     ) {
-        // Due to backend API permission, use `graph/v1` instead of `graph/v2` if this API is called
-        // for sharing message with OTT.
         final String pathSegment = (isForOttShareMessage) ? "shareFriends" : "friends";
         final Uri uri = buildUri(apiBaseUrl, BASE_PATH_GRAPH_API, pathSegment);
         final Map<String, String> queryParams = buildParams(
@@ -132,8 +130,6 @@ public class TalkApiClient {
             @Nullable String pageToken,
             boolean isForOttShareMessage
     ) {
-        // Due to backend API permission, use `graph/v1` instead of `graph/v2` if this API is called
-        // for sharing message with OTT.
         final String pathSegment = (isForOttShareMessage) ? "shareGroups" : "groups";
         final Uri uri = buildUri(apiBaseUrl, BASE_PATH_GRAPH_API, pathSegment);
         final Map<String, String> queryParams;
