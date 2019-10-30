@@ -86,6 +86,12 @@ public class Scope {
      */
     public static final Scope OC_REAL_NAME = new Scope("real_name");
 
+    /**
+     * @hide
+     * LINE internal use only. Permission to use share message feature.
+     */
+    public static final Scope SHARE = new Scope("share");
+
     private static final String SCOPE_DELIMITER = " ";
 
     @NonNull

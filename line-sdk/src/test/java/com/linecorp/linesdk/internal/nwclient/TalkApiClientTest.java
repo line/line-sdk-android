@@ -213,7 +213,7 @@ public class TalkApiClientTest {
         expectedQueryParams.put("pageToken", "pageToken01");
 
         verify(httpClient, times(1)).get(
-                eq(Uri.parse(API_BASE_URL + "/graph/v1/friends")),
+                eq(Uri.parse(API_BASE_URL + "/graph/v2/shareFriends")),
                 eq(Collections.singletonMap("Authorization", "Bearer " + ACCESS_TOKEN.getAccessToken())),
                 eq(expectedQueryParams),
                 responseParserCaptor.capture());
@@ -290,7 +290,7 @@ public class TalkApiClientTest {
         expectedQueryParams.put("pageToken", "pageToken01");
 
         verify(httpClient, times(1)).get(
-                eq(Uri.parse(API_BASE_URL + "/graph/v1/groups")),
+                eq(Uri.parse(API_BASE_URL + "/graph/v2/shareGroups")),
                 eq(Collections.singletonMap("Authorization", "Bearer " + ACCESS_TOKEN.getAccessToken())),
                 eq(expectedQueryParams),
                 responseParserCaptor.capture());
