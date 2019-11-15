@@ -90,7 +90,7 @@ public class Scope {
      * @hide
      * LINE internal use only. Permission to use share message feature.
      */
-    public static final Scope SHARE = new Scope("share");
+    public static final Scope ONE_TIME_SHARE = new Scope("onetime.share");
 
     private static final String SCOPE_DELIMITER = " ";
 

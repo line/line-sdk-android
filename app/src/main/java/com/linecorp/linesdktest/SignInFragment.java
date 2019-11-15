@@ -117,7 +117,7 @@ public class SignInFragment extends Fragment {
                         Scope.FRIEND,
                         Scope.GROUP,
                         Scope.MESSAGE,
-                        Scope.SHARE
+                        Scope.ONE_TIME_SHARE
                 ) :
                 Arrays.asList(
                         Scope.PROFILE,

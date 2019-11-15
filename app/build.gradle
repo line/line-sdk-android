@@ -48,7 +48,6 @@ android {
 
 dependencies {
     implementation project(':line-sdk')
-    //releaseImplementation(name: 'line-sdk-5.1.1', ext: 'aar')
 
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support:design:27.1.1'

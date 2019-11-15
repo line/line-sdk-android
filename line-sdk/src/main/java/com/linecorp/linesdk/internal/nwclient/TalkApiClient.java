@@ -109,7 +109,7 @@ public class TalkApiClient {
             @Nullable String pageToken,
             boolean isForOttShareMessage
     ) {
-        final String pathSegment = (isForOttShareMessage) ? "shareFriends" : "friends";
+        final String pathSegment = (isForOttShareMessage) ? "ots/friends" : "friends";
         final Uri uri = buildUri(apiBaseUrl, BASE_PATH_GRAPH_API, pathSegment);
         final Map<String, String> queryParams = buildParams(
                 "sort", sortField.getServerKey()
@@ -130,7 +130,7 @@ public class TalkApiClient {
             @Nullable String pageToken,
             boolean isForOttShareMessage
     ) {
-        final String pathSegment = (isForOttShareMessage) ? "shareGroups" : "groups";
+        final String pathSegment = (isForOttShareMessage) ? "ots/groups" : "groups";
         final Uri uri = buildUri(apiBaseUrl, BASE_PATH_GRAPH_API, pathSegment);
         final Map<String, String> queryParams;
         if (!TextUtils.isEmpty(pageToken)) {
@@ -283,7 +283,7 @@ public class TalkApiClient {
         }
 
         return httpClient.postWithJson(
-                buildUri(apiBaseUrl, BASE_PATH_MESSAGE_API, "multisend?type=ott"),
+                buildUri(apiBaseUrl, BASE_PATH_MESSAGE_API, "ott/share"),
                 buildRequestHeaders(accessToken),
                 postData,
                 new MultiSendResponseParser());
@@ -304,7 +304,7 @@ public class TalkApiClient {
         }
 
         return httpClient.postWithJson(
-                buildUri(apiBaseUrl, BASE_PATH_MESSAGE_API, "ott"),
+                buildUri(apiBaseUrl, BASE_PATH_MESSAGE_API, "ott/issue"),
                 buildRequestHeaders(accessToken),
                 postData,
                 new StringParser("token"));
