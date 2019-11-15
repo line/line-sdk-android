@@ -39,6 +39,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.linecorp.linesdk.internal.nwclient.TalkApiClient.BASE_PATH_GRAPH_API;
+import static com.linecorp.linesdk.internal.nwclient.TalkApiClient.BASE_PATH_MESSAGE_API;
+import static com.linecorp.linesdk.internal.nwclient.TalkApiClient.PATH_OTS_FRIENDS;
+import static com.linecorp.linesdk.internal.nwclient.TalkApiClient.PATH_OTS_GROUPS;
+import static com.linecorp.linesdk.internal.nwclient.TalkApiClient.PATH_OTT_ISSUE;
+import static com.linecorp.linesdk.internal.nwclient.TalkApiClient.PATH_OTT_SHARE;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.assertEquals;
@@ -213,7 +219,7 @@ public class TalkApiClientTest {
         expectedQueryParams.put("pageToken", "pageToken01");
 
         verify(httpClient, times(1)).get(
-                eq(Uri.parse(API_BASE_URL + "/graph/v2/shareFriends")),
+                eq(Uri.parse(API_BASE_URL + "/" + BASE_PATH_GRAPH_API + "/" + PATH_OTS_FRIENDS)),
                 eq(Collections.singletonMap("Authorization", "Bearer " + ACCESS_TOKEN.getAccessToken())),
                 eq(expectedQueryParams),
                 responseParserCaptor.capture());
@@ -290,7 +296,7 @@ public class TalkApiClientTest {
         expectedQueryParams.put("pageToken", "pageToken01");
 
         verify(httpClient, times(1)).get(
-                eq(Uri.parse(API_BASE_URL + "/graph/v2/shareGroups")),
+                eq(Uri.parse(API_BASE_URL + "/" + BASE_PATH_GRAPH_API + "/" + PATH_OTS_GROUPS)),
                 eq(Collections.singletonMap("Authorization", "Bearer " + ACCESS_TOKEN.getAccessToken())),
                 eq(expectedQueryParams),
                 responseParserCaptor.capture());
@@ -390,11 +396,11 @@ public class TalkApiClientTest {
         assertThat(actualResult, sameInstance(mockResponse));
 
         // Gets ott by target user ids
-        verifyApiCallPostWithJson("/message/v3/ott");
+        verifyApiCallPostWithJson("/" + BASE_PATH_MESSAGE_API + "/" + PATH_OTT_ISSUE);
         responseParserInstanceShouldBe(TalkApiClient.StringParser.class);
 
         // Send the message using ott
-        verifyApiCallPostWithJson("/message/v3/multisend?type=ott");
+        verifyApiCallPostWithJson("/" + BASE_PATH_MESSAGE_API + "/" + PATH_OTT_SHARE);
         responseParserInstanceShouldBe(TalkApiClient.MultiSendResponseParser.class);
     }
 
@@ -415,7 +421,7 @@ public class TalkApiClientTest {
         assertThat(actualApiResponse.getErrorData(), sameInstance(mockResponse.getErrorData()));
 
         // Gets ott by target user ids
-        verifyApiCallPostWithJson("/message/v3/ott");
+        verifyApiCallPostWithJson("/" + BASE_PATH_MESSAGE_API + "/" + PATH_OTT_ISSUE);
         responseParserInstanceShouldBe(TalkApiClient.StringParser.class);
 
         // Should not send message due to failure of getting ott

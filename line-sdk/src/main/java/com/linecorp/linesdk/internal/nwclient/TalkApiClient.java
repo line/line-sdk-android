@@ -47,8 +47,14 @@ public class TalkApiClient {
 
     private static final String BASE_PATH_COMMON_API = "v2";
     private static final String BASE_PATH_FRIENDSHIP_API = "friendship/v1";
-    private static final String BASE_PATH_GRAPH_API = "graph/v2";
-    private static final String BASE_PATH_MESSAGE_API = "message/v3";
+    /* package */ static final String BASE_PATH_GRAPH_API = "graph/v2";
+    /* package */ static final String BASE_PATH_MESSAGE_API = "message/v3";
+    /* package */ static final String PATH_FRIENDS = "friends";
+    /* package */ static final String PATH_OTS_FRIENDS = "ots/friends";
+    /* package */ static final String PATH_GROUPS = "groups";
+    /* package */ static final String PATH_OTS_GROUPS = "ots/groups";
+    /* package */ static final String PATH_OTT_SHARE = "ott/share";
+    /* package */ static final String PATH_OTT_ISSUE = "ott/issue";
 
     private static final ResponseDataParser<LineProfile> PROFILE_PARSER = new ProfileParser();
     private static final ResponseDataParser<LineFriendshipStatus> FRIENDSHIP_STATUS_PARSER =
@@ -109,7 +115,7 @@ public class TalkApiClient {
             @Nullable String pageToken,
             boolean isForOttShareMessage
     ) {
-        final String pathSegment = (isForOttShareMessage) ? "ots/friends" : "friends";
+        final String pathSegment = (isForOttShareMessage) ? PATH_OTS_FRIENDS : PATH_FRIENDS;
         final Uri uri = buildUri(apiBaseUrl, BASE_PATH_GRAPH_API, pathSegment);
         final Map<String, String> queryParams = buildParams(
                 "sort", sortField.getServerKey()
@@ -130,7 +136,7 @@ public class TalkApiClient {
             @Nullable String pageToken,
             boolean isForOttShareMessage
     ) {
-        final String pathSegment = (isForOttShareMessage) ? "ots/groups" : "groups";
+        final String pathSegment = (isForOttShareMessage) ? PATH_OTS_GROUPS : PATH_GROUPS;
         final Uri uri = buildUri(apiBaseUrl, BASE_PATH_GRAPH_API, pathSegment);
         final Map<String, String> queryParams;
         if (!TextUtils.isEmpty(pageToken)) {
@@ -283,7 +289,7 @@ public class TalkApiClient {
         }
 
         return httpClient.postWithJson(
-                buildUri(apiBaseUrl, BASE_PATH_MESSAGE_API, "ott/share"),
+                buildUri(apiBaseUrl, BASE_PATH_MESSAGE_API, PATH_OTT_SHARE),
                 buildRequestHeaders(accessToken),
                 postData,
                 new MultiSendResponseParser());
@@ -304,7 +310,7 @@ public class TalkApiClient {
         }
 
         return httpClient.postWithJson(
-                buildUri(apiBaseUrl, BASE_PATH_MESSAGE_API, "ott/issue"),
+                buildUri(apiBaseUrl, BASE_PATH_MESSAGE_API, PATH_OTT_ISSUE),
                 buildRequestHeaders(accessToken),
                 postData,
                 new StringParser("token"));
