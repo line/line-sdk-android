@@ -80,7 +80,6 @@ import static com.linecorp.linesdk.utils.UriUtils.buildParams;
 
     private static final LineAppVersion AUTO_LOGIN_FOR_LINE_SDK_ENABLED_VERSION =
             new LineAppVersion(6, 9, 0);
-
     @NonNull
     private final LineAuthenticationStatus authenticationStatus;
 
@@ -104,7 +103,12 @@ import static com.linecorp.linesdk.utils.UriUtils.buildParams;
 
         final String openIdNonce;
         if (params.getScopes().contains(Scope.OPENID_CONNECT)) {
-            openIdNonce = createRandomString(8);
+            if (!TextUtils.isEmpty(params.getNonce())) {
+                openIdNonce = params.getNonce();
+            } else {
+                // generate a random string for it, if no `nonce` param specified
+                openIdNonce = createRandomString(8);
+            }
         } else {
             openIdNonce = null;
         }
@@ -289,8 +293,8 @@ import static com.linecorp.linesdk.utils.UriUtils.buildParams;
         }
 
         return !TextUtils.isEmpty(requestToken)
-                ? Result.createAsSuccess(requestToken, friendshipStatusChanged)
-                : Result.createAsAuthenticationAgentError(
+               ? Result.createAsSuccess(requestToken, friendshipStatusChanged)
+               : Result.createAsAuthenticationAgentError(
                 resultDataUri.getQueryParameter("error"),
                 resultDataUri.getQueryParameter("error_description"));
     }
