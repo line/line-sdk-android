@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -23,6 +24,9 @@ import com.linecorp.linesdk.auth.LineAuthenticationTestConfigFactory;
 import com.linecorp.linesdk.auth.LineLoginApi;
 import com.linecorp.linesdk.auth.LineLoginResult;
 import com.linecorp.linesdktest.settings.TestSetting;
+
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,6 +52,10 @@ public class SignInFragment extends Fragment {
 
     @Nullable
     private Locale uiLocale;
+
+    @Nullable
+    @BindView(R.id.signin_nonce)
+    EditText nonceEditText;
 
     @Nullable
     @BindView(R.id.signin_bot_prompt_normal_radio)
@@ -162,6 +170,7 @@ public class SignInFragment extends Fragment {
     private LineAuthenticationParams createAuthenticationParamsForTest() {
         return new LineAuthenticationParams.Builder()
                 .scopes(getCheckedScopes())
+                .nonce(StringUtils.trimToNull(nonceEditText.getText().toString()))
                 .botPrompt(getBotPrompt())
                 .uiLocale(uiLocale)
                 .build();
@@ -197,6 +206,12 @@ public class SignInFragment extends Fragment {
         if (logView != null) {
             logView.setText(logView.getText() + LOG_SEPARATOR + logText);
         }
+    }
+
+    @OnClick(R.id.generate_nonce_btn)
+    @SuppressWarnings("unused")
+    public void onGenerateNonceBtnClick() {
+        nonceEditText.setText(RandomStringUtils.randomAlphanumeric(8));
     }
 
     @OnClick(R.id.scope_all_checkbox)
