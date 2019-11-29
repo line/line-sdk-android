@@ -337,7 +337,7 @@ public interface LineApiClient {
      * @return A {@link LineApiResponse} object. If the API call is successful, the
      * {@link LineApiResponse} object contains the {@link SendMessageResponse} objects that contain
      * the delivery results. If the API call fails, the payload of the {@link LineApiResponse}
-     * object is <code>null</code>. The delivery result is either of the followings:
+     * object is <code>null</code>. The delivery result is either of the following:
      * <ul>
      * <li><code>ok</code>: The messages have been delivered successfully.</li>
      * <li><code>discarded</code>: The messages have been discarded because one of the conditions
