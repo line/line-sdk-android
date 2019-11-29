@@ -41,7 +41,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:text="@android:string/ok"
-        android:textColor="@color/primary_text"
+        android:textColor="@color/share_button_text"
         android:textSize="16sp"
         android:textStyle="bold"
         android:background="@drawable/common_btn_background"

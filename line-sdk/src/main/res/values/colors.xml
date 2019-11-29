@@ -16,6 +16,7 @@
 
     <color name="header_text">@android:color/primary_text_dark</color>
     <color name="primary_text">@android:color/primary_text_dark</color>
+    <color name="share_button_text">@android:color/primary_text_dark</color>
     <color name="background">@android:color/background_light</color>
     <color name="header_background">#464e66</color>
     <color name="selected_panel_background">#f9f9f9</color>
