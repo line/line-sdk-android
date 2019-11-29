@@ -31,7 +31,7 @@ import java.util.Map;
 
 /**
  * @hide
- * A subclass of Dialog that shows the friend and group list for user to pick and send the
+ * A subclass of Dialog that shows the friend and group list for users to pick and send the
  * passed-in messageData. You can register a listener through
  * {@link #setOnSendListener(OnSendListener)} know whether the messageData is sent or not.
  * <pre>
@@ -97,7 +97,7 @@ public class SendMessageDialog extends Dialog implements SendMessageContract.Vie
         buttonConfirm.setOnClickListener(confirmClickListener);
 
         viewPager.post(() -> {
-            // In order to be able to show keyboard for search view
+            // In order to be able to show the keyboard for search view
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
                                            | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
         });
@@ -129,7 +129,7 @@ public class SendMessageDialog extends Dialog implements SendMessageContract.Vie
 
         View targetUserView = targetUserViewCacheMap.get(targetUser.getId());
         linearLayoutTargetUser.addView(targetUserView, layoutParams);
-        // scroll to right
+        // scroll to the right
         horizontalScrollView.post(() -> horizontalScrollView.fullScroll(View.FOCUS_RIGHT));
         updateConfirmButtonLabel();
     }
@@ -181,22 +181,22 @@ public class SendMessageDialog extends Dialog implements SendMessageContract.Vie
 
     /**
      * Interface used to allow the creator of a dialog to run some code when the
-     * dialog does send message to friends or groups.
+     * dialog sends a message to friends or groups.
      */
     public interface OnSendListener {
         /**
-         * Called by the given <i>dialog</i> when the dialog sends message to selected friends
+         * Called by the given <i>dialog</i> when the dialog sends a message to selected friends
          * and groups <i>successfully</i>.
          *
-         * @param dialog The dialog that send the message data will be passed into the method
+         * @param dialog The dialog that sends the message data will be passed into the method.
          */
         void onSendSuccess(DialogInterface dialog);
 
         /**
-         * Called by the given <i>dialog</i> when the dialog sends message to selected friends
+         * Called by the given <i>dialog</i> when the dialog sends a message to selected friends
          * and groups <i>unsuccessfully</i>.
          *
-         * @param dialog The dialog that send the message data will be passed into the method
+         * @param dialog The dialog that send the message data will be passed into the method.
          */
         void onSendFailure(DialogInterface dialog);
     }

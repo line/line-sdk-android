@@ -15,7 +15,7 @@ import java.util.List;
  *
  * <p><p>There are three types of message data.
  * <p>For example,
- * <p>Message data using single user id:
+ * <p>message data using a single user id:
  * <pre>
  * {
  *      "to": "ue97cd0e6646fd73eee758761ca376a15",

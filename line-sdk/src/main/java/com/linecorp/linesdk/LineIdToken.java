@@ -31,7 +31,7 @@ public class LineIdToken implements Parcelable {
         }
     };
 
-    // raw string of ID Token
+    // raw string of the ID Token
     @NonNull
     private final String rawString;
 
@@ -175,9 +175,9 @@ public class LineIdToken implements Parcelable {
     }
 
     /**
-     * Gets the raw string of ID Token.
+     * Gets the raw string of the ID Token.
      *
-     * @return The raw string of ID Token.
+     * @return The raw string of the ID Token.
      */
     @NonNull
     public String getRawString() {
