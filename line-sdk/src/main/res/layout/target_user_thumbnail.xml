@@ -34,6 +34,6 @@
         android:ellipsize="end"
         android:gravity="center"
         android:singleLine="true"
-        android:textColor="#404040"
+        android:textColor="@color/target_user_thumbnail_text"
         android:textSize="12sp" />
 </android.support.constraint.ConstraintLayout>
