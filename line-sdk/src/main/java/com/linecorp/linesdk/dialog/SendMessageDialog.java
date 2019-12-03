@@ -1,6 +1,5 @@
 package com.linecorp.linesdk.dialog;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -8,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -44,7 +44,7 @@ import java.util.Map;
  * sendMessageDialog.show();
  * </pre>
  */
-public class SendMessageDialog extends Dialog implements SendMessageContract.View {
+public class SendMessageDialog extends AppCompatDialog implements SendMessageContract.View {
 
     private ViewPager viewPager;
     private TabLayout tabLayout;

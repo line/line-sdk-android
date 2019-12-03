@@ -47,10 +47,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-        getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.container, new MenuFragment())
-                .commit();
+        if (getSupportFragmentManager().getFragments().isEmpty()) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.container, new MenuFragment())
+                    .commit();
+        }
     }
 
     @Override
