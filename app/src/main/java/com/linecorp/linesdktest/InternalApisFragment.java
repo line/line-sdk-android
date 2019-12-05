@@ -26,8 +26,8 @@ import com.linecorp.linesdk.LineAccessToken;
 import com.linecorp.linesdk.LineApiError;
 import com.linecorp.linesdk.LineApiResponse;
 import com.linecorp.linesdk.LineApiResponseCode;
+import com.linecorp.linesdk.LineFriendProfile;
 import com.linecorp.linesdk.LineGroup;
-import com.linecorp.linesdk.LineProfile;
 import com.linecorp.linesdk.dialog.SendMessageDialog;
 import com.linecorp.linesdk.message.AudioMessage;
 import com.linecorp.linesdk.message.ImageMessage;
@@ -511,8 +511,8 @@ public class InternalApisFragment extends BaseApisFragment implements SendMessag
         private final List<Receiver> friends = new ArrayList<>();
         private final List<Receiver> groups = new ArrayList<>();
 
-        private void addFriends(final List<LineProfile> friendList) {
-            for (final LineProfile friend : friendList) {
+        private void addFriends(final List<LineFriendProfile> friendList) {
+            for (final LineFriendProfile friend : friendList) {
                 friends.add(new Receiver(friend));
             }
         }
@@ -555,10 +555,10 @@ public class InternalApisFragment extends BaseApisFragment implements SendMessag
         final String id;
         final String displayName;
 
-        private Receiver(final LineProfile friend) {
+        private Receiver(final LineFriendProfile friend) {
             type = Type.Friend;
             id = friend.getUserId();
-            displayName = friend.getDisplayName();
+            displayName = friend.getAvailableDisplayName();
         }
 
         private Receiver(final LineGroup group) {

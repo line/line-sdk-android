@@ -49,7 +49,7 @@ public class LineProfile implements Parcelable {
         this.statusMessage = statusMessage;
     }
 
-    private LineProfile(@NonNull Parcel in) {
+    protected LineProfile(@NonNull Parcel in) {
         userId = in.readString();
         displayName = in.readString();
         pictureUrl = in.readParcelable(Uri.class.getClassLoader());
@@ -147,10 +147,10 @@ public class LineProfile implements Parcelable {
     @Override
     public String toString() {
         return "LineProfile{" +
-                "displayName='" + displayName + '\'' +
-                ", userId='" + userId + '\'' +
-                ", pictureUrl='" + pictureUrl + '\'' +
-                ", statusMessage='" + statusMessage + '\'' +
-                '}';
+               "userId='" + userId + '\'' +
+               ", displayName='" + displayName + '\'' +
+               ", pictureUrl=" + pictureUrl +
+               ", statusMessage='" + statusMessage + '\'' +
+               '}';
     }
 }

@@ -14,6 +14,7 @@ import com.linecorp.linesdk.GetGroupsResponse;
 import com.linecorp.linesdk.LineApiError;
 import com.linecorp.linesdk.LineApiResponse;
 import com.linecorp.linesdk.LineApiResponseCode;
+import com.linecorp.linesdk.LineFriendProfile;
 import com.linecorp.linesdk.LineFriendshipStatus;
 import com.linecorp.linesdk.LineGroup;
 import com.linecorp.linesdk.LineProfile;
@@ -321,10 +322,10 @@ public class TalkApiClient {
         @NonNull
         @Override
         GetFriendsResponse parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
-            List<LineProfile> friendList = new ArrayList<>();
+            List<LineFriendProfile> friendList = new ArrayList<>();
             JSONArray friendsArray = jsonObject.getJSONArray("friends");
             for (int i = 0; i < friendsArray.length(); i++) {
-                friendList.add(ProfileParser.parseLineProfile(friendsArray.getJSONObject(i)));
+                friendList.add(FriendProfileParser.parseLineFriendProfile(friendsArray.getJSONObject(i)));
             }
             String pageToken = jsonObject.optString("pageToken", null);
             return new GetFriendsResponse(friendList, pageToken);
@@ -346,6 +347,25 @@ public class TalkApiClient {
         @Override
         LineProfile parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
             return parseLineProfile(jsonObject);
+        }
+    }
+
+    @VisibleForTesting
+    static class FriendProfileParser extends JsonToObjectBaseResponseParser<LineFriendProfile> {
+        private static LineFriendProfile parseLineFriendProfile(@NonNull JSONObject jsonObject) throws JSONException {
+            LineProfile lineProfile = ProfileParser.parseLineProfile(jsonObject);
+            String overriddenDisplayName = jsonObject.optString("displayNameOverridden", null);
+            return new LineFriendProfile(lineProfile.getUserId(),
+                                         lineProfile.getDisplayName(),
+                                         lineProfile.getPictureUrl(),
+                                         lineProfile.getStatusMessage(),
+                                         overriddenDisplayName);
+        }
+
+        @NonNull
+        @Override
+        LineFriendProfile parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
+            return parseLineFriendProfile(jsonObject);
         }
     }
 
