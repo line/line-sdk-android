@@ -7,8 +7,8 @@ import com.linecorp.linesdk.FriendSortField;
 import com.linecorp.linesdk.GetFriendsResponse;
 import com.linecorp.linesdk.GetGroupsResponse;
 import com.linecorp.linesdk.LineApiResponse;
+import com.linecorp.linesdk.LineFriendProfile;
 import com.linecorp.linesdk.LineGroup;
-import com.linecorp.linesdk.LineProfile;
 import com.linecorp.linesdk.api.LineApiClient;
 
 import java.util.ArrayList;
@@ -49,10 +49,10 @@ public class GetTargetUserTask extends AsyncTask<Void, List<TargetUser>, Void> {
     }
 
     @NonNull
-    private List<TargetUser> convertFriendsToTargetUsers(List<LineProfile> profiles) {
+    private List<TargetUser> convertFriendsToTargetUsers(List<LineFriendProfile> friends) {
         List<TargetUser> targetUsers = new ArrayList<>();
-        for (LineProfile profile : profiles) {
-            targetUsers.add(TargetUser.createInstance(profile));
+        for (LineFriendProfile friend : friends) {
+            targetUsers.add(TargetUser.createInstance(friend));
         }
         return targetUsers;
     }

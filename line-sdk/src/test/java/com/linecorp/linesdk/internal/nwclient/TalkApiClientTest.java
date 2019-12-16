@@ -10,6 +10,7 @@ import com.linecorp.linesdk.GetGroupsResponse;
 import com.linecorp.linesdk.LineApiError;
 import com.linecorp.linesdk.LineApiResponse;
 import com.linecorp.linesdk.LineApiResponseCode;
+import com.linecorp.linesdk.LineFriendProfile;
 import com.linecorp.linesdk.LineFriendshipStatus;
 import com.linecorp.linesdk.LineProfile;
 import com.linecorp.linesdk.SendMessageResponse;
@@ -131,6 +132,52 @@ public class TalkApiClientTest {
                         "testDisplayName",
                         null /* pictureUrl */,
                         null /* statucMessage */),
+                new TestJsonDataBuilder()
+                        .put("userId", "testMid")
+                        .put("displayName", "testDisplayName")
+                        .buildAsString()
+        );
+        verifyToThrowException(
+                target,
+                new TestJsonDataBuilder()
+                        .put("displayName", "testDisplayName")
+                        .buildAsString()
+        );
+        verifyToThrowException(
+                target,
+                new TestJsonDataBuilder()
+                        .put("userId", "testMid")
+                        .buildAsString()
+        );
+    }
+
+    @Test
+    public void testFriendProfileParser() throws IOException {
+        TalkApiClient.FriendProfileParser target = new TalkApiClient.FriendProfileParser();
+        verifyResponseDataParser(
+                target,
+                new LineFriendProfile(
+                        "testMid",
+                        "testDisplayName",
+                        Uri.parse("testPictureUrl"),
+                        "testStatusMessage",
+                        "testOverriddenDisplayName"),
+                new TestJsonDataBuilder()
+                        .put("userId", "testMid")
+                        .put("displayName", "testDisplayName")
+                        .put("pictureUrl", "testPictureUrl")
+                        .put("statusMessage", "testStatusMessage")
+                        .put("displayNameOverridden", "testOverriddenDisplayName")
+                        .buildAsString()
+        );
+        verifyResponseDataParser(
+                target,
+                new LineFriendProfile(
+                        "testMid",
+                        "testDisplayName",
+                        null /* pictureUrl */,
+                        null /* statucMessage */,
+                        null),
                 new TestJsonDataBuilder()
                         .put("userId", "testMid")
                         .put("displayName", "testDisplayName")

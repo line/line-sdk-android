@@ -27,7 +27,7 @@ public class LineProfileTest {
 
         parcel.setDataPosition(0);
 
-        LineProfile actual = (LineProfile) LineProfile.CREATOR.createFromParcel(parcel);
+        LineProfile actual = LineProfile.CREATOR.createFromParcel(parcel);
         assertTrue(expected.equals(actual));
     }
 

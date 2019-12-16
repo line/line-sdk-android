@@ -2,8 +2,8 @@ package com.linecorp.linesdk.dialog.internal;
 
 import android.net.Uri;
 
+import com.linecorp.linesdk.LineFriendProfile;
 import com.linecorp.linesdk.LineGroup;
-import com.linecorp.linesdk.LineProfile;
 
 public class TargetUser {
     public enum Type { FRIEND, GROUP }
@@ -49,18 +49,18 @@ public class TargetUser {
         isSelected = selected;
     }
 
-    public static TargetUser createInstance(LineProfile profile) {
+    public static TargetUser createInstance(final LineFriendProfile friend) {
         return new TargetUser(Type.FRIEND,
-                profile.getUserId(),
-                profile.getDisplayName(),
-                profile.getPictureUrl());
+                              friend.getUserId(),
+                              friend.getAvailableDisplayName(),
+                              friend.getPictureUrl());
     }
 
-    public static TargetUser createInstance(LineGroup group) {
+    public static TargetUser createInstance(final LineGroup group) {
         return new TargetUser(Type.GROUP,
-                group.getGroupId(),
-                group.getGroupName(),
-                group.getPictureUrl());
+                              group.getGroupId(),
+                              group.getGroupName(),
+                              group.getPictureUrl());
     }
 
     public static int getTargetTypeCount() {
