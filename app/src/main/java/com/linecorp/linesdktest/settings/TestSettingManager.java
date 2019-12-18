@@ -2,7 +2,7 @@ package com.linecorp.linesdktest.settings;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.text.TextUtils;
 
 import org.apache.commons.lang3.LocaleUtils;

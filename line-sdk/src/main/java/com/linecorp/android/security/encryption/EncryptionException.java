@@ -1,6 +1,6 @@
 package com.linecorp.android.security.encryption;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 /**
  * Exception represents encryption failure by such as falsification of cipher text.

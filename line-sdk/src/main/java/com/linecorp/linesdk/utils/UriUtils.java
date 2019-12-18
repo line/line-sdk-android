@@ -2,7 +2,7 @@ package com.linecorp.linesdk.utils;
 
 import android.net.Uri;
 import android.net.Uri.Builder;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

@@ -3,11 +3,15 @@ package com.linecorp.linesdk.dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatDialog;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import com.google.android.material.tabs.TabLayout;
+
+import androidx.appcompat.app.AppCompatDialog;
+import androidx.viewpager.widget.ViewPager;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -99,7 +103,7 @@ public class SendMessageDialog extends AppCompatDialog implements SendMessageCon
         viewPager.post(() -> {
             // In order to be able to show the keyboard for search view
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-                                           | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+                    | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
         });
     }
 

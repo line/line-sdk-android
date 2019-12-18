@@ -1,6 +1,6 @@
 package com.linecorp.linesdk.message.template;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.linecorp.linesdk.message.Jsonable;
 

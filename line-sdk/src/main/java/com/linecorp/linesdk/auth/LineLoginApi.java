@@ -2,8 +2,8 @@ package com.linecorp.linesdk.auth;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.linecorp.linesdk.auth.internal.LineAuthenticationActivity;
 import com.linecorp.linesdk.internal.EncryptorHolder;

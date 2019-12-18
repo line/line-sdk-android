@@ -1,11 +1,11 @@
 package com.linecorp.linesdk.dialog.internal;
 
 import android.content.Context;
-import android.support.annotation.StringRes;
-import android.support.constraint.ConstraintLayout;
-import android.support.v7.widget.AppCompatTextView;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
+import androidx.annotation.StringRes;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.SearchView;
 import android.util.AttributeSet;
 import android.view.View;
 

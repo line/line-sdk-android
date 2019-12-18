@@ -1,7 +1,7 @@
 package com.linecorp.linesdk.dialog.internal;
 
 import android.content.Context;
-import android.support.constraint.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
