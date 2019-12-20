@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.novoda.bintray-release'
 
-version = "5.3.1"
+version = "5.4.0"
 
 publish {
     userOrg = 'line'
@@ -21,7 +21,7 @@ android {
     defaultConfig {
         minSdkVersion 17
         targetSdkVersion 27
-        versionCode 5_03_01
+        versionCode 5_04_00
         versionName version
 
         consumerProguardFiles 'consumer-proguard-rules.pro'
