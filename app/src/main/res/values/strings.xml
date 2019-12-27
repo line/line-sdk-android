@@ -53,6 +53,11 @@
     <string name="clear_receivers">Clear Friends/Groups</string>
     <string name="generate">Generate</string>
     <string name="uiLocale">UI Locale</string>
+    <string name="apis_section_title_openchat_apis">Openchat APIs</string>
+    <string name="apis_openchat_agreement_update">updateAgreementSatus</string>
+    <string name="apis_openchat_create_room">createChatroom</string>
+    <string name="apis_openchat_membership_status">membership status</string>
+    <string name="apis_openchat_chatroom_status">chatroom status</string>
     <string-array name="supportedLocales">
         <item>ar</item>
         <item>de</item>

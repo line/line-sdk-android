@@ -1,5 +1,8 @@
 package com.linecorp.linesdk.openchat;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class OpenChatParameters {
     private static int DEFAULT_CATEGORY_ID = 17; // Game
     private OpenChatParameters() {}
@@ -10,10 +13,26 @@ public class OpenChatParameters {
     int categoryId = DEFAULT_CATEGORY_ID;
     Boolean isSearchable = true;
 
+    public String toJsonString() {
+        JSONObject jsonObject = new JSONObject();
+
+        try {
+            jsonObject.put("name", name);
+            jsonObject.put("description", description);
+            jsonObject.put("creatorDisplayName", creatorDisplayName);
+            jsonObject.put("category", categoryId);
+            jsonObject.put("allowSearch", isSearchable);
+        } catch (JSONException exception) {
+            return "";
+        }
+
+        return jsonObject.toString();
+    }
+
     public static class Builder  {
         private OpenChatParameters openChatParameters = new OpenChatParameters();
 
-        Builder setName(String name) {
+        public Builder setName(String name) {
             if (name == null || name.length() > 50) {
                 throw new IllegalArgumentException("String size needs to be less or equal to 50");
             }
@@ -22,7 +41,7 @@ public class OpenChatParameters {
             return this;
         }
 
-        Builder setDescription(String description) {
+        public Builder setDescription(String description) {
             if (description == null || description.length() > 200) {
                 throw new IllegalArgumentException("String size needs to be less or equal to 200");
             }
@@ -31,7 +50,7 @@ public class OpenChatParameters {
             return this;
         }
 
-        Builder setCreatorDisplayName(String creatorDisplayName) {
+        public Builder setCreatorDisplayName(String creatorDisplayName) {
             if (creatorDisplayName == null || creatorDisplayName.length() > 50) {
                 throw new IllegalArgumentException("String size needs to be less or equal to 50");
             }
@@ -40,17 +59,17 @@ public class OpenChatParameters {
             return this;
         }
 
-        Builder setCategoryId(int categoryId) {
+        public Builder setCategoryId(int categoryId) {
             openChatParameters.categoryId = categoryId;
             return this;
         }
 
-        Builder setIsSearchable(Boolean isSearchable) {
+        public Builder setIsSearchable(Boolean isSearchable) {
             openChatParameters.isSearchable = isSearchable;
             return this;
         }
 
-        OpenChatParameters build() {
+        public OpenChatParameters build() {
             if (openChatParameters.name == null
                         || openChatParameters.name.isEmpty()
                         || openChatParameters.creatorDisplayName == null

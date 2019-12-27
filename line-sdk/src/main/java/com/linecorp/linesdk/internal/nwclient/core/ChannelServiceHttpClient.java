@@ -73,6 +73,10 @@ public class ChannelServiceHttpClient {
         this.readTimeoutMillis = readTimeoutMillis;
     }
 
+    private enum HTTP_METHOD {
+        POST, GET, DELETE, PUT
+    }
+
     @WorkerThread
     @NonNull
     public <T> LineApiResponse<T> post(
@@ -119,10 +123,31 @@ public class ChannelServiceHttpClient {
             @NonNull Map<String, String> requestHeaders,
             @NonNull String postData,
             @NonNull ResponseDataParser<T> responseDataParser) {
+        return sendRequestWithJson(HTTP_METHOD.POST, uri, requestHeaders, postData, responseDataParser);
+    }
+
+    @WorkerThread
+    @NonNull
+    public <T> LineApiResponse<T> putWithJson(
+            @NonNull Uri uri,
+            @NonNull Map<String, String> requestHeaders,
+            @NonNull String postData,
+            @NonNull ResponseDataParser<T> responseDataParser) {
+        return sendRequestWithJson(HTTP_METHOD.PUT, uri, requestHeaders, postData, responseDataParser);
+    }
+
+    @WorkerThread
+    @NonNull
+    private <T> LineApiResponse<T> sendRequestWithJson(
+            @NonNull HTTP_METHOD method,
+            @NonNull Uri uri,
+            @NonNull Map<String, String> requestHeaders,
+            @NonNull String postData,
+            @NonNull ResponseDataParser<T> responseDataParser) {
         byte[] postDataBytes = postData.getBytes();
         HttpURLConnection conn = null;
         try {
-            conn = openPostConnectionWithJson(uri, postDataBytes.length);
+            conn = openConnectionWithJson(uri, postDataBytes.length, method);
             setRequestHeaders(conn, requestHeaders);
             if (BuildConfig.DEBUG) {
                 logRequestForDebug(conn, postDataBytes);
@@ -229,14 +254,14 @@ public class ChannelServiceHttpClient {
         conn.setRequestProperty("Content-Length", String.valueOf(postDataSizeByte));
         conn.setConnectTimeout(connectTimeoutMillis);
         conn.setReadTimeout(readTimeoutMillis);
-        conn.setRequestMethod("POST");
+        conn.setRequestMethod(HTTP_METHOD.POST.name());
         conn.setDoOutput(true);
         return conn;
     }
 
     @NonNull
-    private HttpURLConnection openPostConnectionWithJson(
-            @NonNull Uri uri, int postDataSizeByte) throws IOException {
+    private HttpURLConnection openConnectionWithJson(
+            @NonNull Uri uri, int postDataSizeByte, HTTP_METHOD method) throws IOException {
         HttpURLConnection conn = openHttpConnection(uri);
         conn.setInstanceFollowRedirects(true);
         conn.setRequestProperty("User-Agent", userAgentGenerator.getUserAgent());
@@ -245,7 +270,7 @@ public class ChannelServiceHttpClient {
         conn.setRequestProperty("Content-Length", String.valueOf(postDataSizeByte));
         conn.setConnectTimeout(connectTimeoutMillis);
         conn.setReadTimeout(readTimeoutMillis);
-        conn.setRequestMethod("POST");
+        conn.setRequestMethod(method.name());
         conn.setDoOutput(true);
         return conn;
     }
@@ -258,7 +283,7 @@ public class ChannelServiceHttpClient {
         conn.setRequestProperty("Accept-Encoding", "gzip");
         conn.setConnectTimeout(connectTimeoutMillis);
         conn.setReadTimeout(readTimeoutMillis);
-        conn.setRequestMethod("GET");
+        conn.setRequestMethod(HTTP_METHOD.GET.name());
         return conn;
     }
 
@@ -270,7 +295,7 @@ public class ChannelServiceHttpClient {
         conn.setRequestProperty("Accept-Encoding", "gzip");
         conn.setConnectTimeout(connectTimeoutMillis);
         conn.setReadTimeout(readTimeoutMillis);
-        conn.setRequestMethod("DELETE");
+        conn.setRequestMethod(HTTP_METHOD.DELETE.name());
         return conn;
     }
 
@@ -332,6 +357,11 @@ public class ChannelServiceHttpClient {
                                 httpResponseCode,
                                 errorResponseParser.getResponseData(inputStream)));
             }
+
+            if (responseDataParser == null) {
+                return LineApiResponse.createAsSuccess(null);
+            }
+
             return LineApiResponse.createAsSuccess(responseDataParser.getResponseData(inputStream));
         } catch (IOException e) {
             // Evaluates response data parsing error as INTERNAL_ERROR

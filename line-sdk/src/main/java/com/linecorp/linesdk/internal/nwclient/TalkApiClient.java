@@ -64,17 +64,17 @@ public class TalkApiClient {
     private static final ResponseDataParser<GetGroupsResponse> GROUP_PARSER = new GroupParser();
 
     @NonNull
-    private final Uri apiBaseUrl;
+    protected final Uri apiBaseUrl;
 
     @NonNull
-    private final ChannelServiceHttpClient httpClient;
+    protected final ChannelServiceHttpClient httpClient;
 
     public TalkApiClient(Context applicationContext, @NonNull Uri apiBaseUrl) {
         this(apiBaseUrl, new ChannelServiceHttpClient(applicationContext, BuildConfig.VERSION_NAME));
     }
 
     @VisibleForTesting
-    TalkApiClient(
+    protected TalkApiClient(
             @NonNull Uri apiBaseUrl,
             @NonNull ChannelServiceHttpClient httpClient) {
         this.apiBaseUrl = apiBaseUrl;
@@ -82,7 +82,7 @@ public class TalkApiClient {
     }
 
     @NonNull
-    private static Map<String, String> buildRequestHeaders(@NonNull InternalAccessToken accessToken) {
+    protected static Map<String, String> buildRequestHeaders(@NonNull InternalAccessToken accessToken) {
         return buildParams(
                 REQUEST_HEADER_ACCESS_TOKEN, TOKEN_TYPE_BEARER + ' ' + accessToken.getAccessToken()
         );
@@ -321,7 +321,7 @@ public class TalkApiClient {
     static class FriendsParser extends JsonToObjectBaseResponseParser<GetFriendsResponse> {
         @NonNull
         @Override
-        GetFriendsResponse parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
+        public GetFriendsResponse parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
             List<LineFriendProfile> friendList = new ArrayList<>();
             JSONArray friendsArray = jsonObject.getJSONArray("friends");
             for (int i = 0; i < friendsArray.length(); i++) {
@@ -345,7 +345,7 @@ public class TalkApiClient {
 
         @NonNull
         @Override
-        LineProfile parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
+        public LineProfile parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
             return parseLineProfile(jsonObject);
         }
     }
@@ -364,7 +364,7 @@ public class TalkApiClient {
 
         @NonNull
         @Override
-        LineFriendProfile parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
+        public LineFriendProfile parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
             return parseLineFriendProfile(jsonObject);
         }
     }
@@ -373,7 +373,7 @@ public class TalkApiClient {
     static class FriendshipStatusParser extends JsonToObjectBaseResponseParser<LineFriendshipStatus> {
         @NonNull
         @Override
-        LineFriendshipStatus parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
+        public LineFriendshipStatus parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
             return new LineFriendshipStatus(jsonObject.getBoolean("friendFlag"));
         }
     }
@@ -391,7 +391,7 @@ public class TalkApiClient {
 
         @NonNull
         @Override
-        GetGroupsResponse parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
+        public GetGroupsResponse parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
             List<LineGroup> groupList = new ArrayList<>();
             JSONArray groupsArray = jsonObject.getJSONArray("groups");
             for (int i = 0; i < groupsArray.length(); i++) {
@@ -413,7 +413,7 @@ public class TalkApiClient {
 
         @NonNull
         @Override
-        String parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
+        public String parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
             return jsonObject.getString(jsonKey);
         }
     }
@@ -422,7 +422,7 @@ public class TalkApiClient {
     static class MultiSendResponseParser extends JsonToObjectBaseResponseParser<List<SendMessageResponse>> {
         @NonNull
         @Override
-        List<SendMessageResponse> parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
+        public List<SendMessageResponse> parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
             List<SendMessageResponse> sendMessageResponses = new ArrayList<>();
             String jsonKeyResults = "results";
             if (jsonObject.has(jsonKeyResults)) {

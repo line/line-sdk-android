@@ -26,6 +26,44 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="@string/apis_section_title_openchat_apis" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@android:color/black" />
+
+                <Button
+                    android:id="@+id/openchat_agreement_update_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/apis_openchat_agreement_update"
+                    android:textAllCaps="false" />
+
+                <Button
+                    android:id="@+id/openchat_create_chat_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/apis_openchat_create_room"
+                    android:textAllCaps="false" />
+
+                <Button
+                    android:id="@+id/openchat_chatroom_status_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/apis_openchat_chatroom_status"
+                    android:textAllCaps="false" />
+
+                <Button
+                    android:id="@+id/openchat_membership_status_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/apis_openchat_membership_status"
+                    android:textAllCaps="false" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="@string/apis_section_title_graph_message_apis" />
 
                 <View

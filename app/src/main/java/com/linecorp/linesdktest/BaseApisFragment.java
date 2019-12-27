@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import com.linecorp.linesdk.LineApiResponse;
 import com.linecorp.linesdk.api.LineApiClient;
 import com.linecorp.linesdk.api.LineApiTestClientFactory;
+import com.linecorp.linesdk.api.OpenChatApiClient;
 import com.linecorp.linesdktest.settings.TestSetting;
 
 import io.reactivex.Single;
@@ -27,6 +28,9 @@ public abstract class BaseApisFragment extends Fragment {
     protected LineApiClient lineApiClient;
 
     @Nullable
+    protected OpenChatApiClient openChatApiClient;
+
+    @Nullable
     protected ProgressDialog progressDialog;
 
     @NonNull
@@ -42,6 +46,7 @@ public abstract class BaseApisFragment extends Fragment {
         Bundle arguments = getArguments();
         channelId = arguments.getString(ARG_KEY_CHANNEL_ID);
         lineApiClient = LineApiTestClientFactory.createLineApiClient(getContext(), channelId);
+        openChatApiClient = LineApiTestClientFactory.createOpenchatApiClient(getContext(), channelId);
         progressDialog = new ProgressDialog(getActivity());
     }
 

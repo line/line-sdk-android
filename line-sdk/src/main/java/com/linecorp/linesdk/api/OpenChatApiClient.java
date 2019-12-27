@@ -1,5 +1,7 @@
 package com.linecorp.linesdk.api;
 
+import android.support.annotation.NonNull;
+
 import com.linecorp.linesdk.LineApiResponse;
 import com.linecorp.linesdk.openchat.MembershipStatus;
 import com.linecorp.linesdk.openchat.OpenChatRoomInfo;
@@ -7,13 +9,19 @@ import com.linecorp.linesdk.openchat.OpenChatParameters;
 import com.linecorp.linesdk.openchat.OpenChatRoomStatus;
 
 public interface OpenChatApiClient {
+
+    @NonNull
     LineApiResponse<Boolean> getAgreementStatus();
 
-    LineApiResponse<Boolean> updateAgreementStatus(Boolean agreed);
+    @NonNull
+    LineApiResponse<Boolean> updateAgreementStatus(@NonNull Boolean agreed);
 
-    LineApiResponse<OpenChatRoomInfo> createOpenChatRoom(OpenChatParameters openChatParameters);
+    @NonNull
+    LineApiResponse<OpenChatRoomInfo> createOpenChatRoom(@NonNull OpenChatParameters openChatParameters);
 
-    LineApiResponse<OpenChatRoomStatus> getOpenChatRoomStatus(String roomId);
+    @NonNull
+    LineApiResponse<OpenChatRoomStatus> getOpenChatRoomStatus(@NonNull String roomId);
 
-    LineApiResponse<MembershipStatus> getMembershipStatus(String roomId);
+    @NonNull
+    LineApiResponse<MembershipStatus> getMembershipStatus(@NonNull String roomId);
 }

@@ -11,7 +11,7 @@ import org.json.JSONObject;
 public class OpenIdDiscoveryDocumentParser extends JsonToObjectBaseResponseParser<OpenIdDiscoveryDocument> {
     @NonNull
     @Override
-    protected OpenIdDiscoveryDocument parseJsonToObject(@NonNull final JSONObject jsonObject)
+    public OpenIdDiscoveryDocument parseJsonToObject(@NonNull final JSONObject jsonObject)
             throws JSONException {
         return new OpenIdDiscoveryDocument.Builder()
                 .issuer(
