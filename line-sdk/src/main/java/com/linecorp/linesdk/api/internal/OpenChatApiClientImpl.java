@@ -146,5 +146,4 @@ public class OpenChatApiClientImpl extends TalkApiClient implements OpenChatApiC
             return MembershipStatus.valueOf(state);
         }
     }
-
 }

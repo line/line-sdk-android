@@ -2,10 +2,11 @@ package com.linecorp.linesdk.internal.nwclient;
 
 import android.content.Context;
 import android.net.Uri;
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
-import android.text.TextUtils;
 
 import com.linecorp.linesdk.BuildConfig;
 import com.linecorp.linesdk.FriendSortField;
