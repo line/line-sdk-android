@@ -120,7 +120,7 @@ public class OpenChatApiClientImpl extends TalkApiClient implements OpenChatApiC
     private static class OpenChatRoomInfoParser extends JsonToObjectBaseResponseParser<OpenChatRoomInfo> {
         @NonNull
         @Override
-        public OpenChatRoomInfo parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
+        protected OpenChatRoomInfo parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
             return new OpenChatRoomInfo(jsonObject.getString("squareMid"),
                     jsonObject.getString("url"));
         }
@@ -130,7 +130,7 @@ public class OpenChatApiClientImpl extends TalkApiClient implements OpenChatApiC
     private static class OpenChatRoomStatusParser extends JsonToObjectBaseResponseParser<OpenChatRoomStatus> {
         @NonNull
         @Override
-        public OpenChatRoomStatus parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
+        protected OpenChatRoomStatus parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
             String status = jsonObject.getString("status");
             return OpenChatRoomStatus.valueOf(status);
         }
@@ -140,7 +140,7 @@ public class OpenChatApiClientImpl extends TalkApiClient implements OpenChatApiC
     private static class MembershipStatusParser extends JsonToObjectBaseResponseParser<MembershipStatus> {
         @NonNull
         @Override
-        public MembershipStatus parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
+        protected MembershipStatus parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
             String state = jsonObject.getString("state");
             return MembershipStatus.valueOf(state);
         }

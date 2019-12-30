@@ -44,7 +44,7 @@ public class JsonToObjectBaseResponseParserTest {
 
         @NonNull
         @Override
-        Object parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
+        protected Object parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
             latestJsonObject = jsonObject;
             if (isJsonExceptionThrown) {
                 throw new JSONException("test");

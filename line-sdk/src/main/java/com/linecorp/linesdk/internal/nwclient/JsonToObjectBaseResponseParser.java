@@ -43,5 +43,5 @@ public abstract class JsonToObjectBaseResponseParser<T> implements ResponseDataP
     }
 
     @NonNull
-    public abstract T parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException;
+    protected abstract T parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException;
 }
