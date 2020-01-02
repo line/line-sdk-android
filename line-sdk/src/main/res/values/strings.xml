@@ -7,4 +7,15 @@
     <string name="search_no_results">No results.</string>
     <string name="search_no_fiend">You don\'t have any friends to choose from.</string>
     <string name="search_no_group">You don\'t have any groups to choose from.</string>
+    <string name="openchat_create_room_title">Create OpenChat</string>
+    <string name="openchat_create_room_name_placeholder">OpenChat name</string>
+    <string name="openchat_create_room_name_guide">The name of your OpenChat room.</string>
+    <string name="openchat_create_room_description_guide">Enter keywords using #hashtags.</string>
+    <string name="openchat_create_room_category">Category</string>
+    <string name="openchat_create_room_category_default">Not defined yet.</string>
+    <string name="openchat_create_room_category_guide">Your OpenChat will be displayed in the selected category.</string>
+    <string name="openchat_create_room_description_placeholder">Enter description</string>
+    <string name="openchat_create_room_search">Allow Search</string>
+    <string name="openchat_create_room_search_guide">Others can search for this OpenChat by its name or description.</string>
+    <string name="common_next">Next</string>
 </resources>

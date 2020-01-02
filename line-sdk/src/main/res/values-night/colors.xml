@@ -6,7 +6,6 @@
     <drawable name="button_01_pressed">#06a637</drawable>
     <drawable name="button_01_disabled">#c9ccd4</drawable>
 
-
     <color name="target_item_text">#ffffff</color>
     <color name="target_item_normal">#111111</color>
     <color name="target_item_pressed">#373737</color>
@@ -23,4 +22,10 @@
     <color name="tab_indicator">#c9c9c9</color>
     <color name="tab_text_selected">#ffffff</color>
     <color name="target_user_thumbnail_text">#ffffff</color>
+
+    <color name="openchat_divider">#1e1e1e</color>
+    <color name="openchat_text_color">#b7b7b7</color>
+    <color name="text_hint">#b8b8b8b8</color>
+    <color name="openchat_background">#111111</color>
+    <color name="openchat_category">#608bc5</color>
 </resources>

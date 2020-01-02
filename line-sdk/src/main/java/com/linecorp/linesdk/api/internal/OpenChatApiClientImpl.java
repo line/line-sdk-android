@@ -1,5 +1,6 @@
 package com.linecorp.linesdk.api.internal;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 
@@ -16,6 +17,7 @@ import com.linecorp.linesdk.internal.InternalAccessToken;
 import com.linecorp.linesdk.internal.nwclient.JsonToObjectBaseResponseParser;
 import com.linecorp.linesdk.internal.nwclient.TalkApiClient;
 import com.linecorp.linesdk.internal.nwclient.core.ChannelServiceHttpClient;
+import com.linecorp.linesdk.openchat.ui.CreateOpenChatActivity;
 import com.linecorp.linesdk.openchat.MembershipStatus;
 import com.linecorp.linesdk.openchat.OpenChatParameters;
 import com.linecorp.linesdk.openchat.OpenChatRoomInfo;
@@ -115,6 +117,11 @@ public class OpenChatApiClientImpl extends TalkApiClient implements OpenChatApiC
                 buildRequestHeaders(accessToken),
                 Collections.emptyMap(),
                 new MembershipStatusParser());
+    }
+
+    @Override
+    public void createOpenChatRoom(@NonNull Activity activity) {
+        activity.startActivity(CreateOpenChatActivity.createIntent(activity));
     }
 
     @VisibleForTesting

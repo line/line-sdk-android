@@ -313,6 +313,12 @@ public class InternalApisFragment extends BaseApisFragment implements SendMessag
         });
     }
 
+    @OnClick(R.id.openchat_create_chat_ui_btn)
+    void createChatroomWithUi() {
+        openChatApiClient.createOpenChatRoom(getActivity());
+    }
+
+
     @OnClick(R.id.openchat_chatroom_status_btn)
     void getChatroomStatus() {
         final EditText input = new EditText(getContext());

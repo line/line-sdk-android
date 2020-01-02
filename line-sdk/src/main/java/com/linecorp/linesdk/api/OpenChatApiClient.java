@@ -1,6 +1,7 @@
 package com.linecorp.linesdk.api;
 
 import androidx.annotation.NonNull;
+import android.app.Activity;
 
 import com.linecorp.linesdk.LineApiResponse;
 import com.linecorp.linesdk.openchat.MembershipStatus;
@@ -24,4 +25,6 @@ public interface OpenChatApiClient {
 
     @NonNull
     LineApiResponse<MembershipStatus> getMembershipStatus(@NonNull String roomId);
+
+    void createOpenChatRoom(@NonNull Activity activity);
 }

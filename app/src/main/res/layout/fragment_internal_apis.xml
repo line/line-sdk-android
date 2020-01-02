@@ -48,6 +48,13 @@
                     android:textAllCaps="false" />
 
                 <Button
+                    android:id="@+id/openchat_create_chat_ui_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/apis_openchat_create_room_with_ui"
+                    android:textAllCaps="false" />
+
+                <Button
                     android:id="@+id/openchat_chatroom_status_btn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
