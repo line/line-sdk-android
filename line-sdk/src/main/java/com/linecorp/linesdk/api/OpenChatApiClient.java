@@ -1,11 +1,11 @@
 package com.linecorp.linesdk.api;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.linecorp.linesdk.LineApiResponse;
 import com.linecorp.linesdk.openchat.MembershipStatus;
-import com.linecorp.linesdk.openchat.OpenChatRoomInfo;
 import com.linecorp.linesdk.openchat.OpenChatParameters;
+import com.linecorp.linesdk.openchat.OpenChatRoomInfo;
 import com.linecorp.linesdk.openchat.OpenChatRoomStatus;
 
 public interface OpenChatApiClient {
