@@ -2,8 +2,8 @@ package com.linecorp.android.security;
 
 
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.util.Log;
 
 import com.linecorp.linesdk.BuildConfig;

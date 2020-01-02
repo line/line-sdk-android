@@ -2,8 +2,11 @@ package com.linecorp.linesdktest;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
+import androidx.multidex.MultiDex;
+
 import android.util.Log;
 
 /**
@@ -15,6 +18,12 @@ public class LineSdkTestApplication extends Application {
         super.onCreate();
 
         registerActivityLifecycleCallbacks(new ActivityLifecycleLoggingCallback("Activity.lifecycle"));
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 
     private static class ActivityLifecycleLoggingCallback implements ActivityLifecycleCallbacks {

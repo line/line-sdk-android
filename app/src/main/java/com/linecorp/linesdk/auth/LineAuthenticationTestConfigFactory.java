@@ -1,7 +1,7 @@
 package com.linecorp.linesdk.auth;
 
 import android.net.Uri;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.linecorp.linesdktest.BuildConfig;
 

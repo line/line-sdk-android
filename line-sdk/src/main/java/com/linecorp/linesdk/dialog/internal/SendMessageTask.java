@@ -1,6 +1,6 @@
 package com.linecorp.linesdk.dialog.internal;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.linecorp.linesdk.LineApiResponse;
 import com.linecorp.linesdk.SendMessageResponse;

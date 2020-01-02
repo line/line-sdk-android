@@ -2,11 +2,11 @@ package com.linecorp.linesdk.internal;
 
 import android.app.Fragment;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
- * A wrapper to wrap the {@link Fragment} or {@link android.support.v4.app.Fragment}. With this
+ * A wrapper to wrap the {@link Fragment} or {@link androidx.fragment.app.Fragment}. With this
  * wrapper, you don't need to know what fragment is used when calling
  * {@link #startActivityForResult(Intent, int)}.
  */
@@ -15,13 +15,13 @@ public class FragmentWrapper {
     private Fragment fragment;
 
     @Nullable
-    private android.support.v4.app.Fragment supportFragment;
+    private androidx.fragment.app.Fragment supportFragment;
 
     public FragmentWrapper(@NonNull Fragment fragment) {
         this.fragment = fragment;
     }
 
-    public FragmentWrapper(@NonNull android.support.v4.app.Fragment fragment) {
+    public FragmentWrapper(@NonNull androidx.fragment.app.Fragment fragment) {
         supportFragment = fragment;
     }
 

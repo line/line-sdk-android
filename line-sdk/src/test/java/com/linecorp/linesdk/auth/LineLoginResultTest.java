@@ -2,7 +2,7 @@ package com.linecorp.linesdk.auth;
 
 import android.net.Uri;
 import android.os.Parcel;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.linecorp.linesdk.BuildConfig;
 import com.linecorp.linesdk.LineAccessToken;
