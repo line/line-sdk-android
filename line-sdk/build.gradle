@@ -122,42 +122,6 @@ ext {
     ]
 }
 
-task javadoc_public(type: Javadoc, dependsOn: project.configurations.doclava) {
-    group javadocParams.taskGroup
-    destinationDir = javadocParams.destDir.public
-
-    // doclava doesn't support `title`
-    title = null
-
-    source = javadocParams.source
-    classpath += javadocParams.classpath
-    include javadocParams.includes.public
-
-    failOnError false
-
-    options {
-        doclet "com.google.doclava.Doclava"
-        // to solve the issue:
-        // Cannot change strategy of configuration ':line-sdk:doclava' after it has been resolved.
-        project.afterEvaluate {
-            docletpath = configurations.doclava.files as List
-        }
-
-        locale javadocParams.locale
-        encoding javadocParams.encoding
-
-        // doclava supports `-title ${title}`
-        addStringOption("title", "${javadocParams.title}")
-        addStringOption("templatedir", "${rootDir}/templates")
-        addMultilineMultiValueOption("federate").with {
-            javadocParams.externalLinks.each {
-                value.add(["name", it])
-            }
-        }
-    }
-
-}
-
 task javadoc_internal(type: Javadoc) {
     group javadocParams.taskGroup
     destinationDir = javadocParams.destDir.internal
