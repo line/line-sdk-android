@@ -1,6 +1,7 @@
 package com.linecorp.linesdk.openchat.ui
 
 import android.app.Activity
+import android.app.ProgressDialog
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
@@ -61,7 +62,8 @@ class CreateOpenChatActivity : AppCompatActivity() {
             .build()
 
         createOpenChatroomTask?.cancel(true)
-        createOpenChatroomTask = CreateOpenChatroomTask(openChatApiClient, openChatParameters) { result ->
+        createOpenChatroomTask = CreateOpenChatroomTask(
+            this, openChatApiClient, openChatParameters) { result ->
             if (result.isSuccess) {
                 val openChatRoomInfo: OpenChatRoomInfo = result.responseData
                 val intent = Intent().apply { putExtra(ARG_OPEN_CHATROOM_INFO, openChatRoomInfo)}
@@ -84,16 +86,26 @@ class CreateOpenChatActivity : AppCompatActivity() {
         CreateOpenChatStep.UserProfile -> ProfileInfoFragment.newInstance()
     }
 
-    class CreateOpenChatroomTask(
+    private class CreateOpenChatroomTask(
+        private val activity: Activity,
         private val apiClient: OpenChatApiClient,
         private val parameters: OpenChatParameters,
         private val postAction: (LineApiResponse<OpenChatRoomInfo>) -> Unit
     ) : AsyncTask<Void, Void, LineApiResponse<OpenChatRoomInfo>>() {
+        private val progressDialog: ProgressDialog by lazy {
+            ProgressDialog(activity).apply {
+                setCancelable(true)
+            }
+        }
+
+        override fun onPreExecute() = progressDialog.show()
+
         override fun doInBackground(vararg params: Void): LineApiResponse<OpenChatRoomInfo> =
             apiClient.createOpenChatRoom(parameters)
 
         override fun onPostExecute(result: LineApiResponse<OpenChatRoomInfo>) {
             postAction(result)
+            if (progressDialog.isShowing) progressDialog.dismiss()
         }
     }
 
