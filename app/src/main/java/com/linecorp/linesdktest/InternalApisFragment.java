@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.Adapter;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,6 +44,7 @@ import com.linecorp.linesdk.message.template.ClickActionForTemplateMessage;
 import com.linecorp.linesdk.message.template.ConfirmLayoutTemplate;
 import com.linecorp.linesdk.message.template.ImageCarouselLayoutTemplate;
 import com.linecorp.linesdk.message.template.UriAction;
+import com.linecorp.linesdk.openchat.OpenChatParameters;
 import com.linecorp.linesdktest.apiclient.LineOauthApiClientForTest;
 import com.linecorp.linesdktest.settings.TestSetting;
 import com.linecorp.linesdktest.util.FlexMessageGenerator;
@@ -190,14 +192,14 @@ public class InternalApisFragment extends BaseApisFragment implements SendMessag
         selectReceivers(
                 receiverIDs ->
                         startApiAsyncTask("getGroupsApprovers", () -> {
-                                              String groupId = receiverIDs.get(0);
-                                              LineApiResponse<GetFriendsResponse> response =
-                                                      lineApiClient.getGroupApprovers(
-                                                              groupId, null);
-                                              return response;
-                                          }
-                        )
-        );
+                                    String groupId = receiverIDs.get(0);
+                                    LineApiResponse<GetFriendsResponse> response =
+                                            lineApiClient.getGroupApprovers(
+                                                    groupId, null);
+                                    return response;
+                                }
+                                         )
+                       );
     }
 
     @OnClick(R.id.send_all_message_btn)
@@ -289,6 +291,51 @@ public class InternalApisFragment extends BaseApisFragment implements SendMessag
         sendMessageDialog.setOnCancelListener(
                 dialog -> Toast.makeText(getContext(), "Sending message is canceled.", Toast.LENGTH_LONG).show());
         sendMessageDialog.show();
+    }
+
+    @OnClick(R.id.openchat_agreement_update_btn)
+    void updateAgreementStatus() {
+        startApiAsyncTask("updateAgreementStatus", () -> openChatApiClient.updateAgreementStatus(true));
+    }
+
+    @OnClick(R.id.openchat_create_chat_btn)
+    void createChatroom() {
+        startApiAsyncTask("createChatroom", () -> {
+            OpenChatParameters parameters = new OpenChatParameters.Builder()
+                    .setName("Demo openchat room")
+                    .setDescription("This is a demo chatroom description")
+                    .setCategoryId(17)
+                    .setCreatorDisplayName("Demo app owner")
+                    .setIsSearchable(true)
+                    .build();
+
+            return openChatApiClient.createOpenChatRoom(parameters);
+        });
+    }
+
+    @OnClick(R.id.openchat_chatroom_status_btn)
+    void getChatroomStatus() {
+        final EditText input = new EditText(getContext());
+        new AlertDialog.Builder(getContext())
+                .setTitle("Input Room Id")
+                .setView(input)
+                .setPositiveButton(string.ok, (dialog, whichButton) -> {
+                    String roomId = input.getText().toString();
+                    startApiAsyncTask("createChatroom", () -> openChatApiClient.getOpenChatRoomStatus(roomId));
+                }).show();
+
+    }
+
+    @OnClick(R.id.openchat_membership_status_btn)
+    void getMembershipStatus() {
+        final EditText input = new EditText(getContext());
+        new AlertDialog.Builder(getContext())
+                .setTitle("Input Room Id")
+                .setView(input)
+                .setPositiveButton(string.ok, (dialog, whichButton) -> {
+                    String roomId = input.getText().toString();
+                    startApiAsyncTask("getMembershipStatus", () -> openChatApiClient.getMembershipStatus(roomId));
+                }).show();
     }
 
     @Override

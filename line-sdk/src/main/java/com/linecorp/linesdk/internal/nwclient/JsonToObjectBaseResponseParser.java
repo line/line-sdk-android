@@ -15,15 +15,15 @@ import java.io.InputStream;
 /**
  * {@link ResponseDataParser} to parse an any object from a json data.
  */
-/* package */ abstract class JsonToObjectBaseResponseParser<T> implements ResponseDataParser<T> {
+public abstract class JsonToObjectBaseResponseParser<T> implements ResponseDataParser<T> {
     @NonNull
     private final JsonResponseParser jsonResponseParser;
 
-    JsonToObjectBaseResponseParser() {
+    public JsonToObjectBaseResponseParser() {
         this(new JsonResponseParser());
     }
 
-    JsonToObjectBaseResponseParser(@NonNull String charsetName) {
+    public JsonToObjectBaseResponseParser(@NonNull String charsetName) {
         this(new JsonResponseParser(charsetName));
     }
 
@@ -43,5 +43,5 @@ import java.io.InputStream;
     }
 
     @NonNull
-    abstract T parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException;
+    protected abstract T parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException;
 }

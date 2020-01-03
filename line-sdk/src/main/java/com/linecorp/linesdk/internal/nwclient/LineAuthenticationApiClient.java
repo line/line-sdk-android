@@ -100,7 +100,7 @@ public class LineAuthenticationApiClient {
             extends JsonToObjectBaseResponseParser<OneTimePassword> {
         @NonNull
         @Override
-        OneTimePassword parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
+        protected OneTimePassword parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
             return new OneTimePassword(
                     jsonObject.getString("otpId"),
                     jsonObject.getString("otp"));
@@ -134,7 +134,7 @@ public class LineAuthenticationApiClient {
             extends JsonToObjectBaseResponseParser<IssueAccessTokenResult> {
         @NonNull
         @Override
-        IssueAccessTokenResult parseJsonToObject(
+        protected IssueAccessTokenResult parseJsonToObject(
                 @NonNull JSONObject jsonObject) throws JSONException {
             String tokenType = jsonObject.getString("token_type");
             if (!AVAILABLE_TOKEN_TYPE.equals(tokenType)) {
@@ -186,7 +186,7 @@ public class LineAuthenticationApiClient {
             extends JsonToObjectBaseResponseParser<AccessTokenVerificationResult> {
         @NonNull
         @Override
-        AccessTokenVerificationResult parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
+        protected AccessTokenVerificationResult parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
             return new AccessTokenVerificationResult(
                     jsonObject.getString("client_id"),
                     jsonObject.getLong("expires_in") * 1000,
@@ -214,7 +214,7 @@ public class LineAuthenticationApiClient {
             extends JsonToObjectBaseResponseParser<RefreshTokenResult> {
         @NonNull
         @Override
-        RefreshTokenResult parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
+        protected RefreshTokenResult parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
             String tokenType = jsonObject.getString("token_type");
             if (!AVAILABLE_TOKEN_TYPE.equals(tokenType)) {
                 throw new JSONException("Illegal token type. token_type=" + tokenType);
