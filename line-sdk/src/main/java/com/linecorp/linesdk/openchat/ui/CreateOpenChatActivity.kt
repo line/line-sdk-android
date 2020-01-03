@@ -2,14 +2,14 @@ package com.linecorp.linesdk.openchat.ui
 
 import android.app.Activity
 import android.app.ProgressDialog
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
 import com.linecorp.linesdk.LineApiResponse
 import com.linecorp.linesdk.R
 import com.linecorp.linesdk.api.OpenChatApiClient
@@ -21,7 +21,7 @@ import com.linecorp.linesdk.openchat.OpenChatRoomInfo
 class CreateOpenChatActivity : AppCompatActivity() {
     private enum class CreateOpenChatStep { ChatroomInfo, UserProfile }
 
-    private val openChatApiClient: OpenChatApiClient by lazy { createOpenChatApiClient() }
+    private lateinit var openChatApiClient: OpenChatApiClient
 
     private var currentStep = CreateOpenChatStep.ChatroomInfo
     private var createOpenChatroomTask: CreateOpenChatroomTask? = null
@@ -34,6 +34,8 @@ class CreateOpenChatActivity : AppCompatActivity() {
         supportFragmentManager.addOnBackStackChangedListener {
             if (supportFragmentManager.backStackEntryCount == 0) finish()
         }
+
+        openChatApiClient = createOpenChatApiClient()
     }
 
     override fun onDestroy() {

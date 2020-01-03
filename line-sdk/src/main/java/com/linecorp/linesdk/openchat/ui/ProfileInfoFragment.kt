@@ -1,19 +1,19 @@
 package com.linecorp.linesdk.openchat.ui
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
-import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 
 import com.linecorp.linesdk.R
 import com.linecorp.linesdk.databinding.ProfileInfoFragmentBinding
 import com.linecorp.linesdk.openchat.TextUpdateWatcher
-import kotlinx.android.synthetic.main.activity_create_open_chat.toolbar
 import kotlinx.android.synthetic.main.profile_info_fragment.displayNameEditText
+import kotlinx.android.synthetic.main.activity_create_open_chat.toolbar
 
 class ProfileInfoFragment : Fragment() {
 
@@ -35,7 +35,7 @@ class ProfileInfoFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.profile_info_fragment, container, false)
-        binding.setLifecycleOwner(this)
+        binding.lifecycleOwner = this
 
         return binding.root
     }
@@ -88,6 +88,4 @@ class ProfileInfoFragment : Fragment() {
             true
         }
     }
-
-
 }

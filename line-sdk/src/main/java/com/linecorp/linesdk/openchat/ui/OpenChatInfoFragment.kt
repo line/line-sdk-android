@@ -1,14 +1,14 @@
 package com.linecorp.linesdk.openchat.ui
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
-import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.linecorp.linesdk.R
 import com.linecorp.linesdk.databinding.OpenChatInfoFragmentBinding
 import com.linecorp.linesdk.openchat.TextUpdateWatcher
@@ -36,7 +36,7 @@ class OpenChatInfoFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.open_chat_info_fragment, container, false)
-        binding.setLifecycleOwner(this)
+        binding.lifecycleOwner = this
 
         return binding.root
     }
