@@ -7,7 +7,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.linecorp.linesdk.openchat.ui.ProfileInfoViewModel" />
+            type="com.linecorp.linesdk.openchat.ui.OpenChatInfoViewModel" />
     </data>
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -33,7 +33,7 @@
         android:textColorHint="@color/text_hint"
         android:textSize="18sp"
         android:maxLength="50"
-        android:text="@{viewModel.displayName}"
+        android:text="@{viewModel.profileName}"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

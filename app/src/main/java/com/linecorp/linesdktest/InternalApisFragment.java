@@ -2,7 +2,9 @@ package com.linecorp.linesdktest;
 
 import android.R.layout;
 import android.R.string;
+import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -45,6 +47,7 @@ import com.linecorp.linesdk.message.template.ConfirmLayoutTemplate;
 import com.linecorp.linesdk.message.template.ImageCarouselLayoutTemplate;
 import com.linecorp.linesdk.message.template.UriAction;
 import com.linecorp.linesdk.openchat.OpenChatParameters;
+import com.linecorp.linesdk.openchat.OpenChatRoomInfo;
 import com.linecorp.linesdktest.apiclient.LineOauthApiClientForTest;
 import com.linecorp.linesdktest.settings.TestSetting;
 import com.linecorp.linesdktest.util.FlexMessageGenerator;
@@ -60,6 +63,7 @@ import butterknife.OnClick;
 import static java.util.Arrays.asList;
 
 public class InternalApisFragment extends BaseApisFragment implements SendMessageDialog.OnSendListener {
+    private static final int REQUEST_CODE_CREATE_OPEN_CHATROOM = 4021;
     private final FlexMessageGenerator flexMessageGenerator = new FlexMessageGenerator();
 
     private final ReceiverList receivers = new ReceiverList();
@@ -300,24 +304,21 @@ public class InternalApisFragment extends BaseApisFragment implements SendMessag
 
     @OnClick(R.id.openchat_create_chat_btn)
     void createChatroom() {
-        startApiAsyncTask("createChatroom", () -> {
-            OpenChatParameters parameters = new OpenChatParameters.Builder()
-                    .setName("Demo openchat room")
-                    .setDescription("This is a demo chatroom description")
-                    .setCategoryId(17)
-                    .setCreatorDisplayName("Demo app owner")
-                    .setIsSearchable(true)
-                    .build();
-
-            return openChatApiClient.createOpenChatRoom(parameters);
-        });
+        OpenChatParameters parameters = new OpenChatParameters.Builder()
+                                                .setName("Demo openchat room")
+                                                .setDescription("This is a demo chatroom description")
+                                                .setCategoryId(17)
+                                                .setCreatorDisplayName("Demo app owner")
+                                                .setIsSearchable(true)
+                                                .build();
+        startApiAsyncTask("createChatroom", () -> openChatApiClient.createOpenChatRoom(parameters));
     }
 
     @OnClick(R.id.openchat_create_chat_ui_btn)
     void createChatroomWithUi() {
-        openChatApiClient.createOpenChatRoom(getActivity());
+        Intent intent = openChatApiClient.getCreateOpenChatRoomIntent(getActivity());
+        startActivityForResult(intent, REQUEST_CODE_CREATE_OPEN_CHATROOM);
     }
-
 
     @OnClick(R.id.openchat_chatroom_status_btn)
     void getChatroomStatus() {
@@ -327,7 +328,7 @@ public class InternalApisFragment extends BaseApisFragment implements SendMessag
                 .setView(input)
                 .setPositiveButton(string.ok, (dialog, whichButton) -> {
                     String roomId = input.getText().toString();
-                    startApiAsyncTask("createChatroom", () -> openChatApiClient.getOpenChatRoomStatus(roomId));
+                    startApiAsyncTask("getChatroomStatus", () -> openChatApiClient.getOpenChatRoomStatus(roomId));
                 }).show();
 
     }
@@ -343,6 +344,17 @@ public class InternalApisFragment extends BaseApisFragment implements SendMessag
                     startApiAsyncTask("getMembershipStatus", () -> openChatApiClient.getMembershipStatus(roomId));
                 }).show();
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+
+        if (requestCode == REQUEST_CODE_CREATE_OPEN_CHATROOM && resultCode == Activity.RESULT_OK) {
+            OpenChatRoomInfo openChatRoomInfo = openChatApiClient.getOpenChatRoomInfoFromIntent(intent);
+            addLog(openChatRoomInfo.toString());
+        }
+    }
+
 
     @Override
     public void onSendSuccess(DialogInterface dialog) {

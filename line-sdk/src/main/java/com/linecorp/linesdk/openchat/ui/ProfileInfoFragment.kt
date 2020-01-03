@@ -23,7 +23,7 @@ class ProfileInfoFragment : Fragment() {
         fun newInstance() = ProfileInfoFragment()
     }
 
-    private lateinit var viewModel: ProfileInfoViewModel
+    private lateinit var viewModel: OpenChatInfoViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +44,7 @@ class ProfileInfoFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         val activity = activity ?: return
 
-        viewModel = ViewModelProviders.of(activity).get(ProfileInfoViewModel::class.java)
+        viewModel = ViewModelProviders.of(activity).get(OpenChatInfoViewModel::class.java)
         binding.viewModel = viewModel
 
         setupViews()
@@ -52,22 +52,22 @@ class ProfileInfoFragment : Fragment() {
 
     private fun setupViews() {
         setupToolbar()
-        setupDisplayName()
+        setupProfileName()
     }
 
-    private fun setupDisplayName() {
+    private fun setupProfileName() {
         displayNameEditText.addTextChangedListener(
             TextUpdateWatcher(
-                ::updateDisplayName,
+                ::updateProfileName,
                 OpenChatInfoViewModel.MAX_CHAT_NAME_LENGTH
             )
         )
 
-        displayNameEditText.setText(viewModel.displayName.value)
+        displayNameEditText.setText(viewModel.profileName.value)
     }
 
-    private fun updateDisplayName(displayName: String, textLengthString: String) {
-        viewModel.setDisplayName(displayName)
+    private fun updateProfileName(displayName: String, textLengthString: String) {
+        viewModel.setProfileName(displayName)
     }
 
     private fun setupToolbar() {
@@ -79,7 +79,7 @@ class ProfileInfoFragment : Fragment() {
         val doneMenuItem = toolbar.menu.findItem(R.id.menu_item_create_profile_done)
         doneMenuItem.isEnabled = viewModel.isValid.value ?: true
 
-        viewModel.isValid.observe(this, Observer { isValid ->
+        viewModel.isProfileValid.observe(this, Observer { isValid ->
             doneMenuItem.isEnabled = isValid ?: true
         })
 

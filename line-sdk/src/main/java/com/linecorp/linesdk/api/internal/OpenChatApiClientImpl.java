@@ -2,6 +2,7 @@ package com.linecorp.linesdk.api.internal;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 
 import androidx.annotation.NonNull;
@@ -17,11 +18,11 @@ import com.linecorp.linesdk.internal.InternalAccessToken;
 import com.linecorp.linesdk.internal.nwclient.JsonToObjectBaseResponseParser;
 import com.linecorp.linesdk.internal.nwclient.TalkApiClient;
 import com.linecorp.linesdk.internal.nwclient.core.ChannelServiceHttpClient;
-import com.linecorp.linesdk.openchat.ui.CreateOpenChatActivity;
 import com.linecorp.linesdk.openchat.MembershipStatus;
 import com.linecorp.linesdk.openchat.OpenChatParameters;
 import com.linecorp.linesdk.openchat.OpenChatRoomInfo;
 import com.linecorp.linesdk.openchat.OpenChatRoomStatus;
+import com.linecorp.linesdk.openchat.ui.CreateOpenChatActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,18 +43,16 @@ public class OpenChatApiClientImpl extends TalkApiClient implements OpenChatApiC
     @NonNull
     private final AccessTokenCache accessTokenCache;
 
+    @NonNull
+    private final String channelId;
+
     public OpenChatApiClientImpl(
             Context applicationContext,
             @NonNull Uri apiBaseUrl,
-            @NonNull AccessTokenCache accessTokenCache) {
+            @NonNull String channelId) {
             super(apiBaseUrl, new ChannelServiceHttpClient(applicationContext, BuildConfig.VERSION_NAME));
-            this.accessTokenCache = accessTokenCache;
-    }
-
-    @NonNull
-    @Override
-    public LineApiResponse<Boolean> getAgreementStatus() {
-        return null;
+        this.channelId = channelId;
+        this.accessTokenCache = new AccessTokenCache(applicationContext, channelId);
     }
 
     @NonNull
@@ -120,8 +119,13 @@ public class OpenChatApiClientImpl extends TalkApiClient implements OpenChatApiC
     }
 
     @Override
-    public void createOpenChatRoom(@NonNull Activity activity) {
-        activity.startActivity(CreateOpenChatActivity.createIntent(activity));
+    public Intent getCreateOpenChatRoomIntent(@NonNull Activity activity) {
+        return CreateOpenChatActivity.createIntent(activity, apiBaseUrl.toString(), channelId);
+    }
+
+    @Override
+    public OpenChatRoomInfo getOpenChatRoomInfoFromIntent(Intent intent) {
+        return intent.getParcelableExtra(CreateOpenChatActivity.ARG_OPEN_CHATROOM_INFO);
     }
 
     @VisibleForTesting

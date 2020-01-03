@@ -43,7 +43,9 @@ class OpenChatInfoFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(OpenChatInfoViewModel::class.java)
+        val activity = activity ?: return
+
+        viewModel = ViewModelProviders.of(activity).get(OpenChatInfoViewModel::class.java)
         binding.viewModel = viewModel
 
         setupViews()
@@ -123,11 +125,11 @@ class OpenChatInfoFragment : Fragment() {
             )
         )
 
-        nameEditText.setText(viewModel.name.value)
+        nameEditText.setText(viewModel.chatroomName.value)
     }
 
     private fun updateName(updatedName: String, lengthString: String) {
-        viewModel.setName(updatedName)
+        viewModel.setChatroomName(updatedName)
         binding.nameMaxTextView.text = lengthString
     }
 

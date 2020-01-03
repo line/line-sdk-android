@@ -32,6 +32,6 @@ public final class LineApiTestClientFactory {
         return new OpenChatApiClientImpl(
                 context,
                 Uri.parse(BuildConfig.API_SERVER_BASE_URI),
-                new AccessTokenCache(context, channelId));
+                channelId);
     }
 }
