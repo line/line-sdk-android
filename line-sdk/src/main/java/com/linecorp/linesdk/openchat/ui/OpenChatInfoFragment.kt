@@ -61,6 +61,7 @@ class OpenChatInfoFragment : Fragment() {
         val toolbar = activity?.toolbar ?: return
 
         toolbar.title = getString(R.string.openchat_create_room_title)
+        toolbar.menu.clear()
         toolbar.inflateMenu(R.menu.menu_openchat_info)
         val nextMenuItem = toolbar.menu.findItem(R.id.menu_item_openchat_next)
         nextMenuItem.isEnabled = viewModel.isValid.value ?: true
@@ -68,6 +69,11 @@ class OpenChatInfoFragment : Fragment() {
         viewModel.isValid.observe(this, Observer { isValid ->
             nextMenuItem.isEnabled = isValid ?: true
         })
+
+        nextMenuItem.setOnMenuItemClickListener {
+            (activity as? CreateOpenChatActivity)?.run { onNextClick() }
+            true
+        }
     }
 
     private fun setupSearchOption() {

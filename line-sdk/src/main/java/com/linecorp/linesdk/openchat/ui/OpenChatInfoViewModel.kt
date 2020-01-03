@@ -36,7 +36,7 @@ class OpenChatInfoViewModel : ViewModel() {
     private fun updateValidity() {
         val nameLength = name.value?.length ?: 0
 
-        isValid.value = nameLength in 1 until MAX_CHAT_NAME_LENGTH
+        isValid.value = nameLength > 0
     }
 
     fun setName(name: String) {

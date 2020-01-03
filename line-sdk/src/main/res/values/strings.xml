@@ -18,4 +18,8 @@
     <string name="openchat_create_room_search">Allow Search</string>
     <string name="openchat_create_room_search_guide">Others can search for this OpenChat by its name or description.</string>
     <string name="common_next">Next</string>
+    <string name="openchat_create_profile_title">Profile</string>
+    <string name="openchat_create_profile_input_placeholder">Edit nickname</string>
+    <string name="openchat_create_profile_input_guide">Set your nickname to be used in openchat room.</string>
+    <string name="common_done">Done</string>
 </resources>
