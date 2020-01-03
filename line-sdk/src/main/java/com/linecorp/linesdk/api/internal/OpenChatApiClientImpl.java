@@ -132,7 +132,7 @@ public class OpenChatApiClientImpl extends TalkApiClient implements OpenChatApiC
         @NonNull
         @Override
         protected OpenChatRoomStatus parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
-            String status = jsonObject.getString("status");
+            String status = jsonObject.getString("status").toUpperCase();
             return OpenChatRoomStatus.valueOf(status);
         }
     }
@@ -142,7 +142,7 @@ public class OpenChatApiClientImpl extends TalkApiClient implements OpenChatApiC
         @NonNull
         @Override
         protected MembershipStatus parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
-            String state = jsonObject.getString("state");
+            String state = jsonObject.getString("state").toUpperCase();
             return MembershipStatus.valueOf(state);
         }
     }

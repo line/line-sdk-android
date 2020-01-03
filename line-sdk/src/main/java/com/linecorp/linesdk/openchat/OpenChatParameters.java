@@ -23,7 +23,7 @@ public class OpenChatParameters {
             jsonObject.put("category", categoryId);
             jsonObject.put("allowSearch", isSearchable);
         } catch (JSONException exception) {
-            return "";
+            return "{}";
         }
 
         return jsonObject.toString();
