@@ -62,7 +62,7 @@ public class OpenChatApiClientImpl extends TalkApiClient implements OpenChatApiC
         if (accessToken == null) return ERROR_RESPONSE_NO_TOKEN;
 
         final Uri uri = Uri.parse(apiBaseUrl + "square/v1/terms/agreement");
-        final String postData = String.format("{ \"agreed\": %s }", (agreed)? "true" : "false");
+        final String postData = String.format("{ \"agreed\": %s }", (agreed) ? "true" : "false");
 
         return httpClient.putWithJson(
                 uri,
