@@ -2,15 +2,17 @@ package com.linecorp.linesdk.internal.nwclient;
 
 import android.content.Context;
 import android.net.Uri;
-import androidx.annotation.NonNull;
-import androidx.annotation.VisibleForTesting;
 import android.text.TextUtils;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 
 import com.linecorp.linesdk.BuildConfig;
 import com.linecorp.linesdk.LineApiResponse;
 import com.linecorp.linesdk.LineIdToken;
 import com.linecorp.linesdk.Scope;
+import com.linecorp.linesdk.api.BaseApiClient;
 import com.linecorp.linesdk.internal.AccessTokenVerificationResult;
 import com.linecorp.linesdk.internal.IdTokenKeyType;
 import com.linecorp.linesdk.internal.InternalAccessToken;
@@ -36,7 +38,7 @@ import static java.util.Collections.emptyMap;
  * Internal LINE OAUTH API client to process internal process such as building request data and
  * parsing response data.
  */
-public class LineAuthenticationApiClient {
+public class LineAuthenticationApiClient extends BaseApiClient {
     private static final String TAG = "LineAuthApiClient";
 
     private static final String BASE_PATH_OAUTH_V21_API = "oauth2/v2.1";
@@ -60,10 +62,6 @@ public class LineAuthenticationApiClient {
 
     @NonNull
     private final Uri openidDiscoveryDocumentUrl;
-    @NonNull
-    private final Uri apiBaseUrl;
-    @NonNull
-    private final ChannelServiceHttpClient httpClient;
 
     public LineAuthenticationApiClient(@NonNull final Context applicationContext,
                                        @NonNull final Uri openidDiscoveryDocumentUrl,
@@ -78,17 +76,14 @@ public class LineAuthenticationApiClient {
             @NonNull final Uri openidDiscoveryDocumentUrl,
             @NonNull final Uri apiBaseUrl,
             @NonNull final ChannelServiceHttpClient httpClient) {
+        super(apiBaseUrl, httpClient);
         this.openidDiscoveryDocumentUrl = openidDiscoveryDocumentUrl;
-        this.apiBaseUrl = apiBaseUrl;
-        this.httpClient = httpClient;
     }
 
     @NonNull
     public LineApiResponse<OneTimePassword> getOneTimeIdAndPassword(@NonNull String channelId) {
         final Uri uri = buildUri(apiBaseUrl, BASE_PATH_OAUTH_V21_API, "otp");
-        final Map<String, String> postData = buildParams(
-                "client_id", channelId
-        );
+        final Map<String, String> postData = buildParams("client_id", channelId);
         return httpClient.post(
                 uri,
                 emptyMap() /* requestHeaders */,

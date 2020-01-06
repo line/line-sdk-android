@@ -12,11 +12,11 @@ import com.linecorp.linesdk.BuildConfig;
 import com.linecorp.linesdk.LineApiError;
 import com.linecorp.linesdk.LineApiResponse;
 import com.linecorp.linesdk.LineApiResponseCode;
+import com.linecorp.linesdk.api.BaseApiClient;
 import com.linecorp.linesdk.api.OpenChatApiClient;
 import com.linecorp.linesdk.internal.AccessTokenCache;
 import com.linecorp.linesdk.internal.InternalAccessToken;
 import com.linecorp.linesdk.internal.nwclient.JsonToObjectBaseResponseParser;
-import com.linecorp.linesdk.internal.nwclient.TalkApiClient;
 import com.linecorp.linesdk.internal.nwclient.core.ChannelServiceHttpClient;
 import com.linecorp.linesdk.openchat.MembershipStatus;
 import com.linecorp.linesdk.openchat.OpenChatParameters;
@@ -34,7 +34,7 @@ import java.util.Map;
 /**
  * Implementation of {@link OpenChatApiClient}.
  */
-public class OpenChatApiClientImpl extends TalkApiClient implements OpenChatApiClient {
+public class OpenChatApiClientImpl extends BaseApiClient implements OpenChatApiClient {
     private static final LineApiResponse ERROR_RESPONSE_NO_TOKEN = LineApiResponse.createAsError(
             LineApiResponseCode.INTERNAL_ERROR,
             new LineApiError("access token is null")
