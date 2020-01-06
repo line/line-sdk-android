@@ -67,7 +67,7 @@ class OpenChatInfoViewModel : ViewModel() {
             description.value.orEmpty(),
             profileName.value.orEmpty(),
             category.value ?: DEFAULT_CATEGORY,
-            isValid.value ?: true
+            isSearchIncluded.value ?: true
         )
 
     companion object {

@@ -16,21 +16,19 @@ class OpenChatParameters(
         require(creatorDisplayName.isNotEmpty() && creatorDisplayName.length <= 50) { "String size needs to be less or equal to 50" }
     }
 
-    fun toJsonString(): String {
-        try {
-            return JSONObject().apply {
-                put("name", name)
-                put("description", description)
-                put("creatorDisplayName", creatorDisplayName)
-                put("category", category.id)
-                put("allowSearch", isSearchable)
-            }.toString()
-        } catch (exception: JSONException) {
-            return "{}"
-        }
+    fun toJsonString(): String = try {
+        JSONObject().apply {
+            put("name", name)
+            put("description", description)
+            put("creatorDisplayName", creatorDisplayName)
+            put("category", category.id)
+            put("allowSearch", isSearchable)
+        }.toString()
+    } catch (exception: JSONException) {
+        "{}"
     }
 
     companion object {
-        private val DEFAULT_CATEGORY = OpenChatCategory.Game // Game
+        private val DEFAULT_CATEGORY = OpenChatCategory.Game
     }
 }
