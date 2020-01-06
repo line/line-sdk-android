@@ -55,24 +55,18 @@ class CreateOpenChatActivity : AppCompatActivity() {
 
     fun createChatroom() {
         val openChatInfoViewModel = ViewModelProviders.of(this).get(OpenChatInfoViewModel::class.java)
-        val openChatParameters = OpenChatParameters.Builder()
-            .setName(openChatInfoViewModel.chatroomName.value)
-            .setDescription(openChatInfoViewModel.description.value)
-            .setCategoryId(openChatInfoViewModel.category.value?.id ?: 17)
-            .setCreatorDisplayName(openChatInfoViewModel.profileName.value)
-            .setIsSearchable(openChatInfoViewModel.isValid.value)
-            .build()
+        val openChatParameters = openChatInfoViewModel.toOpenChatParameters()
 
         createOpenChatroomTask?.cancel(true)
-        createOpenChatroomTask = CreateOpenChatroomTask(
-            this, openChatApiClient, openChatParameters) { result ->
-            if (result.isSuccess) {
-                val openChatRoomInfo: OpenChatRoomInfo = result.responseData
-                val intent = Intent().apply { putExtra(ARG_OPEN_CHATROOM_INFO, openChatRoomInfo)}
-                setResult(Activity.RESULT_OK, intent)
+        createOpenChatroomTask =
+            CreateOpenChatroomTask(this, openChatApiClient, openChatParameters) { result ->
+                if (result.isSuccess) {
+                    val openChatRoomInfo: OpenChatRoomInfo = result.responseData
+                    val intent = Intent().apply { putExtra(ARG_OPEN_CHATROOM_INFO, openChatRoomInfo)}
+                    setResult(Activity.RESULT_OK, intent)
+                }
+                finish()
             }
-            finish()
-        }
         createOpenChatroomTask?.execute()
     }
 

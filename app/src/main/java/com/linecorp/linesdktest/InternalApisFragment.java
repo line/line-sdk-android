@@ -6,9 +6,6 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -21,6 +18,10 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 
 import com.linecorp.linesdk.FriendSortField;
 import com.linecorp.linesdk.GetFriendsResponse;
@@ -46,6 +47,7 @@ import com.linecorp.linesdk.message.template.ClickActionForTemplateMessage;
 import com.linecorp.linesdk.message.template.ConfirmLayoutTemplate;
 import com.linecorp.linesdk.message.template.ImageCarouselLayoutTemplate;
 import com.linecorp.linesdk.message.template.UriAction;
+import com.linecorp.linesdk.openchat.OpenChatCategory;
 import com.linecorp.linesdk.openchat.OpenChatParameters;
 import com.linecorp.linesdk.openchat.OpenChatRoomInfo;
 import com.linecorp.linesdktest.apiclient.LineOauthApiClientForTest;
@@ -304,13 +306,12 @@ public class InternalApisFragment extends BaseApisFragment implements SendMessag
 
     @OnClick(R.id.openchat_create_chat_btn)
     void createChatroom() {
-        OpenChatParameters parameters = new OpenChatParameters.Builder()
-                                                .setName("Demo openchat room")
-                                                .setDescription("This is a demo chatroom description")
-                                                .setCategoryId(17)
-                                                .setCreatorDisplayName("Demo app owner")
-                                                .setIsSearchable(true)
-                                                .build();
+        OpenChatParameters parameters = new OpenChatParameters(
+                "Demo openchat room",
+                "This is a demo chatroom description",
+                "Demo app owner",
+                OpenChatCategory.Game,
+                true);
         startApiAsyncTask("createChatroom", () -> openChatApiClient.createOpenChatRoom(parameters));
     }
 

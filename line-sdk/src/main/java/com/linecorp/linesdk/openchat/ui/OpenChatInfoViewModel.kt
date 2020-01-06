@@ -3,6 +3,7 @@ package com.linecorp.linesdk.openchat.ui
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.linecorp.linesdk.openchat.OpenChatCategory
+import com.linecorp.linesdk.openchat.OpenChatParameters
 
 class OpenChatInfoViewModel : ViewModel() {
     val chatroomName: MutableLiveData<String> = MutableLiveData()
@@ -59,6 +60,15 @@ class OpenChatInfoViewModel : ViewModel() {
         profileName.value = name
         updateValidity()
     }
+
+    fun toOpenChatParameters(): OpenChatParameters =
+        OpenChatParameters(
+            chatroomName.value.orEmpty(),
+            description.value.orEmpty(),
+            profileName.value.orEmpty(),
+            category.value ?: DEFAULT_CATEGORY,
+            isValid.value ?: true
+        )
 
     companion object {
         const val MAX_CHAT_NAME_LENGTH = 50
