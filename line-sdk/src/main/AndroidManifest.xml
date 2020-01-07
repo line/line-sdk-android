@@ -7,7 +7,7 @@
         android:supportsRtl="true">
         <activity
             android:name=".openchat.ui.CreateOpenChatActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
         <!--
          "launchMode" of this activity must not be singleInstance and singleTask because, this is
          launched with using startActivityForResult().

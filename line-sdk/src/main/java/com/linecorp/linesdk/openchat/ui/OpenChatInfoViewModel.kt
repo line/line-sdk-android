@@ -1,5 +1,6 @@
 package com.linecorp.linesdk.openchat.ui
 
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.linecorp.linesdk.openchat.OpenChatCategory
@@ -12,8 +13,17 @@ class OpenChatInfoViewModel : ViewModel() {
     val category: MutableLiveData<OpenChatCategory> = MutableLiveData()
     val isSearchIncluded: MutableLiveData<Boolean> = MutableLiveData()
 
-    val isValid: MutableLiveData<Boolean> = MutableLiveData()
-    val isProfileValid: MutableLiveData<Boolean> = MutableLiveData()
+    val isValid: MediatorLiveData<Boolean> = MediatorLiveData<Boolean>().apply {
+        addSource(chatroomName) { chatroomNameString ->
+            value = chatroomNameString.isNotEmpty()
+        }
+    }
+
+    val isProfileValid: MediatorLiveData<Boolean> = MediatorLiveData<Boolean>().apply {
+        addSource(profileName) { profileNameString ->
+            value = profileNameString.isNotEmpty()
+        }
+    }
 
     init {
         chatroomName.value = ""
@@ -21,8 +31,6 @@ class OpenChatInfoViewModel : ViewModel() {
         description.value = ""
         category.value = DEFAULT_CATEGORY
         isSearchIncluded.value = true
-        isValid.value = false
-        isProfileValid.value = false
     }
 
     fun getCategoryString(): String {
@@ -31,35 +39,10 @@ class OpenChatInfoViewModel : ViewModel() {
     }
 
     fun getCategoryStringArray(): Array<String> =
-        OpenChatCategory.values().map { it.defaultString }.toTypedArray()
+        OpenChatCategory.values().map(OpenChatCategory::defaultString).toTypedArray()
 
-    fun getSelectedCategory(position: Int): OpenChatCategory {
-        if (position > OpenChatCategory.values().size) return DEFAULT_CATEGORY
-        return OpenChatCategory.values()[position]
-    }
-
-    private fun updateValidity() {
-        val nameLength = chatroomName.value?.length ?: 0
-        val profileNameLength = profileName.value?.length ?: 0
-
-        isValid.value = nameLength > 0
-        isProfileValid.value = profileNameLength > 0
-    }
-
-    fun setChatroomName(name: String) {
-        chatroomName.value = name
-        updateValidity()
-    }
-
-    fun setDescription(description: String) {
-        this.description.value = description
-        updateValidity()
-    }
-
-    fun setProfileName(name: String) {
-        profileName.value = name
-        updateValidity()
-    }
+    fun getSelectedCategory(position: Int): OpenChatCategory =
+        OpenChatCategory.values().getOrElse(position) { DEFAULT_CATEGORY }
 
     fun toOpenChatParameters(): OpenChatParameters =
         OpenChatParameters(
@@ -71,6 +54,7 @@ class OpenChatInfoViewModel : ViewModel() {
         )
 
     companion object {
+        const val MAX_PROFILE_NAME_LENGTH = 20
         const val MAX_CHAT_NAME_LENGTH = 50
         const val MAX_CHAT_DESCRIPTION_LENGTH = 200
         private val DEFAULT_CATEGORY = OpenChatCategory.Game

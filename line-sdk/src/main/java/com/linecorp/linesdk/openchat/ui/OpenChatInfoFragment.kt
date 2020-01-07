@@ -5,13 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.linecorp.linesdk.R
 import com.linecorp.linesdk.databinding.OpenChatInfoFragmentBinding
-import com.linecorp.linesdk.openchat.TextUpdateWatcher
+import com.linecorp.linesdk.openchat.FormatStringTextWatcher
 import com.linecorp.linesdk.openchat.ui.OpenChatInfoViewModel.Companion.MAX_CHAT_DESCRIPTION_LENGTH
 import com.linecorp.linesdk.openchat.ui.OpenChatInfoViewModel.Companion.MAX_CHAT_NAME_LENGTH
 import kotlinx.android.synthetic.main.activity_create_open_chat.toolbar
@@ -22,6 +21,7 @@ import kotlinx.android.synthetic.main.open_chat_info_fragment.searchIncludedChec
 import kotlinx.android.synthetic.main.open_chat_info_fragment.searchIncludedContainer
 
 class OpenChatInfoFragment : Fragment() {
+
     private lateinit var binding: OpenChatInfoFragmentBinding
 
     private lateinit var viewModel: OpenChatInfoViewModel
@@ -32,10 +32,11 @@ class OpenChatInfoFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.open_chat_info_fragment, container, false)
+        binding = OpenChatInfoFragmentBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
 
         return binding.root
@@ -43,9 +44,8 @@ class OpenChatInfoFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        val activity = activity ?: return
 
-        viewModel = ViewModelProviders.of(activity).get(OpenChatInfoViewModel::class.java)
+        viewModel = ViewModelProviders.of(requireActivity()).get(OpenChatInfoViewModel::class.java)
         binding.viewModel = viewModel
 
         setupViews()
@@ -60,22 +60,26 @@ class OpenChatInfoFragment : Fragment() {
     }
 
     private fun setupToolbar() {
-        val toolbar = activity?.toolbar ?: return
+        val toolbar = requireActivity().toolbar.apply {
+            title = getString(R.string.openchat_create_room_title)
+            menu.clear()
+            inflateMenu(R.menu.menu_openchat_info)
+        }
 
-        toolbar.title = getString(R.string.openchat_create_room_title)
-        toolbar.menu.clear()
-        toolbar.inflateMenu(R.menu.menu_openchat_info)
         val nextMenuItem = toolbar.menu.findItem(R.id.menu_item_openchat_next)
-        nextMenuItem.isEnabled = viewModel.isValid.value ?: true
+        nextMenuItem.setOnMenuItemClickListener { menuItem ->
+            if (menuItem.itemId == R.id.menu_item_openchat_next) {
+                (requireActivity() as CreateOpenChatActivity).goToNextScreen()
+                true
+            } else {
+                false
+            }
+        }
 
         viewModel.isValid.observe(this, Observer { isValid ->
-            nextMenuItem.isEnabled = isValid ?: true
+            nextMenuItem.isEnabled = isValid ?: false
         })
 
-        nextMenuItem.setOnMenuItemClickListener {
-            (activity as? CreateOpenChatActivity)?.run { onNextClick() }
-            true
-        }
     }
 
     private fun setupSearchOption() {
@@ -93,25 +97,18 @@ class OpenChatInfoFragment : Fragment() {
         })
     }
 
-    private fun showCategorySelectionDialog() {
-        val context = context ?: return
-
-        val builder = AlertDialog.Builder(context)
-        val categoryStrings = viewModel.getCategoryStringArray()
-        builder.setItems(categoryStrings) { _, which ->
-            val selectedCategory = viewModel.getSelectedCategory(which)
-            viewModel.category.value = selectedCategory
-        }
-
-        builder.create().show()
-    }
+    private fun showCategorySelectionDialog() =
+        AlertDialog.Builder(requireContext())
+            .setItems(viewModel.getCategoryStringArray()) { _, which ->
+                val selectedCategory = viewModel.getSelectedCategory(which)
+                viewModel.category.value = selectedCategory
+            }
+            .create()
+            .show()
 
     private fun setupDescription() {
         descriptionEditText.addTextChangedListener(
-            TextUpdateWatcher(
-                ::updateDescription,
-                MAX_CHAT_DESCRIPTION_LENGTH
-            )
+            FormatStringTextWatcher(::updateDescription, MAX_CHAT_DESCRIPTION_LENGTH)
         )
 
         descriptionEditText.setText(viewModel.description.value)
@@ -119,22 +116,19 @@ class OpenChatInfoFragment : Fragment() {
 
     private fun setupName() {
         nameEditText.addTextChangedListener(
-            TextUpdateWatcher(
-                ::updateName,
-                MAX_CHAT_NAME_LENGTH
-            )
+            FormatStringTextWatcher(::updateName, MAX_CHAT_NAME_LENGTH)
         )
 
         nameEditText.setText(viewModel.chatroomName.value)
     }
 
     private fun updateName(updatedName: String, lengthString: String) {
-        viewModel.setChatroomName(updatedName)
+        viewModel.chatroomName.value = updatedName
         binding.nameMaxTextView.text = lengthString
     }
 
     private fun updateDescription(updatedDescription: String, lengthString: String) {
-        viewModel.setDescription(updatedDescription)
+        viewModel.description.value = updatedDescription
         binding.descriptionMaxTextView.text = lengthString
     }
 

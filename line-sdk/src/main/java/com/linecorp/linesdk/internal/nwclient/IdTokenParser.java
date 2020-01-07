@@ -1,8 +1,9 @@
 package com.linecorp.linesdk.internal.nwclient;
 
-import androidx.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import com.linecorp.linesdk.LineIdToken;
 
@@ -15,7 +16,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SigningKeyResolver;
 
-public final class IdTokenParser {
+final class IdTokenParser {
     private static final String TAG = "IdTokenParser";
 
     // allowed clock skew: 10000 days

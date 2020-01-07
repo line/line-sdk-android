@@ -21,6 +21,11 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/content_create_open_chat"/>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/container"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:context=".openchat.ui.CreateOpenChatActivity"/>
 </LinearLayout>
 

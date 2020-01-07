@@ -4,24 +4,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-
 import com.linecorp.linesdk.R
 import com.linecorp.linesdk.databinding.ProfileInfoFragmentBinding
-import com.linecorp.linesdk.openchat.TextUpdateWatcher
-import kotlinx.android.synthetic.main.profile_info_fragment.displayNameEditText
+import com.linecorp.linesdk.openchat.FormatStringTextWatcher
 import kotlinx.android.synthetic.main.activity_create_open_chat.toolbar
+import kotlinx.android.synthetic.main.profile_info_fragment.displayNameEditText
 
 class ProfileInfoFragment : Fragment() {
 
     private lateinit var binding: ProfileInfoFragmentBinding
-
-    companion object {
-        fun newInstance() = ProfileInfoFragment()
-    }
 
     private lateinit var viewModel: OpenChatInfoViewModel
 
@@ -31,10 +25,11 @@ class ProfileInfoFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.profile_info_fragment, container, false)
+        binding = ProfileInfoFragmentBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
 
         return binding.root
@@ -42,9 +37,8 @@ class ProfileInfoFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        val activity = activity ?: return
 
-        viewModel = ViewModelProviders.of(activity).get(OpenChatInfoViewModel::class.java)
+        viewModel = ViewModelProviders.of(requireActivity()).get(OpenChatInfoViewModel::class.java)
         binding.viewModel = viewModel
 
         setupViews()
@@ -57,35 +51,36 @@ class ProfileInfoFragment : Fragment() {
 
     private fun setupProfileName() {
         displayNameEditText.addTextChangedListener(
-            TextUpdateWatcher(
-                ::updateProfileName,
-                OpenChatInfoViewModel.MAX_CHAT_NAME_LENGTH
+            FormatStringTextWatcher(
+                { name, _ -> viewModel.profileName.value = name },
+                OpenChatInfoViewModel.MAX_PROFILE_NAME_LENGTH
             )
         )
-
-        displayNameEditText.setText(viewModel.profileName.value)
-    }
-
-    private fun updateProfileName(displayName: String, textLengthString: String) {
-        viewModel.setProfileName(displayName)
     }
 
     private fun setupToolbar() {
-        val toolbar = activity?.toolbar ?: return
-
-        toolbar.title = getString(R.string.openchat_create_profile_title)
-        toolbar.menu.clear()
-        toolbar.inflateMenu(R.menu.menu_profile_info)
-        val doneMenuItem = toolbar.menu.findItem(R.id.menu_item_create_profile_done)
-        doneMenuItem.isEnabled = viewModel.isValid.value ?: true
-
-        viewModel.isProfileValid.observe(this, Observer { isValid ->
-            doneMenuItem.isEnabled = isValid ?: true
-        })
-
-        doneMenuItem.setOnMenuItemClickListener {
-            (activity as? CreateOpenChatActivity)?.run { createChatroom() }
-            true
+        val toolbar = requireActivity().toolbar.apply {
+            title = getString(R.string.openchat_create_profile_title)
+            menu.clear()
+            inflateMenu(R.menu.menu_profile_info)
         }
+
+        val doneMenuItem = toolbar.menu.findItem(R.id.menu_item_create_profile_done)
+        doneMenuItem.setOnMenuItemClickListener { menuItem ->
+            if (menuItem.itemId == R.id.menu_item_create_profile_done) {
+                (requireActivity() as CreateOpenChatActivity).createChatroom()
+                true
+            } else {
+                false
+            }
+        }
+
+        viewModel.isProfileValid.observe(this, Observer { isProfileValid ->
+            doneMenuItem.isEnabled = isProfileValid ?: false
+        })
+    }
+
+    companion object {
+        fun newInstance() = ProfileInfoFragment()
     }
 }

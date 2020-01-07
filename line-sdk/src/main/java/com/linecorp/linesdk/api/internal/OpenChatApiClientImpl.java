@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 
 import com.linecorp.linesdk.BuildConfig;
@@ -119,11 +120,13 @@ public class OpenChatApiClientImpl extends BaseApiClient implements OpenChatApiC
     }
 
     @Override
+    @NonNull
     public Intent getCreateOpenChatRoomIntent(@NonNull Activity activity) {
         return CreateOpenChatActivity.createIntent(activity, apiBaseUrl.toString(), channelId);
     }
 
     @Override
+    @Nullable
     public OpenChatRoomInfo getOpenChatRoomInfoFromIntent(Intent intent) {
         return intent.getParcelableExtra(CreateOpenChatActivity.ARG_OPEN_CHATROOM_INFO);
     }

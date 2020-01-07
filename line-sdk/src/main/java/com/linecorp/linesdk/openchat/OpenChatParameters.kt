@@ -7,7 +7,7 @@ class OpenChatParameters(
     private val name: String,
     private val description: String,
     private val creatorDisplayName: String,
-    private val category: OpenChatCategory = DEFAULT_CATEGORY,
+    private val category: OpenChatCategory = OpenChatCategory.Game,
     private val isSearchable: Boolean = true
 ) {
     init {
@@ -26,9 +26,5 @@ class OpenChatParameters(
         }.toString()
     } catch (exception: JSONException) {
         "{}"
-    }
-
-    companion object {
-        private val DEFAULT_CATEGORY = OpenChatCategory.Game
     }
 }

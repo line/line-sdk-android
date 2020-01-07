@@ -32,7 +32,7 @@
         <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="CursorStyle" parent="Theme.AppCompat.DayNight.NoActionBar"></style>
+    <style name="CursorStyle" parent="Theme.AppCompat.DayNight.NoActionBar"/>
 
     <style name="AppTheme" parent="Theme.AppCompat.Light" />
 

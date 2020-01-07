@@ -317,7 +317,7 @@ public class InternalApisFragment extends BaseApisFragment implements SendMessag
 
     @OnClick(R.id.openchat_create_chat_ui_btn)
     void createChatroomWithUi() {
-        Intent intent = openChatApiClient.getCreateOpenChatRoomIntent(getActivity());
+        Intent intent = openChatApiClient.getCreateOpenChatRoomIntent(requireActivity());
         startActivityForResult(intent, REQUEST_CODE_CREATE_OPEN_CHATROOM);
     }
 

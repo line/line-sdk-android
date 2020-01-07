@@ -12,10 +12,10 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JWKSetParser extends JsonToObjectBaseResponseParser<JWKSet> {
+final class JWKSetParser extends JsonToObjectBaseResponseParser<JWKSet> {
     @NonNull
     @Override
-    public JWKSet parseJsonToObject(@NonNull final JSONObject jsonObject) throws JSONException {
+    protected JWKSet parseJsonToObject(@NonNull final JSONObject jsonObject) throws JSONException {
         final List<JWK> jwkList = new ArrayList<>();
 
         final JSONArray keyArray = jsonObject.getJSONArray("keys");

@@ -21,7 +21,11 @@ import com.linecorp.linesdk.openchat.OpenChatRoomInfo
 class CreateOpenChatActivity : AppCompatActivity() {
     private enum class CreateOpenChatStep { ChatroomInfo, UserProfile }
 
-    private lateinit var openChatApiClient: OpenChatApiClient
+    private val openChatApiClient: OpenChatApiClient by lazy {
+        val apiBaseUrl = intent.getStringExtra(ARG_API_BASE_URL).orEmpty()
+        val channelId = intent.getStringExtra(ARG_CHANNEL_ID).orEmpty()
+        OpenChatApiClientImpl(this, Uri.parse(apiBaseUrl), channelId)
+    }
 
     private var currentStep = CreateOpenChatStep.ChatroomInfo
     private var createOpenChatroomTask: CreateOpenChatroomTask? = null
@@ -29,13 +33,11 @@ class CreateOpenChatActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_open_chat)
-        addFragment(currentStep)
 
-        supportFragmentManager.addOnBackStackChangedListener {
-            if (supportFragmentManager.backStackEntryCount == 0) finish()
-        }
-
-        openChatApiClient = createOpenChatApiClient()
+        // The first fragment doesn't need to add to back stack so that the activity can leave
+        // directly without popping up the first fragment and then manually handle finish() in
+        // onBackPressed() or OnBackStackChangedListener.
+        addFragment(currentStep, false)
     }
 
     override fun onDestroy() {
@@ -43,15 +45,7 @@ class CreateOpenChatActivity : AppCompatActivity() {
         super.onDestroy()
     }
 
-    private fun createOpenChatApiClient(): OpenChatApiClient {
-        val apiBaseUrl = intent.getStringExtra(ARG_API_BASE_URL)
-        val channelId = intent.getStringExtra(ARG_CHANNEL_ID)
-        return OpenChatApiClientImpl(this, Uri.parse(apiBaseUrl), channelId)
-    }
-
-    fun onNextClick() {
-        addFragment(CreateOpenChatStep.UserProfile)
-    }
+    fun goToNextScreen() = addFragment(CreateOpenChatStep.UserProfile)
 
     fun createChatroom() {
         val openChatInfoViewModel = ViewModelProviders.of(this).get(OpenChatInfoViewModel::class.java)
@@ -70,14 +64,16 @@ class CreateOpenChatActivity : AppCompatActivity() {
         createOpenChatroomTask?.execute()
     }
 
-    private fun addFragment(step: CreateOpenChatStep) =
+    private fun addFragment(step: CreateOpenChatStep, addToBackStack: Boolean = true) =
         supportFragmentManager.beginTransaction().run {
-            addToBackStack(step.name)
+            if (addToBackStack) {
+                addToBackStack(step.name)
+            }
             replace(R.id.container, createFragment(step))
             commit()
         }
 
-    private fun createFragment(step: CreateOpenChatStep): Fragment = when(step) {
+    private fun createFragment(step: CreateOpenChatStep): Fragment = when (step) {
         CreateOpenChatStep.ChatroomInfo -> OpenChatInfoFragment.newInstance()
         CreateOpenChatStep.UserProfile -> ProfileInfoFragment.newInstance()
     }
@@ -110,7 +106,7 @@ class CreateOpenChatActivity : AppCompatActivity() {
         private const val ARG_API_BASE_URL: String = "arg_api_base_url"
         private const val ARG_CHANNEL_ID: String = "arg_channel_id"
         @JvmStatic
-        fun createIntent(context: Context, apiBaseUrl: String, channelId: String) =
+        fun createIntent(context: Context, apiBaseUrl: String, channelId: String): Intent =
             Intent(context, CreateOpenChatActivity::class.java).apply {
                 putExtra(ARG_API_BASE_URL, apiBaseUrl)
                 putExtra(ARG_CHANNEL_ID, channelId)

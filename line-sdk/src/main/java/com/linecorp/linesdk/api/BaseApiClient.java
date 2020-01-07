@@ -33,8 +33,7 @@ public abstract class BaseApiClient {
     @NonNull
     protected static Map<String, String> buildRequestHeaders(@NonNull InternalAccessToken accessToken) {
         return buildParams(
-                REQUEST_HEADER_ACCESS_TOKEN,
-                TOKEN_TYPE_BEARER + ' ' + accessToken.getAccessToken()
-                          );
+            REQUEST_HEADER_ACCESS_TOKEN,
+            TOKEN_TYPE_BEARER + ' ' + accessToken.getAccessToken());
     }
 }
