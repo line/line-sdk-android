@@ -32,7 +32,7 @@
         android:textColor="@color/target_item_text"
         android:textColorHint="@color/text_hint"
         android:textSize="18sp"
-        android:maxLength="20"
+        android:maxLength="@integer/max_profile_name_length"
         android:text="@{viewModel.profileName}"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

@@ -1,7 +1,8 @@
 package com.linecorp.linesdk.openchat.ui
 
-import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.linecorp.linesdk.LineApiResponse
@@ -26,17 +27,8 @@ class OpenChatInfoViewModel(
     val createChatRoomError: MutableLiveData<LineApiResponse<OpenChatRoomInfo>> = MutableLiveData()
     val isCreatingChatRoom: MutableLiveData<Boolean> = MutableLiveData()
 
-    val isValid: MediatorLiveData<Boolean> = MediatorLiveData<Boolean>().apply {
-        addSource(chatroomName) { chatroomNameString ->
-            value = chatroomNameString.isNotEmpty()
-        }
-    }
-
-    val isProfileValid: MediatorLiveData<Boolean> = MediatorLiveData<Boolean>().apply {
-        addSource(profileName) { profileNameString ->
-            value = profileNameString.isNotEmpty()
-        }
-    }
+    val isValid: LiveData<Boolean> = Transformations.map(chatroomName, String::isNotEmpty)
+    val isProfileValid: LiveData<Boolean> = Transformations.map(profileName, String::isNotEmpty)
 
     init {
         chatroomName.value = ""

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="max_profile_name_length">20</integer>
+    <integer name="max_chatroom_name_length">50</integer>
+    <integer name="max_chatroom_description_length">200</integer>
+</resources>

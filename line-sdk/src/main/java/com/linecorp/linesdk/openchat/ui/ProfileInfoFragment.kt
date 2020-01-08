@@ -11,7 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.linecorp.linesdk.R
 import com.linecorp.linesdk.databinding.ProfileInfoFragmentBinding
-import com.linecorp.linesdk.openchat.FormatStringTextWatcher
+import com.linecorp.linesdk.openchat.setAfterTextChangedAction
 import kotlinx.android.synthetic.main.activity_create_open_chat.toolbar
 import kotlinx.android.synthetic.main.profile_info_fragment.displayNameEditText
 
@@ -51,14 +51,10 @@ class ProfileInfoFragment : Fragment() {
         setupProfileName()
     }
 
-    private fun setupProfileName() {
-        displayNameEditText.addTextChangedListener(
-            FormatStringTextWatcher(
-                { name, _ -> viewModel.profileName.value = name },
-                OpenChatInfoViewModel.MAX_PROFILE_NAME_LENGTH
-            )
-        )
-    }
+    private fun setupProfileName() =
+        displayNameEditText.setAfterTextChangedAction { name ->
+            viewModel.profileName.value = name
+        }
 
     private fun setupToolbar() {
         val toolbar = requireActivity().toolbar.apply {

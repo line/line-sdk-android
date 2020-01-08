@@ -100,6 +100,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.1.0'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.1.0'
 }
 
 ext {
@@ -149,6 +150,8 @@ task javadoc_public(type: Javadoc) {
 
     failOnError false
 
+    // TODO : find another way to support @hide annotation for internal API docs, since doclava
+    // conflicts with Kotlin and AndroidX
     /*
     options {
         doclet "com.google.doclava.Doclava"

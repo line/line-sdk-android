@@ -4,19 +4,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.IntegerRes
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.linecorp.linesdk.R
 import com.linecorp.linesdk.databinding.OpenChatInfoFragmentBinding
-import com.linecorp.linesdk.openchat.FormatStringTextWatcher
-import com.linecorp.linesdk.openchat.ui.OpenChatInfoViewModel.Companion.MAX_CHAT_DESCRIPTION_LENGTH
-import com.linecorp.linesdk.openchat.ui.OpenChatInfoViewModel.Companion.MAX_CHAT_NAME_LENGTH
+import com.linecorp.linesdk.openchat.setAfterTextChangedAction
 import kotlinx.android.synthetic.main.activity_create_open_chat.toolbar
 import kotlinx.android.synthetic.main.open_chat_info_fragment.categoryLabelTextView
 import kotlinx.android.synthetic.main.open_chat_info_fragment.descriptionEditText
+import kotlinx.android.synthetic.main.open_chat_info_fragment.descriptionMaxTextView
 import kotlinx.android.synthetic.main.open_chat_info_fragment.nameEditText
+import kotlinx.android.synthetic.main.open_chat_info_fragment.nameMaxTextView
 import kotlinx.android.synthetic.main.open_chat_info_fragment.searchIncludedCheckBox
 import kotlinx.android.synthetic.main.open_chat_info_fragment.searchIncludedContainer
 
@@ -45,10 +46,27 @@ class OpenChatInfoFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        setupViewModel()
+        setupViews()
+    }
+
+    private fun setupViewModel() {
         viewModel = ViewModelProviders.of(requireActivity()).get(OpenChatInfoViewModel::class.java)
         binding.viewModel = viewModel
 
-        setupViews()
+        viewModel.chatroomName.observe(this, Observer { name ->
+            nameMaxTextView.text =
+                generateTextLengthLimitString(name, R.integer.max_chatroom_name_length)
+        })
+
+        viewModel.description.observe(this, Observer { name ->
+            descriptionMaxTextView.text =
+                generateTextLengthLimitString(name, R.integer.max_chatroom_description_length)
+        })
+
+        viewModel.category.observe(this, Observer { category ->
+            categoryLabelTextView.text = category?.defaultString?.orEmpty()
+        })
     }
 
     private fun setupViews() {
@@ -79,7 +97,11 @@ class OpenChatInfoFragment : Fragment() {
         viewModel.isValid.observe(this, Observer { isValid ->
             nextMenuItem.isEnabled = isValid ?: false
         })
+    }
 
+    private fun generateTextLengthLimitString(text: String, limitResId: Int): String {
+        val maxCount = getResourceInt(limitResId)
+        return "${text.length}/$maxCount"
     }
 
     private fun setupSearchOption() {
@@ -92,9 +114,6 @@ class OpenChatInfoFragment : Fragment() {
 
     private fun setupCategoryLabel() {
         categoryLabelTextView.setOnClickListener { showCategorySelectionDialog() }
-        viewModel.category.observe(this, Observer { category ->
-            categoryLabelTextView.text = category?.defaultString?.orEmpty()
-        })
     }
 
     private fun showCategorySelectionDialog() =
@@ -103,34 +122,18 @@ class OpenChatInfoFragment : Fragment() {
                 val selectedCategory = viewModel.getSelectedCategory(which)
                 viewModel.category.value = selectedCategory
             }
-            .create()
             .show()
 
-    private fun setupDescription() {
-        descriptionEditText.addTextChangedListener(
-            FormatStringTextWatcher(::updateDescription, MAX_CHAT_DESCRIPTION_LENGTH)
-        )
+    private fun setupDescription() =
+        descriptionEditText.setAfterTextChangedAction { description ->
+            viewModel.description.value = description
+        }
 
-        descriptionEditText.setText(viewModel.description.value)
-    }
+    private fun setupName() =
+        nameEditText.setAfterTextChangedAction { viewModel.chatroomName.value = it }
 
-    private fun setupName() {
-        nameEditText.addTextChangedListener(
-            FormatStringTextWatcher(::updateName, MAX_CHAT_NAME_LENGTH)
-        )
-
-        nameEditText.setText(viewModel.chatroomName.value)
-    }
-
-    private fun updateName(updatedName: String, lengthString: String) {
-        viewModel.chatroomName.value = updatedName
-        binding.nameMaxTextView.text = lengthString
-    }
-
-    private fun updateDescription(updatedDescription: String, lengthString: String) {
-        viewModel.description.value = updatedDescription
-        binding.descriptionMaxTextView.text = lengthString
-    }
+    private fun getResourceInt(@IntegerRes resId: Int): Int =
+        requireActivity().resources.getInteger(resId)
 
     companion object {
         fun newInstance() = OpenChatInfoFragment()
