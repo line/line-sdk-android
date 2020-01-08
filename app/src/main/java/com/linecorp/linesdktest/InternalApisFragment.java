@@ -50,6 +50,7 @@ import com.linecorp.linesdk.message.template.UriAction;
 import com.linecorp.linesdk.openchat.OpenChatCategory;
 import com.linecorp.linesdk.openchat.OpenChatParameters;
 import com.linecorp.linesdk.openchat.OpenChatRoomInfo;
+import com.linecorp.linesdk.openchat.ui.CreateOpenChatActivity;
 import com.linecorp.linesdktest.apiclient.LineOauthApiClientForTest;
 import com.linecorp.linesdktest.settings.TestSetting;
 import com.linecorp.linesdktest.util.FlexMessageGenerator;
@@ -350,9 +351,14 @@ public class InternalApisFragment extends BaseApisFragment implements SendMessag
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
 
-        if (requestCode == REQUEST_CODE_CREATE_OPEN_CHATROOM && resultCode == Activity.RESULT_OK) {
-            OpenChatRoomInfo openChatRoomInfo = openChatApiClient.getOpenChatRoomInfoFromIntent(intent);
-            addLog(openChatRoomInfo.toString());
+        if (requestCode == REQUEST_CODE_CREATE_OPEN_CHATROOM) {
+            if (resultCode == Activity.RESULT_OK) {
+                OpenChatRoomInfo openChatRoomInfo = openChatApiClient.getOpenChatRoomInfoFromIntent(intent);
+                addLog(openChatRoomInfo.toString());
+            } else {
+                LineApiError error = intent.getParcelableExtra(CreateOpenChatActivity.ARG_ERROR_RESULT);
+                addLog(error.toString());
+            }
         }
     }
 
