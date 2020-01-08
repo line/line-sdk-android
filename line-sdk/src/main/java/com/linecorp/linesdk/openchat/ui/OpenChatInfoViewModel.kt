@@ -1,14 +1,17 @@
 package com.linecorp.linesdk.openchat.ui
 
-import android.os.AsyncTask
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.linecorp.linesdk.LineApiResponse
 import com.linecorp.linesdk.api.OpenChatApiClient
 import com.linecorp.linesdk.openchat.OpenChatCategory
 import com.linecorp.linesdk.openchat.OpenChatParameters
 import com.linecorp.linesdk.openchat.OpenChatRoomInfo
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class OpenChatInfoViewModel(
     private val openChatApiClient: OpenChatApiClient
@@ -35,8 +38,6 @@ class OpenChatInfoViewModel(
         }
     }
 
-    private var createOpenChatroomTask: CreateOpenChatroomTask? = null
-
     init {
         chatroomName.value = ""
         profileName.value = ""
@@ -58,28 +59,25 @@ class OpenChatInfoViewModel(
 
     fun createChatroom() {
         val openChatParameters = generateOpenChatParameters()
-        createOpenChatroomTask?.cancel(true)
 
-        createOpenChatroomTask =
-            CreateOpenChatroomTask(
-                openChatApiClient,
-                openChatParameters,
-                isCreatingChatRoom
-            ) { result ->
-                if (result.isSuccess) {
-                    openChatRoomInfo.value =  result.responseData
-                } else {
-                    createChatRoomError.value = result
-                }
+        viewModelScope.launch {
+            isCreatingChatRoom.value = true
+
+            val result = createChatRoomAsync(openChatParameters)
+            if (result.isSuccess) {
+                openChatRoomInfo.value =  result.responseData
+            } else {
+                createChatRoomError.value = result
             }
-        createOpenChatroomTask?.execute()
+
+            isCreatingChatRoom.value = false
+        }
     }
 
-
-    override fun onCleared() {
-        createOpenChatroomTask?.cancel(true)
-        super.onCleared()
-    }
+    private suspend fun createChatRoomAsync(openChatParameters: OpenChatParameters) =
+        withContext(Dispatchers.IO) {
+            openChatApiClient.createOpenChatRoom(openChatParameters)
+        }
 
     private fun generateOpenChatParameters(): OpenChatParameters =
         OpenChatParameters(
@@ -89,26 +87,6 @@ class OpenChatInfoViewModel(
             category.value ?: DEFAULT_CATEGORY,
             isSearchIncluded.value ?: true
         )
-
-    private class CreateOpenChatroomTask(
-        private val apiClient: OpenChatApiClient,
-        private val parameters: OpenChatParameters,
-        private val isCreatingChatRoom: MutableLiveData<Boolean>,
-        private val postAction: (LineApiResponse<OpenChatRoomInfo>) -> Unit
-    ) : AsyncTask<Void, Void, LineApiResponse<OpenChatRoomInfo>>() {
-        override fun onPreExecute() {
-            isCreatingChatRoom.value = true
-        }
-
-        override fun doInBackground(vararg params: Void): LineApiResponse<OpenChatRoomInfo> =
-            apiClient.createOpenChatRoom(parameters)
-
-        override fun onPostExecute(result: LineApiResponse<OpenChatRoomInfo>) {
-            isCreatingChatRoom.value = false
-            postAction(result)
-        }
-    }
-
 
     companion object {
         const val MAX_PROFILE_NAME_LENGTH = 20

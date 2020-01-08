@@ -1,9 +1,11 @@
 package com.linecorp.linesdk.openchat.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -68,6 +70,7 @@ class ProfileInfoFragment : Fragment() {
         val doneMenuItem = toolbar.menu.findItem(R.id.menu_item_create_profile_done)
         doneMenuItem.setOnMenuItemClickListener { menuItem ->
             if (menuItem.itemId == R.id.menu_item_create_profile_done) {
+                dismissKeyboard()
                 (requireActivity() as CreateOpenChatActivity).createChatroom()
                 true
             } else {
@@ -78,6 +81,16 @@ class ProfileInfoFragment : Fragment() {
         viewModel.isProfileValid.observe(this, Observer { isProfileValid ->
             doneMenuItem.isEnabled = isProfileValid ?: false
         })
+    }
+
+    private fun dismissKeyboard() {
+        val focusedView = requireActivity().currentFocus ?: return
+
+        (requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
+            .hideSoftInputFromWindow(
+                focusedView.windowToken,
+                InputMethodManager.RESULT_UNCHANGED_SHOWN
+            )
     }
 
     companion object {
