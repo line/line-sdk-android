@@ -13,6 +13,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import com.linecorp.linesdk.Constants
 import com.linecorp.linesdk.R
 import com.linecorp.linesdk.api.OpenChatApiClient
 import com.linecorp.linesdk.api.internal.OpenChatApiClientImpl
@@ -45,8 +46,6 @@ class CreateOpenChatActivity : AppCompatActivity() {
     }
 
     fun goToNextScreen() = addFragment(CreateOpenChatStep.UserProfile)
-
-    fun createChatroom() = viewModel.createChatroom()
 
     private fun initViewModel() {
         viewModel = ViewModelProviders.of(
@@ -103,7 +102,12 @@ class CreateOpenChatActivity : AppCompatActivity() {
         private const val ARG_API_BASE_URL: String = "arg_api_base_url"
         private const val ARG_CHANNEL_ID: String = "arg_channel_id"
         @JvmStatic
-        fun createIntent(context: Context, apiBaseUrl: String, channelId: String): Intent =
+        @JvmOverloads
+        fun createIntent(
+            context: Context,
+            channelId: String,
+            apiBaseUrl: String = Constants.API_SERVER_BASE_URI
+        ): Intent =
             Intent(context, CreateOpenChatActivity::class.java).apply {
                 putExtra(ARG_API_BASE_URL, apiBaseUrl)
                 putExtra(ARG_CHANNEL_ID, channelId)

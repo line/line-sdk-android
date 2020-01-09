@@ -11,7 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.linecorp.linesdk.R
 import com.linecorp.linesdk.databinding.OpenChatInfoFragmentBinding
-import com.linecorp.linesdk.openchat.setAfterTextChangedAction
+import com.linecorp.linesdk.openchat.addAfterTextChangedAction
 import kotlinx.android.synthetic.main.activity_create_open_chat.toolbar
 import kotlinx.android.synthetic.main.open_chat_info_fragment.categoryLabelTextView
 import kotlinx.android.synthetic.main.open_chat_info_fragment.descriptionEditText
@@ -65,7 +65,7 @@ class OpenChatInfoFragment : Fragment() {
         })
 
         viewModel.category.observe(this, Observer { category ->
-            categoryLabelTextView.text = category?.defaultString?.orEmpty()
+            categoryLabelTextView.text = category?.defaultString.orEmpty()
         })
     }
 
@@ -125,12 +125,10 @@ class OpenChatInfoFragment : Fragment() {
             .show()
 
     private fun setupDescription() =
-        descriptionEditText.setAfterTextChangedAction { description ->
-            viewModel.description.value = description
-        }
+        descriptionEditText.addAfterTextChangedAction(viewModel.description::setValue)
 
     private fun setupName() =
-        nameEditText.setAfterTextChangedAction { viewModel.chatroomName.value = it }
+        nameEditText.addAfterTextChangedAction(viewModel.chatroomName::setValue)
 
     private fun getResourceInt(@IntegerRes resId: Int): Int =
         requireActivity().resources.getInteger(resId)

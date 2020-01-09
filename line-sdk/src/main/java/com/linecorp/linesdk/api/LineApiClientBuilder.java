@@ -2,11 +2,12 @@ package com.linecorp.linesdk.api;
 
 import android.content.Context;
 import android.net.Uri;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.text.TextUtils;
 
-import com.linecorp.linesdk.BuildConfig;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import com.linecorp.linesdk.Constants;
 import com.linecorp.linesdk.api.internal.AutoRefreshLineApiClientProxy;
 import com.linecorp.linesdk.api.internal.LineApiClientImpl;
 import com.linecorp.linesdk.internal.AccessTokenCache;
@@ -42,8 +43,8 @@ public class LineApiClientBuilder {
         }
         this.context = context.getApplicationContext();
         this.channelId = channelId;
-        openidDiscoveryDocumentUrl = Uri.parse(BuildConfig.OPENID_DISCOVERY_DOCUMENT_URL);
-        apiBaseUri = Uri.parse(BuildConfig.API_SERVER_BASE_URI);
+        openidDiscoveryDocumentUrl = Uri.parse(Constants.OPENID_DISCOVERY_DOCUMENT_URL);
+        apiBaseUri = Uri.parse(Constants.API_SERVER_BASE_URI);
     }
 
     /**
@@ -78,14 +79,14 @@ public class LineApiClientBuilder {
     LineApiClientBuilder openidDiscoveryDocumentUrl(@Nullable final Uri openidDiscoveryDocumentUrl) {
         this.openidDiscoveryDocumentUrl =
                 ObjectUtils.defaultIfNull(openidDiscoveryDocumentUrl,
-                                          Uri.parse(BuildConfig.OPENID_DISCOVERY_DOCUMENT_URL));
+                                          Uri.parse(Constants.OPENID_DISCOVERY_DOCUMENT_URL));
         return this;
     }
 
     @NonNull
     LineApiClientBuilder apiBaseUri(@Nullable final Uri apiBaseUri) {
         this.apiBaseUri = ObjectUtils.defaultIfNull(apiBaseUri,
-                                                    Uri.parse(BuildConfig.API_SERVER_BASE_URI));
+                                                    Uri.parse(Constants.API_SERVER_BASE_URI));
         return this;
     }
 

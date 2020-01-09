@@ -4,7 +4,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
 
-fun EditText.setAfterTextChangedAction(textChangedAction: (String) -> Unit) {
+fun EditText.addAfterTextChangedAction(textChangedAction: (String) -> Unit) {
     this.addTextChangedListener(object : TextWatcher {
         override fun afterTextChanged(s: Editable?) =
             textChangedAction(s?.toString().orEmpty())

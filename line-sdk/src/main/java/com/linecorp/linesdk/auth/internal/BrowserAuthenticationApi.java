@@ -8,14 +8,16 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.core.content.ContextCompat;
-import android.text.TextUtils;
 
 import com.linecorp.linesdk.BuildConfig;
+import com.linecorp.linesdk.Constants;
 import com.linecorp.linesdk.LineApiError;
 import com.linecorp.linesdk.Scope;
 import com.linecorp.linesdk.auth.LineAuthenticationConfig;
@@ -225,7 +227,7 @@ import static com.linecorp.linesdk.utils.UriUtils.buildParams;
         if (shouldLaunchLineApp) {
             Intent lineAppIntent = new Intent(Intent.ACTION_VIEW);
             lineAppIntent.setData(loginUri);
-            lineAppIntent.setPackage(BuildConfig.LINE_APP_PACKAGE_NAME);
+            lineAppIntent.setPackage(Constants.LINE_APP_PACKAGE_NAME);
             return new AuthenticationIntentHolder(
                     lineAppIntent, startActivityOptions, true /* isLineAppAuthentication */);
         }

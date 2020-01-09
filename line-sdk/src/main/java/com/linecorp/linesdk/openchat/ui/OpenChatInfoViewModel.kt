@@ -23,9 +23,14 @@ class OpenChatInfoViewModel(
     val category: MutableLiveData<OpenChatCategory> = MutableLiveData()
     val isSearchIncluded: MutableLiveData<Boolean> = MutableLiveData()
 
-    val openChatRoomInfo: MutableLiveData<OpenChatRoomInfo> = MutableLiveData()
-    val createChatRoomError: MutableLiveData<LineApiResponse<OpenChatRoomInfo>> = MutableLiveData()
-    val isCreatingChatRoom: MutableLiveData<Boolean> = MutableLiveData()
+    val openChatRoomInfo: LiveData<OpenChatRoomInfo> get() = _openChatRoomInfo
+    private val _openChatRoomInfo: MutableLiveData<OpenChatRoomInfo> = MutableLiveData()
+
+    val createChatRoomError: LiveData<LineApiResponse<OpenChatRoomInfo>> get() = _createChatRoomError
+    private val _createChatRoomError: MutableLiveData<LineApiResponse<OpenChatRoomInfo>> = MutableLiveData()
+
+    val isCreatingChatRoom: LiveData<Boolean> get() = _isCreatingChatRoom
+    private val _isCreatingChatRoom: MutableLiveData<Boolean> = MutableLiveData()
 
     val isValid: LiveData<Boolean> = Transformations.map(chatroomName, String::isNotEmpty)
     val isProfileValid: LiveData<Boolean> = Transformations.map(profileName, String::isNotEmpty)
@@ -53,20 +58,20 @@ class OpenChatInfoViewModel(
         val openChatParameters = generateOpenChatParameters()
 
         viewModelScope.launch {
-            isCreatingChatRoom.value = true
+            _isCreatingChatRoom.value = true
 
             val result = createChatRoomAsync(openChatParameters)
             if (result.isSuccess) {
-                openChatRoomInfo.value =  result.responseData
+                _openChatRoomInfo.value =  result.responseData
             } else {
-                createChatRoomError.value = result
+                _createChatRoomError.value = result
             }
 
-            isCreatingChatRoom.value = false
+            _isCreatingChatRoom.value = false
         }
     }
 
-    private suspend fun createChatRoomAsync(openChatParameters: OpenChatParameters) =
+    private suspend fun createChatRoomAsync(openChatParameters: OpenChatParameters): LineApiResponse<OpenChatRoomInfo> =
         withContext(Dispatchers.IO) {
             openChatApiClient.createOpenChatRoom(openChatParameters)
         }
@@ -81,9 +86,6 @@ class OpenChatInfoViewModel(
         )
 
     companion object {
-        const val MAX_PROFILE_NAME_LENGTH = 20
-        const val MAX_CHAT_NAME_LENGTH = 50
-        const val MAX_CHAT_DESCRIPTION_LENGTH = 200
         private val DEFAULT_CATEGORY = OpenChatCategory.Game
     }
 }
