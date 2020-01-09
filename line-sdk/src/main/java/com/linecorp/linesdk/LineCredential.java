@@ -7,7 +7,7 @@ import androidx.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.linecorp.android.security.SecurityUtils.hideIfNotDebug;
+import static com.linecorp.linesdk.utils.DebugUtils.hideIfNotDebug;
 
 /**
  * Represents credentials that are used to grant access to the Social API.

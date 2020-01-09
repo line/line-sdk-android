@@ -20,15 +20,16 @@ import com.linecorp.linesdk.auth.LineLoginResult;
 import com.linecorp.linesdk.internal.AccessTokenCache;
 import com.linecorp.linesdk.internal.InternalAccessToken;
 import com.linecorp.linesdk.internal.IssueAccessTokenResult;
-import com.linecorp.linesdk.internal.OneTimePassword;
 import com.linecorp.linesdk.internal.OpenIdDiscoveryDocument;
 import com.linecorp.linesdk.internal.nwclient.LineAuthenticationApiClient;
 import com.linecorp.linesdk.internal.nwclient.TalkApiClient;
+import com.linecorp.linesdk.internal.pkce.PKCECode;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
@@ -57,10 +58,7 @@ public class LineAuthenticationControllerTest {
 
     private static final String USER_ID = "userId";
 
-    private static final String ONE_TIME_ID = "oneTimeId";
-    private static final String ONE_TIME_PASSWORD = "oneTimePassword";
-    private static final OneTimePassword ONE_TIME_ID_AND_PASSWORD =
-            new OneTimePassword(ONE_TIME_ID, ONE_TIME_PASSWORD);
+    private static final PKCECode PKCE_CODE = PKCECode.newCode();
     private static final String NONCE = "testNonce";
     private static final String REDIRECT_URI = "test://redirect.uri";
 
@@ -133,7 +131,8 @@ public class LineAuthenticationControllerTest {
                 RuntimeEnvironment.application, CHANNEL_ID, new TestStringCipher());
         LineAuthenticationStatus authenticationStatus = new LineAuthenticationStatus();
         authenticationStatus.setOpenIdNonce(NONCE);
-        target = new LineAuthenticationController(
+
+        final LineAuthenticationController controller = new LineAuthenticationController(
                 activity,
                 config,
                 authApiClient,
@@ -142,6 +141,9 @@ public class LineAuthenticationControllerTest {
                 accessTokenCache,
                 authenticationStatus,
                 LINE_AUTH_PARAMS);
+        target =  Mockito.spy(controller);
+        doReturn(PKCE_CODE).when(target).createPKCECode();
+
         doReturn(RuntimeEnvironment.application).when(activity).getApplicationContext();
         doReturn(new BrowserAuthenticationApi.Request(
                 LOGIN_INTENT, null /* startActivityOption */, REDIRECT_URI, false /* isLineAppAuthentication */))
@@ -149,46 +151,13 @@ public class LineAuthenticationControllerTest {
                 .getRequest(
                         any(Context.class),
                         any(LineAuthenticationConfig.class),
-                        any(OneTimePassword.class),
+                        any(PKCECode.class),
                         any(LineAuthenticationParams.class));
-    }
-
-    @Test
-    public void testNetworkErrorOfGettingOneTimePassword() throws Exception {
-        doReturn(LineApiResponse.createAsError(LineApiResponseCode.NETWORK_ERROR, LineApiError.DEFAULT))
-                .when(authApiClient)
-                .getOneTimeIdAndPassword(CHANNEL_ID);
-
-        target.startLineAuthentication();
-
-        Robolectric.getBackgroundThreadScheduler().runOneTask();
-        Robolectric.getForegroundThreadScheduler().runOneTask();
-
-        verify(activity, times(1)).onAuthenticationFinished(
-                LineLoginResult.error(LineApiResponseCode.NETWORK_ERROR, LineApiError.DEFAULT));
-    }
-
-    @Test
-    public void testInternalErrorOfGettingOneTimePassword() throws Exception {
-        doReturn(LineApiResponse.createAsError(LineApiResponseCode.INTERNAL_ERROR, LineApiError.DEFAULT))
-                .when(authApiClient)
-                .getOneTimeIdAndPassword(CHANNEL_ID);
-
-        target.startLineAuthentication();
-
-        Robolectric.getBackgroundThreadScheduler().runOneTask();
-        Robolectric.getForegroundThreadScheduler().runOneTask();
-
-        verify(activity, times(1)).onAuthenticationFinished(
-                LineLoginResult.error(LineApiResponseCode.INTERNAL_ERROR, LineApiError.DEFAULT));
     }
 
     @Test
     public void testErrorOfRequestTokenProvider() throws Exception {
         Intent newIntentData = new Intent();
-        doReturn(LineApiResponse.createAsSuccess(ONE_TIME_ID_AND_PASSWORD))
-                .when(authApiClient)
-                .getOneTimeIdAndPassword(CHANNEL_ID);
         doReturn(BrowserAuthenticationApi.Result.createAsInternalError("internalErrorMessage"))
                 .when(browserAuthenticationApi)
                 .getAuthenticationResultFrom(newIntentData);
@@ -199,7 +168,7 @@ public class LineAuthenticationControllerTest {
         Robolectric.getForegroundThreadScheduler().runOneTask();
 
         verify(browserAuthenticationApi, times(1))
-                .getRequest(activity, config, ONE_TIME_ID_AND_PASSWORD, LINE_AUTH_PARAMS);
+                .getRequest(activity, config, PKCE_CODE, LINE_AUTH_PARAMS);
 
         target.handleIntentFromLineApp(newIntentData);
 
@@ -210,16 +179,12 @@ public class LineAuthenticationControllerTest {
     @Test
     public void testNetworkErrorOfGettingAccessToken() throws Exception {
         Intent newIntentData = new Intent();
-        doReturn(LineApiResponse.createAsSuccess(ONE_TIME_ID_AND_PASSWORD))
-                .when(authApiClient)
-                .getOneTimeIdAndPassword(CHANNEL_ID);
         doReturn(BrowserAuthenticationApi.Result.createAsSuccess(REQUEST_TOKEN_STR, false))
                 .when(browserAuthenticationApi)
                 .getAuthenticationResultFrom(newIntentData);
         doReturn(LineApiResponse.createAsError(LineApiResponseCode.NETWORK_ERROR, LineApiError.DEFAULT))
                 .when(authApiClient)
-                .issueAccessToken(
-                        CHANNEL_ID, REQUEST_TOKEN_STR, ONE_TIME_ID_AND_PASSWORD, REDIRECT_URI);
+                .issueAccessToken(CHANNEL_ID, REQUEST_TOKEN_STR, PKCE_CODE, REDIRECT_URI);
 
         target.startLineAuthentication();
 
@@ -227,7 +192,7 @@ public class LineAuthenticationControllerTest {
         Robolectric.getForegroundThreadScheduler().runOneTask();
 
         verify(browserAuthenticationApi, times(1))
-                .getRequest(activity, config, ONE_TIME_ID_AND_PASSWORD, LINE_AUTH_PARAMS);
+                .getRequest(activity, config, PKCE_CODE, LINE_AUTH_PARAMS);
 
         target.handleIntentFromLineApp(newIntentData);
 
@@ -241,16 +206,12 @@ public class LineAuthenticationControllerTest {
     @Test
     public void testInternalErrorOfGettingAccessToken() throws Exception {
         Intent newIntentData = new Intent();
-        doReturn(LineApiResponse.createAsSuccess(ONE_TIME_ID_AND_PASSWORD))
-                .when(authApiClient)
-                .getOneTimeIdAndPassword(CHANNEL_ID);
         doReturn(BrowserAuthenticationApi.Result.createAsSuccess(REQUEST_TOKEN_STR, null))
                 .when(browserAuthenticationApi)
                 .getAuthenticationResultFrom(newIntentData);
         doReturn(LineApiResponse.createAsError(LineApiResponseCode.INTERNAL_ERROR, LineApiError.DEFAULT))
                 .when(authApiClient)
-                .issueAccessToken(
-                        CHANNEL_ID, REQUEST_TOKEN_STR, ONE_TIME_ID_AND_PASSWORD, REDIRECT_URI);
+                .issueAccessToken(CHANNEL_ID, REQUEST_TOKEN_STR, PKCE_CODE, REDIRECT_URI);
 
         target.startLineAuthentication();
 
@@ -258,7 +219,7 @@ public class LineAuthenticationControllerTest {
         Robolectric.getForegroundThreadScheduler().runOneTask();
 
         verify(browserAuthenticationApi, times(1))
-                .getRequest(activity, config, ONE_TIME_ID_AND_PASSWORD, LINE_AUTH_PARAMS);
+                .getRequest(activity, config, PKCE_CODE, LINE_AUTH_PARAMS);
 
         target.handleIntentFromLineApp(newIntentData);
 
@@ -272,16 +233,12 @@ public class LineAuthenticationControllerTest {
     @Test
     public void testNetworkErrorOfGettingAccountInfo() throws Exception {
         Intent newIntentData = new Intent();
-        doReturn(LineApiResponse.createAsSuccess(ONE_TIME_ID_AND_PASSWORD))
-                .when(authApiClient)
-                .getOneTimeIdAndPassword(CHANNEL_ID);
         doReturn(BrowserAuthenticationApi.Result.createAsSuccess(REQUEST_TOKEN_STR, null))
                 .when(browserAuthenticationApi)
                 .getAuthenticationResultFrom(newIntentData);
         doReturn(LineApiResponse.createAsSuccess(ISSUE_ACCESS_TOKEN_RESULT))
                 .when(authApiClient)
-                .issueAccessToken(
-                        CHANNEL_ID, REQUEST_TOKEN_STR, ONE_TIME_ID_AND_PASSWORD, REDIRECT_URI);
+                .issueAccessToken(CHANNEL_ID, REQUEST_TOKEN_STR, PKCE_CODE, REDIRECT_URI);
         doReturn(LineApiResponse.createAsError(LineApiResponseCode.NETWORK_ERROR, LineApiError.DEFAULT))
                 .when(talkApiClient)
                 .getProfile(ACCESS_TOKEN);
@@ -292,7 +249,7 @@ public class LineAuthenticationControllerTest {
         Robolectric.getForegroundThreadScheduler().runOneTask();
 
         verify(browserAuthenticationApi, times(1))
-                .getRequest(activity, config, ONE_TIME_ID_AND_PASSWORD, LINE_AUTH_PARAMS);
+                .getRequest(activity, config, PKCE_CODE, LINE_AUTH_PARAMS);
 
         target.handleIntentFromLineApp(newIntentData);
 
@@ -306,16 +263,12 @@ public class LineAuthenticationControllerTest {
     @Test
     public void testInternalErrorOfGettingAccountInfo() throws Exception {
         Intent newIntentData = new Intent();
-        doReturn(LineApiResponse.createAsSuccess(ONE_TIME_ID_AND_PASSWORD))
-                .when(authApiClient)
-                .getOneTimeIdAndPassword(CHANNEL_ID);
         doReturn(BrowserAuthenticationApi.Result.createAsSuccess(REQUEST_TOKEN_STR, null))
                 .when(browserAuthenticationApi)
                 .getAuthenticationResultFrom(newIntentData);
         doReturn(LineApiResponse.createAsSuccess(ISSUE_ACCESS_TOKEN_RESULT))
                 .when(authApiClient)
-                .issueAccessToken(
-                        CHANNEL_ID, REQUEST_TOKEN_STR, ONE_TIME_ID_AND_PASSWORD, REDIRECT_URI);
+                .issueAccessToken(CHANNEL_ID, REQUEST_TOKEN_STR, PKCE_CODE, REDIRECT_URI);
         doReturn(LineApiResponse.createAsError(LineApiResponseCode.INTERNAL_ERROR, LineApiError.DEFAULT))
                 .when(talkApiClient)
                 .getProfile(ACCESS_TOKEN);
@@ -326,7 +279,7 @@ public class LineAuthenticationControllerTest {
         Robolectric.getForegroundThreadScheduler().runOneTask();
 
         verify(browserAuthenticationApi, times(1))
-                .getRequest(activity, config, ONE_TIME_ID_AND_PASSWORD, LINE_AUTH_PARAMS);
+                .getRequest(activity, config, PKCE_CODE, LINE_AUTH_PARAMS);
 
         target.handleIntentFromLineApp(newIntentData);
 
@@ -340,16 +293,12 @@ public class LineAuthenticationControllerTest {
     @Test
     public void testSuccess() throws Exception {
         Intent newIntentData = new Intent();
-        doReturn(LineApiResponse.createAsSuccess(ONE_TIME_ID_AND_PASSWORD))
-                .when(authApiClient)
-                .getOneTimeIdAndPassword(CHANNEL_ID);
         doReturn(BrowserAuthenticationApi.Result.createAsSuccess(REQUEST_TOKEN_STR, null))
                 .when(browserAuthenticationApi)
                 .getAuthenticationResultFrom(newIntentData);
         doReturn(LineApiResponse.createAsSuccess(ISSUE_ACCESS_TOKEN_RESULT))
                 .when(authApiClient)
-                .issueAccessToken(
-                        CHANNEL_ID, REQUEST_TOKEN_STR, ONE_TIME_ID_AND_PASSWORD, REDIRECT_URI);
+                .issueAccessToken(CHANNEL_ID, REQUEST_TOKEN_STR, PKCE_CODE, REDIRECT_URI);
         doReturn(LineApiResponse.createAsSuccess(ACCOUNT_INFO))
                 .when(talkApiClient)
                 .getProfile(ACCESS_TOKEN);
@@ -363,7 +312,7 @@ public class LineAuthenticationControllerTest {
         Robolectric.getForegroundThreadScheduler().runOneTask();
 
         verify(browserAuthenticationApi, times(1))
-                .getRequest(activity, config, ONE_TIME_ID_AND_PASSWORD, LINE_AUTH_PARAMS);
+                .getRequest(activity, config, PKCE_CODE, LINE_AUTH_PARAMS);
 
         target.onActivityResult(3 /* requestCode */, 0 /* resultCode */, null /* data */);
         target.handleIntentFromLineApp(newIntentData);
@@ -390,17 +339,13 @@ public class LineAuthenticationControllerTest {
 
     @Test
     public void testCancel() throws Exception {
-        doReturn(LineApiResponse.createAsSuccess(ONE_TIME_ID_AND_PASSWORD))
-                .when(authApiClient)
-                .getOneTimeIdAndPassword(CHANNEL_ID);
-
         target.startLineAuthentication();
 
         Robolectric.getBackgroundThreadScheduler().runOneTask();
         Robolectric.getForegroundThreadScheduler().runOneTask();
 
         verify(browserAuthenticationApi, times(1))
-                .getRequest(activity, config, ONE_TIME_ID_AND_PASSWORD, LINE_AUTH_PARAMS);
+                .getRequest(activity, config, PKCE_CODE, LINE_AUTH_PARAMS);
 
         target.onActivityResult(3 /* requestCode */, 0 /* resultCode */, null /* data */);
 

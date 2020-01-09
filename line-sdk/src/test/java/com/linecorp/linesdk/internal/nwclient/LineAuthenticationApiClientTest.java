@@ -12,10 +12,10 @@ import com.linecorp.linesdk.internal.AccessTokenVerificationResult;
 import com.linecorp.linesdk.internal.IdTokenKeyType;
 import com.linecorp.linesdk.internal.InternalAccessToken;
 import com.linecorp.linesdk.internal.IssueAccessTokenResult;
-import com.linecorp.linesdk.internal.OneTimePassword;
 import com.linecorp.linesdk.internal.RefreshTokenResult;
 import com.linecorp.linesdk.internal.nwclient.core.ChannelServiceHttpClient;
 import com.linecorp.linesdk.internal.nwclient.core.ResponseDataParser;
+import com.linecorp.linesdk.internal.pkce.PKCECode;
 
 import org.json.JSONObject;
 import org.junit.Before;
@@ -53,6 +53,7 @@ import static org.mockito.Mockito.verify;
 public class LineAuthenticationApiClientTest {
     private static final String CHARSET_NAME = "UTF-8";
     private static final String CHANNEL_ID = "123";
+    private static final PKCECode PKCE_CODE = PKCECode.newCode();
     private static final String OPENID_DISCOVERY_DOC_URL = "https://test/.well-known/openid-configuration";
     private static final String API_BASE_URL = "https://test";
     private static final InternalAccessToken ACCESS_TOKEN =
@@ -75,42 +76,6 @@ public class LineAuthenticationApiClientTest {
     }
 
     @Test
-    public void getOneTimeIdAndPassword() throws Exception {
-        doReturn(EXPECTED_RESULT).when(httpClient).post(
-                any(Uri.class),
-                anyMapOf(String.class, String.class),
-                anyMapOf(String.class, String.class),
-                any(ResponseDataParser.class));
-
-        LineApiResponse<OneTimePassword> actualResult =
-                target.getOneTimeIdAndPassword(CHANNEL_ID);
-
-        assertSame(EXPECTED_RESULT, actualResult);
-
-        verify(httpClient, times(1)).post(
-                eq(Uri.parse(API_BASE_URL + "/oauth2/v2.1/otp")),
-                eq(Collections.<String, String>emptyMap()),
-                eq(Collections.singletonMap("client_id", String.valueOf(CHANNEL_ID))),
-                responseParserCaptor.capture());
-
-        verifyOneTimeIdAndPasswordParser(responseParserCaptor.getValue());
-    }
-
-    private static void verifyOneTimeIdAndPasswordParser(
-            @NonNull ResponseDataParser<?> responseDataParser) throws Exception {
-        ResponseDataParser<OneTimePassword> target =
-                (ResponseDataParser<OneTimePassword>) responseDataParser;
-
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("otpId", "testOtpId");
-        jsonObject.put("otp", "testOtp");
-        OneTimePassword oneTimePassword = target.getResponseData(
-                new TestStringInputStream(jsonObject.toString(), CHARSET_NAME));
-        assertEquals("testOtpId", oneTimePassword.getId());
-        assertEquals("testOtp", oneTimePassword.getPassword());
-    }
-
-    @Test
     public void testIssueAccessToken() throws Exception {
         doReturn(EXPECTED_RESULT).when(httpClient).post(
                 any(Uri.class),
@@ -122,7 +87,7 @@ public class LineAuthenticationApiClientTest {
                 target.issueAccessToken(
                         CHANNEL_ID,
                         "testRequestToken",
-                        new OneTimePassword("testOtpId", "testOtp"),
+                        PKCE_CODE,
                         "testRedirectUri");
 
         assertSame(EXPECTED_RESULT, actualResult);
@@ -132,12 +97,12 @@ public class LineAuthenticationApiClientTest {
         expectedPostData.put("code", "testRequestToken");
         expectedPostData.put("redirect_uri", "testRedirectUri");
         expectedPostData.put("client_id", CHANNEL_ID);
-        expectedPostData.put("otp", "testOtp");
+        expectedPostData.put("code_verifier", PKCE_CODE.getVerifier());
         expectedPostData.put("id_token_key_type", IdTokenKeyType.JWK.name());
         expectedPostData.put("client_version", "LINE SDK Android v" + BuildConfig.VERSION_NAME);
         verify(httpClient, times(1)).post(
                 eq(Uri.parse(API_BASE_URL + "/oauth2/v2.1/token")),
-                eq(Collections.<String, String>emptyMap()),
+                eq(Collections.emptyMap()),
                 eq(expectedPostData),
                 responseParserCaptor.capture());
 

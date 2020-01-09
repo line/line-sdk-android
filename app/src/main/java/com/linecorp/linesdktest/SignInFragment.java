@@ -3,10 +3,6 @@ package com.linecorp.linesdktest;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +11,10 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import com.linecorp.linesdk.Scope;
 import com.linecorp.linesdk.auth.LineAuthenticationConfig;
@@ -216,7 +216,7 @@ public class SignInFragment extends Fragment {
     @OnClick(R.id.generate_nonce_btn)
     @SuppressWarnings("unused")
     public void onGenerateNonceBtnClick() {
-        nonceEditText.setText(RandomStringUtils.randomAlphanumeric(8));
+        nonceEditText.setText(RandomStringUtils.randomAlphanumeric(16));
     }
 
     @OnClick(R.id.scope_all_checkbox)

@@ -2,7 +2,7 @@ package com.linecorp.linesdk.internal;
 
 import androidx.annotation.NonNull;
 
-import static com.linecorp.android.security.SecurityUtils.hideIfNotDebug;
+import static com.linecorp.linesdk.utils.DebugUtils.hideIfNotDebug;
 
 /**
  * Immutable data class represents a channel access token.

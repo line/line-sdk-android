@@ -6,7 +6,7 @@ import com.linecorp.linesdk.Scope;
 
 import java.util.List;
 
-import static com.linecorp.android.security.SecurityUtils.hideIfNotDebug;
+import static com.linecorp.linesdk.utils.DebugUtils.hideIfNotDebug;
 
 /**
  * Data class represents a result of refresh token.
