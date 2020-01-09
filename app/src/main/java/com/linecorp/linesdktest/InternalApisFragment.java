@@ -23,6 +23,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 
+import com.linecorp.linesdk.ActionResult;
 import com.linecorp.linesdk.FriendSortField;
 import com.linecorp.linesdk.GetFriendsResponse;
 import com.linecorp.linesdk.GetGroupsResponse;
@@ -355,14 +356,16 @@ public class InternalApisFragment extends BaseApisFragment implements SendMessag
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
 
-        if (requestCode == REQUEST_CODE_CREATE_OPEN_CHATROOM) {
-            if (resultCode == Activity.RESULT_OK) {
-                OpenChatRoomInfo openChatRoomInfo = openChatApiClient.getOpenChatRoomInfoFromIntent(intent);
-                addLog(openChatRoomInfo.toString());
+        if (requestCode == REQUEST_CODE_CREATE_OPEN_CHATROOM && resultCode == Activity.RESULT_OK) {
+            ActionResult result = CreateOpenChatActivity.getChatRoomCreationResult(intent);
+            if (result instanceof ActionResult.Success) {
+                OpenChatRoomInfo openChatRoomInfo = (OpenChatRoomInfo)((ActionResult.Success) result).getValue();
+                // post operations to openChatRoomInfo
             } else {
-                LineApiError error = intent.getParcelableExtra(CreateOpenChatActivity.ARG_ERROR_RESULT);
-                addLog(error.toString());
+                LineApiError lineApiError = (LineApiError) ((ActionResult.Error) result).getValue();
+                // post operations to lineApiError
             }
+            addLog(result.toString());
         }
     }
 

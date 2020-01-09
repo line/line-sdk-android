@@ -119,18 +119,6 @@ public class OpenChatApiClientImpl extends BaseApiClient implements OpenChatApiC
                 new MembershipStatusParser());
     }
 
-    @Override
-    @NonNull
-    public Intent getCreateOpenChatRoomIntent(@NonNull Activity activity) {
-        return CreateOpenChatActivity.createIntent(activity, apiBaseUrl.toString(), channelId);
-    }
-
-    @Override
-    @Nullable
-    public OpenChatRoomInfo getOpenChatRoomInfoFromIntent(Intent intent) {
-        return intent.getParcelableExtra(CreateOpenChatActivity.ARG_OPEN_CHATROOM_INFO);
-    }
-
     @VisibleForTesting
     private static class OpenChatRoomInfoParser extends JsonToObjectBaseResponseParser<OpenChatRoomInfo> {
         @NonNull
