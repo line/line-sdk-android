@@ -1,6 +1,5 @@
 package com.linecorp.linesdk.dialog.internal;
 
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
@@ -8,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.linecorp.linesdk.R;
 import com.squareup.picasso.Picasso;
@@ -26,7 +27,7 @@ public class TargetListAdapter extends RecyclerView.Adapter<TargetListAdapter.Ta
         private TextView textView;
         private CheckBox checkBox;
         private ImageView imageView;
-        private int highlightTextColor = 0;
+        private int highlightTextColor;
 
         public TargetViewHolder(ViewGroup vg) {
             super(vg);

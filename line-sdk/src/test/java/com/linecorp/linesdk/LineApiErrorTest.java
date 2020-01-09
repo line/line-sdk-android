@@ -14,7 +14,7 @@ import static org.junit.Assert.assertTrue;
  * Test for {@link LineApiError}.
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = TestConfig.TARGET_SDK_VERSION)
+@Config(sdk = TestConfig.TARGET_SDK_VERSION)
 public class LineApiErrorTest {
     @Test
     public void testParcelable() {

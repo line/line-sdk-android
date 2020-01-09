@@ -32,7 +32,7 @@ import static org.mockito.Mockito.when;
  * Test for {@link AutoRefreshLineApiClientProxy}.
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = TestConfig.TARGET_SDK_VERSION)
+@Config(sdk = TestConfig.TARGET_SDK_VERSION)
 public class AutoRefreshLineApiClientProxyTest {
     private static class Results {
         private static final LineApiResponse<?> UNAUTHORIZED = LineApiResponse.createAsError(

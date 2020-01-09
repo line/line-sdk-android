@@ -66,7 +66,7 @@ import static org.mockito.Mockito.verify;
  * Test for {@link TalkApiClient}.
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = TestConfig.TARGET_SDK_VERSION)
+@Config(sdk = TestConfig.TARGET_SDK_VERSION)
 public class TalkApiClientTest {
     private static final String CHARSET_NAME = "UTF-8";
     private static final String API_BASE_URL = "https://test";

@@ -6,11 +6,12 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
+
 import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
-import android.text.TextUtils;
 
 import com.linecorp.linesdk.LineAccessToken;
 import com.linecorp.linesdk.LineApiResponse;
@@ -110,7 +111,6 @@ import java.util.List;
     private class RequestTokenRequestTask
             extends AsyncTask<Void, Void, LineApiResponse<OneTimePassword>> {
 
-        @SuppressWarnings("OverloadedVarargsMethod")
         @Override
         protected LineApiResponse<OneTimePassword> doInBackground(
                 @Nullable Void... params) {
@@ -225,7 +225,6 @@ import java.util.List;
 
     private class AccessTokenRequestTask extends AsyncTask<BrowserAuthenticationApi.Result, Void, LineLoginResult> {
 
-        @SuppressWarnings("OverloadedVarargsMethod")
         @Override
         protected LineLoginResult doInBackground(@Nullable BrowserAuthenticationApi.Result... params) {
             BrowserAuthenticationApi.Result authResult = params[0];

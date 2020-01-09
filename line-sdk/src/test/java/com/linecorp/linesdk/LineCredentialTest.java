@@ -16,7 +16,7 @@ import static org.junit.Assert.assertTrue;
  * Test for {@link LineCredential}.
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = TestConfig.TARGET_SDK_VERSION)
+@Config(sdk = TestConfig.TARGET_SDK_VERSION)
 public class LineCredentialTest {
     @Test
     public void testParcelable() {

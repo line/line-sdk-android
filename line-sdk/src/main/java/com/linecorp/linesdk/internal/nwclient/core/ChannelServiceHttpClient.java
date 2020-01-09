@@ -102,9 +102,7 @@ public class ChannelServiceHttpClient {
                 logResponseHeadersForDebug(conn);
             }
 
-            LineApiResponse<T> response =
-                    getChannelServiceResponse(conn, responseDataParser, errorResponseParser);
-            return response;
+            return getChannelServiceResponse(conn, responseDataParser, errorResponseParser);
         } catch (IOException e) {
             LineApiResponse<T> response = LineApiResponse.createAsError(
                     LineApiResponseCode.NETWORK_ERROR, new LineApiError(e));
@@ -162,9 +160,7 @@ public class ChannelServiceHttpClient {
                 logResponseHeadersForDebug(conn);
             }
 
-            LineApiResponse<T> response =
-                    getChannelServiceResponse(conn, responseDataParser, errorResponseParser);
-            return response;
+            return getChannelServiceResponse(conn, responseDataParser, errorResponseParser);
         } catch (IOException e) {
             LineApiResponse<T> response = LineApiResponse.createAsError(
                     LineApiResponseCode.NETWORK_ERROR, new LineApiError(e));
@@ -197,9 +193,7 @@ public class ChannelServiceHttpClient {
             if (BuildConfig.DEBUG) {
                 logResponseHeadersForDebug(conn);
             }
-            LineApiResponse<T> response =
-                    getChannelServiceResponse(conn, responseDataParser, errorResponseParser);
-            return response;
+            return getChannelServiceResponse(conn, responseDataParser, errorResponseParser);
         } catch (IOException e) {
             LineApiResponse<T> response = LineApiResponse.createAsError(
                     LineApiResponseCode.NETWORK_ERROR, new LineApiError(e));
@@ -229,9 +223,7 @@ public class ChannelServiceHttpClient {
             if (BuildConfig.DEBUG) {
                 logResponseHeadersForDebug(conn);
             }
-            LineApiResponse<T> response =
-                    getChannelServiceResponse(conn, responseDataParser, errorResponseParser);
-            return response;
+            return getChannelServiceResponse(conn, responseDataParser, errorResponseParser);
         } catch (IOException e) {
             LineApiResponse<T> response = LineApiResponse.createAsError(
                     LineApiResponseCode.NETWORK_ERROR, new LineApiError(e));

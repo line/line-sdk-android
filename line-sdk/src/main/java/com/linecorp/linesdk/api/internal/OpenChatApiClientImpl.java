@@ -1,12 +1,9 @@
 package com.linecorp.linesdk.api.internal;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 
 import com.linecorp.linesdk.BuildConfig;
@@ -23,7 +20,6 @@ import com.linecorp.linesdk.openchat.MembershipStatus;
 import com.linecorp.linesdk.openchat.OpenChatParameters;
 import com.linecorp.linesdk.openchat.OpenChatRoomInfo;
 import com.linecorp.linesdk.openchat.OpenChatRoomStatus;
-import com.linecorp.linesdk.openchat.ui.CreateOpenChatActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,15 +40,11 @@ public class OpenChatApiClientImpl extends BaseApiClient implements OpenChatApiC
     @NonNull
     private final AccessTokenCache accessTokenCache;
 
-    @NonNull
-    private final String channelId;
-
     public OpenChatApiClientImpl(
             Context applicationContext,
             @NonNull Uri apiBaseUrl,
             @NonNull String channelId) {
             super(apiBaseUrl, new ChannelServiceHttpClient(applicationContext, BuildConfig.VERSION_NAME));
-        this.channelId = channelId;
         this.accessTokenCache = new AccessTokenCache(applicationContext, channelId);
     }
 

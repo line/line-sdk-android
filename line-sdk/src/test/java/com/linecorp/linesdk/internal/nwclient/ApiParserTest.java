@@ -1,6 +1,5 @@
 package com.linecorp.linesdk.internal.nwclient;
 
-import com.linecorp.linesdk.BuildConfig;
 import com.linecorp.linesdk.SendMessageResponse;
 import com.linecorp.linesdk.TestConfig;
 
@@ -18,7 +17,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = TestConfig.TARGET_SDK_VERSION)
+@Config(sdk = TestConfig.TARGET_SDK_VERSION)
 public class ApiParserTest {
 
     @Test
