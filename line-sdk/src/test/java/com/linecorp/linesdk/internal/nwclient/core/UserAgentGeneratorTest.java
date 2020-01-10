@@ -17,7 +17,7 @@ import static org.junit.Assert.assertTrue;
  * A test of {@link UserAgentGenerator}.
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = TestConfig.TARGET_SDK_VERSION)
+@Config(sdk = TestConfig.TARGET_SDK_VERSION)
 public class UserAgentGeneratorTest {
     private static final String SDK_VERSION = "999.999";
 

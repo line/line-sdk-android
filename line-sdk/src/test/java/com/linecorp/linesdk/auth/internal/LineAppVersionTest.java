@@ -3,10 +3,10 @@ package com.linecorp.linesdk.auth.internal;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.linecorp.linesdk.BuildConfig;
 import com.linecorp.linesdk.TestConfig;
 
 import org.junit.Before;
@@ -29,7 +29,7 @@ import static org.mockito.Mockito.doReturn;
  * Test for {@link LineAppVersion}.
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = TestConfig.TARGET_SDK_VERSION)
+@Config(sdk = TestConfig.TARGET_SDK_VERSION)
 public class LineAppVersionTest {
 
     @Mock

@@ -3,11 +3,12 @@ package com.linecorp.linesdk.auth;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.text.TextUtils;
 
-import com.linecorp.linesdk.BuildConfig;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import com.linecorp.linesdk.Constants;
 import com.linecorp.linesdk.utils.ObjectUtils;
 
 /**
@@ -161,30 +162,30 @@ public class LineAuthenticationConfig implements Parcelable {
                 throw new IllegalArgumentException("channelId is empty.");
             }
             this.channelId = channelId;
-            openidDiscoveryDocumentUrl = Uri.parse(BuildConfig.OPENID_DISCOVERY_DOCUMENT_URL);
-            apiBaseUrl = Uri.parse(BuildConfig.API_SERVER_BASE_URI);
-            webLoginPageUrl = Uri.parse(BuildConfig.WEB_LOGIN_PAGE_URL);
+            openidDiscoveryDocumentUrl = Uri.parse(Constants.OPENID_DISCOVERY_DOCUMENT_URL);
+            apiBaseUrl = Uri.parse(Constants.API_SERVER_BASE_URI);
+            webLoginPageUrl = Uri.parse(Constants.WEB_LOGIN_PAGE_URL);
         }
 
         @NonNull
         Builder openidDiscoveryDocumentUrl(@Nullable final Uri openidDiscoveryDocumentUrl) {
             this.openidDiscoveryDocumentUrl =
                     ObjectUtils.defaultIfNull(openidDiscoveryDocumentUrl,
-                                              Uri.parse(BuildConfig.OPENID_DISCOVERY_DOCUMENT_URL));
+                                              Uri.parse(Constants.OPENID_DISCOVERY_DOCUMENT_URL));
             return this;
         }
 
         @NonNull
         Builder apiBaseUrl(@Nullable final Uri apiBaseUrl) {
             this.apiBaseUrl = ObjectUtils.defaultIfNull(apiBaseUrl,
-                                                        Uri.parse(BuildConfig.API_SERVER_BASE_URI));
+                                                        Uri.parse(Constants.API_SERVER_BASE_URI));
             return this;
         }
 
         @NonNull
         Builder webLoginPageUrl(@Nullable final Uri webLoginPageUrl) {
             this.webLoginPageUrl = ObjectUtils.defaultIfNull(webLoginPageUrl,
-                                                             Uri.parse(BuildConfig.WEB_LOGIN_PAGE_URL));
+                                                             Uri.parse(Constants.WEB_LOGIN_PAGE_URL));
             return this;
         }
 

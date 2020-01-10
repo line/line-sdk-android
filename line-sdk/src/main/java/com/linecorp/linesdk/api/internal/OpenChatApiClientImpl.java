@@ -10,11 +10,11 @@ import com.linecorp.linesdk.BuildConfig;
 import com.linecorp.linesdk.LineApiError;
 import com.linecorp.linesdk.LineApiResponse;
 import com.linecorp.linesdk.LineApiResponseCode;
+import com.linecorp.linesdk.api.BaseApiClient;
 import com.linecorp.linesdk.api.OpenChatApiClient;
 import com.linecorp.linesdk.internal.AccessTokenCache;
 import com.linecorp.linesdk.internal.InternalAccessToken;
 import com.linecorp.linesdk.internal.nwclient.JsonToObjectBaseResponseParser;
-import com.linecorp.linesdk.internal.nwclient.TalkApiClient;
 import com.linecorp.linesdk.internal.nwclient.core.ChannelServiceHttpClient;
 import com.linecorp.linesdk.openchat.MembershipStatus;
 import com.linecorp.linesdk.openchat.OpenChatParameters;
@@ -31,7 +31,7 @@ import java.util.Map;
 /**
  * Implementation of {@link OpenChatApiClient}.
  */
-public class OpenChatApiClientImpl extends TalkApiClient implements OpenChatApiClient {
+public class OpenChatApiClientImpl extends BaseApiClient implements OpenChatApiClient {
     private static final LineApiResponse ERROR_RESPONSE_NO_TOKEN = LineApiResponse.createAsError(
             LineApiResponseCode.INTERNAL_ERROR,
             new LineApiError("access token is null")
@@ -43,15 +43,9 @@ public class OpenChatApiClientImpl extends TalkApiClient implements OpenChatApiC
     public OpenChatApiClientImpl(
             Context applicationContext,
             @NonNull Uri apiBaseUrl,
-            @NonNull AccessTokenCache accessTokenCache) {
+            @NonNull String channelId) {
             super(apiBaseUrl, new ChannelServiceHttpClient(applicationContext, BuildConfig.VERSION_NAME));
-            this.accessTokenCache = accessTokenCache;
-    }
-
-    @NonNull
-    @Override
-    public LineApiResponse<Boolean> getAgreementStatus() {
-        return null;
+        this.accessTokenCache = new AccessTokenCache(applicationContext, channelId);
     }
 
     @NonNull
@@ -61,7 +55,7 @@ public class OpenChatApiClientImpl extends TalkApiClient implements OpenChatApiC
         if (accessToken == null) return ERROR_RESPONSE_NO_TOKEN;
 
         final Uri uri = Uri.parse(apiBaseUrl + "square/v1/terms/agreement");
-        final String postData = String.format("{ \"agreed\": %s }", (agreed)? "true" : "false");
+        final String postData = String.format("{ \"agreed\": %s }", (agreed) ? "true" : "false");
 
         return httpClient.putWithJson(
                 uri,
@@ -146,5 +140,4 @@ public class OpenChatApiClientImpl extends TalkApiClient implements OpenChatApiC
             return MembershipStatus.valueOf(state);
         }
     }
-
 }

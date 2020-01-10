@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
-import com.linecorp.linesdk.BuildConfig;
 import com.linecorp.linesdk.LineAccessToken;
 import com.linecorp.linesdk.LineApiError;
 import com.linecorp.linesdk.LineApiResponse;
@@ -51,7 +50,7 @@ import static org.mockito.Mockito.verify;
  * Test for {@link LineAuthenticationController}.
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = TestConfig.TARGET_SDK_VERSION)
+@Config(sdk = TestConfig.TARGET_SDK_VERSION)
 public class LineAuthenticationControllerTest {
     private static final String ISSUER = "https://access.line.me";
     private static final String CHANNEL_ID = "testChannelId";
@@ -205,7 +204,7 @@ public class LineAuthenticationControllerTest {
         target.handleIntentFromLineApp(newIntentData);
 
         verify(activity, times(1)).onAuthenticationFinished(
-                LineLoginResult.error(LineApiResponseCode.INTERNAL_ERROR, any(LineApiError.class)));
+                LineLoginResult.error(LineApiResponseCode.INTERNAL_ERROR, any()));
     }
 
     @Test

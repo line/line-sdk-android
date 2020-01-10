@@ -2,11 +2,10 @@ package com.linecorp.linesdktest;
 
 import android.R.layout;
 import android.R.string;
+import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -20,6 +19,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+
+import com.linecorp.linesdk.ActionResult;
 import com.linecorp.linesdk.FriendSortField;
 import com.linecorp.linesdk.GetFriendsResponse;
 import com.linecorp.linesdk.GetGroupsResponse;
@@ -44,7 +48,10 @@ import com.linecorp.linesdk.message.template.ClickActionForTemplateMessage;
 import com.linecorp.linesdk.message.template.ConfirmLayoutTemplate;
 import com.linecorp.linesdk.message.template.ImageCarouselLayoutTemplate;
 import com.linecorp.linesdk.message.template.UriAction;
+import com.linecorp.linesdk.openchat.OpenChatCategory;
 import com.linecorp.linesdk.openchat.OpenChatParameters;
+import com.linecorp.linesdk.openchat.OpenChatRoomInfo;
+import com.linecorp.linesdk.openchat.ui.CreateOpenChatActivity;
 import com.linecorp.linesdktest.apiclient.LineOauthApiClientForTest;
 import com.linecorp.linesdktest.settings.TestSetting;
 import com.linecorp.linesdktest.util.FlexMessageGenerator;
@@ -60,6 +67,7 @@ import butterknife.OnClick;
 import static java.util.Arrays.asList;
 
 public class InternalApisFragment extends BaseApisFragment implements SendMessageDialog.OnSendListener {
+    private static final int REQUEST_CODE_CREATE_OPEN_CHATROOM = 4021;
     private final FlexMessageGenerator flexMessageGenerator = new FlexMessageGenerator();
 
     private final ReceiverList receivers = new ReceiverList();
@@ -300,17 +308,23 @@ public class InternalApisFragment extends BaseApisFragment implements SendMessag
 
     @OnClick(R.id.openchat_create_chat_btn)
     void createChatroom() {
-        startApiAsyncTask("createChatroom", () -> {
-            OpenChatParameters parameters = new OpenChatParameters.Builder()
-                    .setName("Demo openchat room")
-                    .setDescription("This is a demo chatroom description")
-                    .setCategoryId(17)
-                    .setCreatorDisplayName("Demo app owner")
-                    .setIsSearchable(true)
-                    .build();
+        OpenChatParameters parameters = new OpenChatParameters(
+                "Demo openchat room",
+                "This is a demo chatroom description",
+                "Demo app owner",
+                OpenChatCategory.Game,
+                true);
+        startApiAsyncTask("createChatroom", () -> openChatApiClient.createOpenChatRoom(parameters));
+    }
 
-            return openChatApiClient.createOpenChatRoom(parameters);
-        });
+    @OnClick(R.id.openchat_create_chat_ui_btn)
+    void createChatroomWithUi() {
+        Intent intent = CreateOpenChatActivity.createIntent(
+            getActivity(),
+            channelId,
+            BuildConfig.API_SERVER_BASE_URI);
+
+        startActivityForResult(intent, REQUEST_CODE_CREATE_OPEN_CHATROOM);
     }
 
     @OnClick(R.id.openchat_chatroom_status_btn)
@@ -321,7 +335,7 @@ public class InternalApisFragment extends BaseApisFragment implements SendMessag
                 .setView(input)
                 .setPositiveButton(string.ok, (dialog, whichButton) -> {
                     String roomId = input.getText().toString();
-                    startApiAsyncTask("createChatroom", () -> openChatApiClient.getOpenChatRoomStatus(roomId));
+                    startApiAsyncTask("getChatroomStatus", () -> openChatApiClient.getOpenChatRoomStatus(roomId));
                 }).show();
 
     }
@@ -337,6 +351,24 @@ public class InternalApisFragment extends BaseApisFragment implements SendMessag
                     startApiAsyncTask("getMembershipStatus", () -> openChatApiClient.getMembershipStatus(roomId));
                 }).show();
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+
+        if (requestCode == REQUEST_CODE_CREATE_OPEN_CHATROOM && resultCode == Activity.RESULT_OK) {
+            ActionResult result = CreateOpenChatActivity.getChatRoomCreationResult(intent);
+            if (result instanceof ActionResult.Success) {
+                OpenChatRoomInfo openChatRoomInfo = (OpenChatRoomInfo)((ActionResult.Success) result).getValue();
+                // post operations to openChatRoomInfo
+            } else {
+                LineApiError lineApiError = (LineApiError) ((ActionResult.Error) result).getValue();
+                // post operations to lineApiError
+            }
+            addLog(result.toString());
+        }
+    }
+
 
     @Override
     public void onSendSuccess(DialogInterface dialog) {

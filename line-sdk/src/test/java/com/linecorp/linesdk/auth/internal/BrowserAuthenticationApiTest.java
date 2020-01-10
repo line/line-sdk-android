@@ -20,6 +20,7 @@ import com.linecorp.linesdk.auth.LineAuthenticationParams;
 import com.linecorp.linesdk.internal.OneTimePassword;
 
 import org.json.JSONObject;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -54,7 +55,7 @@ import static org.mockito.Mockito.verify;
  * Test for {@link BrowserAuthenticationApi}.
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = TestConfig.TARGET_SDK_VERSION)
+@Config(sdk = TestConfig.TARGET_SDK_VERSION)
 public class BrowserAuthenticationApiTest {
     private static final String PACKAGE_NAME_SDK_CLIENT = "testPackageName";
     private static final String PACKAGE_NAME_LINE = "jp.naver.line.android";
@@ -132,10 +133,10 @@ public class BrowserAuthenticationApiTest {
         assertTrue(request.isLineAppAuthentication());
 
         verify(target, times(1)).getAuthenticationIntentHolder(
-                eq(context), eq(loginUri), eq(true) /* isLineAppAuthDisabled */);
+                eq(context), any(Uri.class), eq(true) /* isLineAppAuthDisabled */);
 
         verify(target, times(1)).createLoginUrl(
-                eq(config), eq(OTP), eq(LINE_AUTH_PARAMS), anyString(), anyString(), eq(REDIRECT_URI)
+                eq(config), eq(OTP), eq(LINE_AUTH_PARAMS), anyString(), any(), eq(REDIRECT_URI)
         );
     }
 
@@ -318,5 +319,10 @@ public class BrowserAuthenticationApiTest {
         //noinspection WrongConstant
         doReturn(targetApps).when(packageManager)
                 .queryIntentActivities(any(Intent.class), anyInt());
+    }
+
+    @After
+    public void tearDown() throws Exception {
+
     }
 }

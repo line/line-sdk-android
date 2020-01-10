@@ -3,11 +3,12 @@ package com.linecorp.linesdk.auth.internal;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.text.TextUtils;
 
-import com.linecorp.linesdk.BuildConfig;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import com.linecorp.linesdk.Constants;
 
 import java.util.StringTokenizer;
 
@@ -20,7 +21,7 @@ import java.util.StringTokenizer;
         PackageInfo packageInfo;
         try {
             packageInfo = context.getPackageManager()
-                    .getPackageInfo(BuildConfig.LINE_APP_PACKAGE_NAME, PackageManager.GET_META_DATA);
+                    .getPackageInfo(Constants.LINE_APP_PACKAGE_NAME, PackageManager.GET_META_DATA);
         } catch (PackageManager.NameNotFoundException e) {
             return null;
         }

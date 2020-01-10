@@ -58,6 +58,7 @@
     <string name="apis_openchat_create_room">createChatroom</string>
     <string name="apis_openchat_membership_status">membership status</string>
     <string name="apis_openchat_chatroom_status">chatroom status</string>
+    <string name="apis_openchat_create_room_with_ui">create chatroom with UI</string>
     <string-array name="supportedLocales">
         <item>ar</item>
         <item>de</item>

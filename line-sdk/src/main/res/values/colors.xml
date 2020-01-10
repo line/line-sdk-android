@@ -24,4 +24,10 @@
     <color name="tab_indicator">#464e66</color>
     <color name="tab_text_selected">#464e66</color>
     <color name="target_user_thumbnail_text">#404040</color>
+
+    <color name="openchat_divider">#efefef</color>
+    <color name="openchat_text_color">#b7b7b7</color>
+    <color name="text_hint">#b8b8b8b8</color>
+    <color name="openchat_background">#efefef</color>
+    <color name="openchat_category">#608bc5</color>
 </resources>

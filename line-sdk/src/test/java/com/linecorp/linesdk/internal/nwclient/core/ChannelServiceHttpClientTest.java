@@ -42,7 +42,7 @@ import static org.mockito.Mockito.verify;
  * Test for {@link ChannelServiceHttpClient}.
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = TestConfig.TARGET_SDK_VERSION)
+@Config(sdk = TestConfig.TARGET_SDK_VERSION)
 public class ChannelServiceHttpClientTest {
     private static final String CHARSET = "UTF-8";
     private static final String USER_AGENT = "testUserAgent";

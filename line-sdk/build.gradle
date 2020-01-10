@@ -1,5 +1,8 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.novoda.bintray-release'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 version = "5.4.0"
 
@@ -26,11 +29,10 @@ android {
         versionName version
 
         consumerProguardFiles 'consumer-proguard-rules.pro'
+    }
 
-        buildConfigField "String", "LINE_APP_PACKAGE_NAME", "\"jp.naver.line.android\""
-        buildConfigField "String", "OPENID_DISCOVERY_DOCUMENT_URL", "\"https://access.line.me/.well-known/openid-configuration\""
-        buildConfigField "String", "API_SERVER_BASE_URI", "\"https://api.line.me/\""
-        buildConfigField "String", "WEB_LOGIN_PAGE_URL", "\"https://access.line.me/oauth2/v2.1/login\""
+    dataBinding {
+        enabled = true
     }
 
     libraryVariants.all { variant ->
@@ -55,13 +57,15 @@ android {
     }
 }
 
+/*
 configurations {
     doclava
 }
+*/
 
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.browser:browser:1.0.0'
+    implementation 'androidx.browser:browser:1.2.0'
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.exifinterface:exifinterface:1.1.0'
@@ -71,13 +75,14 @@ dependencies {
         exclude group: 'junit', module: 'junit'
     }
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+
     testImplementation 'junit:junit:4.12'
-    testImplementation 'org.robolectric:robolectric:3.1.2'
-    testImplementation 'org.mockito:mockito-core:1.10.19'
+    testImplementation 'org.robolectric:robolectric:4.3'
+    testImplementation 'org.mockito:mockito-core:2.28.2'
 
     api 'io.jsonwebtoken:jjwt-api:0.10.5'
     implementation 'io.jsonwebtoken:jjwt-impl:0.10.5'
-    implementation ('io.jsonwebtoken:jjwt-orgjson:0.10.5') {
+    implementation('io.jsonwebtoken:jjwt-orgjson:0.10.5') {
         exclude group: 'org.json', module: 'json' //provided by Android natively
     }
 
@@ -85,7 +90,12 @@ dependencies {
 
     // doclava seems to be incompatible with latest Android X.
     // for @hide annotation on functions to hide it from javadoc
-    doclava 'com.google.doclava:doclava:1.0.6'
+    //doclava 'com.google.doclava:doclava:1.0.6'
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.1.0'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.1.0'
 }
 
 ext {
@@ -120,6 +130,41 @@ ext {
                     "https://developer.android.com/reference/"
             ]
     ]
+}
+
+task javadoc_public(type: Javadoc) {
+    group javadocParams.taskGroup
+    destinationDir = javadocParams.destDir.public
+
+    // doclava doesn't support `title`
+    title = null
+
+    source = javadocParams.source
+    classpath += javadocParams.classpath
+    include javadocParams.includes.public
+
+    failOnError false
+
+    // TODO : find another way to support @hide annotation for internal API docs, since doclava
+    // conflicts with Kotlin and AndroidX
+    /*
+    options {
+        doclet "com.google.doclava.Doclava"
+        docletpath = configurations.doclava.files.asType(List)
+
+        locale javadocParams.locale
+        encoding javadocParams.encoding
+
+        // doclava supports `-title ${title}`
+        addStringOption("title", "${javadocParams.title}")
+        addStringOption("templatedir", "${rootDir}/templates")
+        addMultilineMultiValueOption("federate").with {
+            javadocParams.externalLinks.each {
+                value.add(["name", it])
+            }
+        }
+    }
+     */
 }
 
 task javadoc_internal(type: Javadoc) {

@@ -49,7 +49,7 @@ import static org.mockito.Mockito.verify;
  * Test for {@link LineAuthenticationApiClient}.
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = TestConfig.TARGET_SDK_VERSION)
+@Config(sdk = TestConfig.TARGET_SDK_VERSION)
 public class LineAuthenticationApiClientTest {
     private static final String CHARSET_NAME = "UTF-8";
     private static final String CHANNEL_ID = "123";

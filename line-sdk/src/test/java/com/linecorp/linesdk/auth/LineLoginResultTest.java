@@ -2,9 +2,9 @@ package com.linecorp.linesdk.auth;
 
 import android.net.Uri;
 import android.os.Parcel;
+
 import androidx.annotation.NonNull;
 
-import com.linecorp.linesdk.BuildConfig;
 import com.linecorp.linesdk.LineAccessToken;
 import com.linecorp.linesdk.LineApiError;
 import com.linecorp.linesdk.LineApiResponseCode;
@@ -30,7 +30,7 @@ import static org.junit.Assert.assertNotEquals;
  * Test for {@link LineLoginResult}.
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = TestConfig.TARGET_SDK_VERSION)
+@Config(sdk = TestConfig.TARGET_SDK_VERSION)
 public class LineLoginResultTest {
     private final Date now = new Date();
     private final Date oneHourLater = new Date(now.getTime() + 3600000);

@@ -9,10 +9,6 @@ import com.linecorp.linesdk.openchat.OpenChatRoomInfo;
 import com.linecorp.linesdk.openchat.OpenChatRoomStatus;
 
 public interface OpenChatApiClient {
-
-    @NonNull
-    LineApiResponse<Boolean> getAgreementStatus();
-
     @NonNull
     LineApiResponse<Boolean> updateAgreementStatus(@NonNull Boolean agreed);
 

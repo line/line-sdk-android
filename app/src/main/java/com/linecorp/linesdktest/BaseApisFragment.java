@@ -24,13 +24,13 @@ public abstract class BaseApisFragment extends Fragment {
     @Nullable
     protected String channelId;
 
-    @Nullable
+    @NonNull
     protected LineApiClient lineApiClient;
 
-    @Nullable
+    @NonNull
     protected OpenChatApiClient openChatApiClient;
 
-    @Nullable
+    @NonNull
     protected ProgressDialog progressDialog;
 
     @NonNull
@@ -47,7 +47,7 @@ public abstract class BaseApisFragment extends Fragment {
         channelId = arguments.getString(ARG_KEY_CHANNEL_ID);
         lineApiClient = LineApiTestClientFactory.createLineApiClient(getContext(), channelId);
         openChatApiClient = LineApiTestClientFactory.createOpenchatApiClient(getContext(), channelId);
-        progressDialog = new ProgressDialog(getActivity());
+        progressDialog = new ProgressDialog(requireActivity());
     }
 
     protected Disposable startApiAsyncTask(String apiName, FunctionWithApiResponse function) {

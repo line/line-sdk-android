@@ -8,7 +8,7 @@ import com.linecorp.linesdk.internal.OpenIdDiscoveryDocument;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class OpenIdDiscoveryDocumentParser extends JsonToObjectBaseResponseParser<OpenIdDiscoveryDocument> {
+final class OpenIdDiscoveryDocumentParser extends JsonToObjectBaseResponseParser<OpenIdDiscoveryDocument> {
     @NonNull
     @Override
     protected OpenIdDiscoveryDocument parseJsonToObject(@NonNull final JSONObject jsonObject)

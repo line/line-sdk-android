@@ -2,10 +2,11 @@ package com.linecorp.linesdk.internal.nwclient;
 
 import android.content.Context;
 import android.net.Uri;
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
-import android.text.TextUtils;
 
 import com.linecorp.linesdk.BuildConfig;
 import com.linecorp.linesdk.FriendSortField;
@@ -19,6 +20,7 @@ import com.linecorp.linesdk.LineFriendshipStatus;
 import com.linecorp.linesdk.LineGroup;
 import com.linecorp.linesdk.LineProfile;
 import com.linecorp.linesdk.SendMessageResponse;
+import com.linecorp.linesdk.api.BaseApiClient;
 import com.linecorp.linesdk.internal.InternalAccessToken;
 import com.linecorp.linesdk.internal.nwclient.core.ChannelServiceHttpClient;
 import com.linecorp.linesdk.internal.nwclient.core.ResponseDataParser;
@@ -42,10 +44,7 @@ import static com.linecorp.linesdk.utils.UriUtils.buildUri;
  * Internal LINE Talk API client to process internal process such as building request data and
  * parsing response data.
  */
-public class TalkApiClient {
-    private static final String REQUEST_HEADER_ACCESS_TOKEN = "Authorization";
-    private static final String TOKEN_TYPE_BEARER = "Bearer";
-
+public class TalkApiClient extends BaseApiClient {
     private static final String BASE_PATH_COMMON_API = "v2";
     private static final String BASE_PATH_FRIENDSHIP_API = "friendship/v1";
     /* package */ static final String BASE_PATH_GRAPH_API = "graph/v2";
@@ -63,12 +62,6 @@ public class TalkApiClient {
     private static final ResponseDataParser<GetFriendsResponse> FRIENDS_PARSER = new FriendsParser();
     private static final ResponseDataParser<GetGroupsResponse> GROUP_PARSER = new GroupParser();
 
-    @NonNull
-    protected final Uri apiBaseUrl;
-
-    @NonNull
-    protected final ChannelServiceHttpClient httpClient;
-
     public TalkApiClient(Context applicationContext, @NonNull Uri apiBaseUrl) {
         this(apiBaseUrl, new ChannelServiceHttpClient(applicationContext, BuildConfig.VERSION_NAME));
     }
@@ -77,15 +70,7 @@ public class TalkApiClient {
     protected TalkApiClient(
             @NonNull Uri apiBaseUrl,
             @NonNull ChannelServiceHttpClient httpClient) {
-        this.apiBaseUrl = apiBaseUrl;
-        this.httpClient = httpClient;
-    }
-
-    @NonNull
-    protected static Map<String, String> buildRequestHeaders(@NonNull InternalAccessToken accessToken) {
-        return buildParams(
-                REQUEST_HEADER_ACCESS_TOKEN, TOKEN_TYPE_BEARER + ' ' + accessToken.getAccessToken()
-        );
+        super(apiBaseUrl, httpClient);
     }
 
     @NonNull

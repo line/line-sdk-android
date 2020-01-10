@@ -21,7 +21,7 @@ import static org.junit.Assert.assertNull;
  * Test for {@link AccessTokenCache}.
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = TestConfig.TARGET_SDK_VERSION)
+@Config(sdk = TestConfig.TARGET_SDK_VERSION)
 public class AccessTokenCacheTest {
     private static final String CHANNEL_ID1 = "1";
     private static final String CHANNEL_ID2 = "2";
