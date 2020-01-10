@@ -11,7 +11,7 @@ class OpenChatParameters(
     private val isSearchable: Boolean = true
 ) {
     init {
-        require(name.isNotEmpty() &&  name.length <= 50) { "String size needs to be less or equal to 50" }
+        require(name.isNotEmpty() && name.length <= 50) { "String size needs to be less or equal to 50" }
         require(description.length <= 200) { "String size needs to be less or equal to 200" }
         require(creatorDisplayName.isNotEmpty() && creatorDisplayName.length <= 50) { "String size needs to be less or equal to 50" }
     }

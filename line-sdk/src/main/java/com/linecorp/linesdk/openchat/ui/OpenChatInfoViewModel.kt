@@ -16,7 +16,7 @@ import kotlinx.coroutines.withContext
 
 class OpenChatInfoViewModel(
     private val openChatApiClient: OpenChatApiClient
-): ViewModel() {
+) : ViewModel() {
     val chatroomName: MutableLiveData<String> = MutableLiveData()
     val profileName: MutableLiveData<String> = MutableLiveData()
     val description: MutableLiveData<String> = MutableLiveData()
@@ -27,7 +27,8 @@ class OpenChatInfoViewModel(
     private val _openChatRoomInfo: MutableLiveData<OpenChatRoomInfo> = MutableLiveData()
 
     val createChatRoomError: LiveData<LineApiResponse<OpenChatRoomInfo>> get() = _createChatRoomError
-    private val _createChatRoomError: MutableLiveData<LineApiResponse<OpenChatRoomInfo>> = MutableLiveData()
+    private val _createChatRoomError: MutableLiveData<LineApiResponse<OpenChatRoomInfo>> =
+        MutableLiveData()
 
     val isCreatingChatRoom: LiveData<Boolean> get() = _isCreatingChatRoom
     private val _isCreatingChatRoom: MutableLiveData<Boolean> = MutableLiveData()
@@ -62,7 +63,7 @@ class OpenChatInfoViewModel(
 
             val result = createChatRoomAsync(openChatParameters)
             if (result.isSuccess) {
-                _openChatRoomInfo.value =  result.responseData
+                _openChatRoomInfo.value = result.responseData
             } else {
                 _createChatRoomError.value = result
             }

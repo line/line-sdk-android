@@ -116,8 +116,9 @@ class CreateOpenChatActivity : AppCompatActivity() {
 
         @JvmStatic
         fun getChatRoomCreationResult(intent: Intent): ActionResult<OpenChatRoomInfo, LineApiError> {
-            val openChatRoomInfo = intent.getParcelableExtra(ARG_OPEN_CHATROOM_INFO) as? OpenChatRoomInfo
-            openChatRoomInfo?.let { openChatRoomInfo ->  return ActionResult.Success(openChatRoomInfo) }
+            val openChatRoomInfo =
+                intent.getParcelableExtra(ARG_OPEN_CHATROOM_INFO) as? OpenChatRoomInfo
+            openChatRoomInfo?.let { openChatRoomInfo -> return ActionResult.Success(openChatRoomInfo) }
 
             val lineApiError = intent.getParcelableExtra(ARG_ERROR_RESULT) as? LineApiError
             lineApiError?.let { lineApiError -> return ActionResult.Error(lineApiError) }

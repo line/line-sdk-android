@@ -33,18 +33,18 @@ import java.util.Map;
  */
 public class OpenChatApiClientImpl extends BaseApiClient implements OpenChatApiClient {
     private static final LineApiResponse ERROR_RESPONSE_NO_TOKEN = LineApiResponse.createAsError(
-            LineApiResponseCode.INTERNAL_ERROR,
-            new LineApiError("access token is null")
-    );
+        LineApiResponseCode.INTERNAL_ERROR,
+        new LineApiError("access token is null")
+                                                                                                );
 
     @NonNull
     private final AccessTokenCache accessTokenCache;
 
     public OpenChatApiClientImpl(
-            Context applicationContext,
-            @NonNull Uri apiBaseUrl,
-            @NonNull String channelId) {
-            super(apiBaseUrl, new ChannelServiceHttpClient(applicationContext, BuildConfig.VERSION_NAME));
+        Context applicationContext,
+        @NonNull Uri apiBaseUrl,
+        @NonNull String channelId) {
+        super(apiBaseUrl, new ChannelServiceHttpClient(applicationContext, BuildConfig.VERSION_NAME));
         this.accessTokenCache = new AccessTokenCache(applicationContext, channelId);
     }
 
@@ -58,10 +58,10 @@ public class OpenChatApiClientImpl extends BaseApiClient implements OpenChatApiC
         final String postData = String.format("{ \"agreed\": %s }", (agreed) ? "true" : "false");
 
         return httpClient.putWithJson(
-                uri,
-                buildRequestHeaders(accessToken),
-                postData,
-                null);
+            uri,
+            buildRequestHeaders(accessToken),
+            postData,
+            null);
     }
 
     @NonNull
@@ -73,10 +73,10 @@ public class OpenChatApiClientImpl extends BaseApiClient implements OpenChatApiC
         final Uri uri = Uri.parse(apiBaseUrl + "square/v1/square");
 
         return httpClient.postWithJson(
-                uri,
-                buildRequestHeaders(accessToken),
-                openChatParameters.toJsonString(),
-                new OpenChatRoomInfoParser());
+            uri,
+            buildRequestHeaders(accessToken),
+            openChatParameters.toJsonString(),
+            new OpenChatRoomInfoParser());
     }
 
     @NonNull
@@ -90,10 +90,10 @@ public class OpenChatApiClientImpl extends BaseApiClient implements OpenChatApiC
         queryParameters.put("squareMid", roomId);
 
         return httpClient.get(
-                uri,
-                buildRequestHeaders(accessToken),
-                queryParameters,
-                new OpenChatRoomStatusParser());
+            uri,
+            buildRequestHeaders(accessToken),
+            queryParameters,
+            new OpenChatRoomStatusParser());
     }
 
     @NonNull
@@ -105,10 +105,10 @@ public class OpenChatApiClientImpl extends BaseApiClient implements OpenChatApiC
         final Uri uri = Uri.parse(apiBaseUrl + "square/v1/square/" + roomId + "/membership");
 
         return httpClient.get(
-                uri,
-                buildRequestHeaders(accessToken),
-                Collections.emptyMap(),
-                new MembershipStatusParser());
+            uri,
+            buildRequestHeaders(accessToken),
+            Collections.emptyMap(),
+            new MembershipStatusParser());
     }
 
     @VisibleForTesting
@@ -117,7 +117,7 @@ public class OpenChatApiClientImpl extends BaseApiClient implements OpenChatApiC
         @Override
         protected OpenChatRoomInfo parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
             return new OpenChatRoomInfo(jsonObject.getString("squareMid"),
-                    jsonObject.getString("url"));
+                jsonObject.getString("url"));
         }
     }
 
