@@ -1,8 +1,9 @@
 package com.linecorp.linesdk.api.internal;
 
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.text.TextUtils;
 
 import com.linecorp.linesdk.FriendSortField;
 import com.linecorp.linesdk.GetFriendsResponse;
@@ -23,6 +24,10 @@ import com.linecorp.linesdk.internal.RefreshTokenResult;
 import com.linecorp.linesdk.internal.nwclient.LineAuthenticationApiClient;
 import com.linecorp.linesdk.internal.nwclient.TalkApiClient;
 import com.linecorp.linesdk.message.MessageData;
+import com.linecorp.linesdk.openchat.MembershipStatus;
+import com.linecorp.linesdk.openchat.OpenChatParameters;
+import com.linecorp.linesdk.openchat.OpenChatRoomInfo;
+import com.linecorp.linesdk.openchat.OpenChatRoomStatus;
 
 import java.util.List;
 
@@ -269,6 +274,32 @@ public class LineApiClientImpl implements LineApiClient {
                 accessToken -> talkApiClient.sendMessageToMultipleUsers(
                         accessToken, targetUserIds, messages, isOttUsed)
         );
+    }
+
+    @NonNull
+    public LineApiResponse<Boolean> updateAgreementStatus(@NonNull Boolean agreed) {
+        return callWithAccessToken(
+            accessToken -> talkApiClient.updateAgreementStatus(accessToken, agreed));
+    }
+
+    @NonNull
+    public LineApiResponse<OpenChatRoomInfo> createOpenChatRoom(@NonNull OpenChatParameters openChatParameters) {
+        return callWithAccessToken(
+            accessToken -> talkApiClient.createOpenChatRoom(accessToken, openChatParameters));
+
+    }
+
+    @NonNull
+    public LineApiResponse<OpenChatRoomStatus> getOpenChatRoomStatus(@NonNull String roomId) {
+        return callWithAccessToken(
+            accessToken -> talkApiClient.getOpenChatRoomStatus(accessToken, roomId));
+
+    }
+
+    @NonNull
+    public LineApiResponse<MembershipStatus> getMembershipStatus(@NonNull String roomId) {
+        return callWithAccessToken(
+            accessToken -> talkApiClient.getMembershipStatus(accessToken, roomId));
     }
 
     @FunctionalInterface

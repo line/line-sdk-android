@@ -76,7 +76,7 @@ public class LineApiClientBuilder {
      * @return The current {@link LineApiClientBuilder} instance.
      */
     @NonNull
-    LineApiClientBuilder openidDiscoveryDocumentUrl(@Nullable final Uri openidDiscoveryDocumentUrl) {
+    public LineApiClientBuilder openidDiscoveryDocumentUrl(@Nullable final Uri openidDiscoveryDocumentUrl) {
         this.openidDiscoveryDocumentUrl =
                 ObjectUtils.defaultIfNull(openidDiscoveryDocumentUrl,
                                           Uri.parse(Constants.OPENID_DISCOVERY_DOCUMENT_URL));
@@ -84,7 +84,7 @@ public class LineApiClientBuilder {
     }
 
     @NonNull
-    LineApiClientBuilder apiBaseUri(@Nullable final Uri apiBaseUri) {
+    public LineApiClientBuilder apiBaseUri(@Nullable final Uri apiBaseUri) {
         this.apiBaseUri = ObjectUtils.defaultIfNull(apiBaseUri,
                                                     Uri.parse(Constants.API_SERVER_BASE_URI));
         return this;

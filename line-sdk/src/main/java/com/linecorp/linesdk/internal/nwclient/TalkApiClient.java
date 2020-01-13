@@ -20,13 +20,16 @@ import com.linecorp.linesdk.LineFriendshipStatus;
 import com.linecorp.linesdk.LineGroup;
 import com.linecorp.linesdk.LineProfile;
 import com.linecorp.linesdk.SendMessageResponse;
-import com.linecorp.linesdk.api.BaseApiClient;
 import com.linecorp.linesdk.internal.InternalAccessToken;
 import com.linecorp.linesdk.internal.nwclient.core.ChannelServiceHttpClient;
 import com.linecorp.linesdk.internal.nwclient.core.ResponseDataParser;
 import com.linecorp.linesdk.message.MessageData;
 import com.linecorp.linesdk.message.MessageSendRequest;
 import com.linecorp.linesdk.message.OttRequest;
+import com.linecorp.linesdk.openchat.MembershipStatus;
+import com.linecorp.linesdk.openchat.OpenChatParameters;
+import com.linecorp.linesdk.openchat.OpenChatRoomInfo;
+import com.linecorp.linesdk.openchat.OpenChatRoomStatus;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,6 +37,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -44,10 +48,13 @@ import static com.linecorp.linesdk.utils.UriUtils.buildUri;
  * Internal LINE Talk API client to process internal process such as building request data and
  * parsing response data.
  */
-public class TalkApiClient extends BaseApiClient {
+public class TalkApiClient {
+    private static final String REQUEST_HEADER_ACCESS_TOKEN = "Authorization";
+    private static final String TOKEN_TYPE_BEARER = "Bearer";
     private static final String BASE_PATH_COMMON_API = "v2";
     private static final String BASE_PATH_FRIENDSHIP_API = "friendship/v1";
-    /* package */ static final String BASE_PATH_GRAPH_API = "graph/v2";
+    private static final String BASE_PATH_GRAPH_API = "graph/v2";
+    private static final String BASE_PATH_OPENCHAT_API = "square/v1";
     /* package */ static final String BASE_PATH_MESSAGE_API = "message/v3";
     /* package */ static final String PATH_FRIENDS = "friends";
     /* package */ static final String PATH_OTS_FRIENDS = "ots/friends";
@@ -55,6 +62,12 @@ public class TalkApiClient extends BaseApiClient {
     /* package */ static final String PATH_OTS_GROUPS = "ots/groups";
     /* package */ static final String PATH_OTT_SHARE = "ott/share";
     /* package */ static final String PATH_OTT_ISSUE = "ott/issue";
+
+    @NonNull
+    private final Uri apiBaseUrl;
+
+    @NonNull
+    private final ChannelServiceHttpClient httpClient;
 
     private static final ResponseDataParser<LineProfile> PROFILE_PARSER = new ProfileParser();
     private static final ResponseDataParser<LineFriendshipStatus> FRIENDSHIP_STATUS_PARSER =
@@ -67,10 +80,11 @@ public class TalkApiClient extends BaseApiClient {
     }
 
     @VisibleForTesting
-    protected TalkApiClient(
+    public TalkApiClient(
             @NonNull Uri apiBaseUrl,
             @NonNull ChannelServiceHttpClient httpClient) {
-        super(apiBaseUrl, httpClient);
+        this.apiBaseUrl = apiBaseUrl;
+        this.httpClient = httpClient;
     }
 
     @NonNull
@@ -282,6 +296,95 @@ public class TalkApiClient extends BaseApiClient {
     }
 
     @NonNull
+    public LineApiResponse<Boolean> updateAgreementStatus(
+        @NonNull InternalAccessToken accessToken,
+        @NonNull Boolean agreed
+    ) {
+        final Uri uri = buildUri(apiBaseUrl, BASE_PATH_OPENCHAT_API, "terms/agreement");
+        final String postData = String.format("{ \"agreed\": %s }", (agreed) ? "true" : "false");
+
+        return httpClient.putWithJson(
+            uri,
+            buildRequestHeaders(accessToken),
+            postData,
+            null);
+    }
+
+    @NonNull
+    public LineApiResponse<OpenChatRoomInfo> createOpenChatRoom(
+        @NonNull InternalAccessToken accessToken,
+        @NonNull OpenChatParameters openChatParameters
+    ) {
+        final Uri uri = Uri.parse(apiBaseUrl + "square/v1/square");
+
+        return httpClient.postWithJson(
+            uri,
+            buildRequestHeaders(accessToken),
+            openChatParameters.toJsonString(),
+            new OpenChatRoomInfoParser());
+    }
+
+    @NonNull
+    public LineApiResponse<OpenChatRoomStatus> getOpenChatRoomStatus(
+        @NonNull InternalAccessToken accessToken,
+        @NonNull String roomId
+    ) {
+        final Uri uri = buildUri(apiBaseUrl, BASE_PATH_OPENCHAT_API, "square/" + roomId + "/status");
+        final Map<String, String> queryParameters = new HashMap<>();
+        queryParameters.put("squareMid", roomId);
+
+        return httpClient.get(
+            uri,
+            buildRequestHeaders(accessToken),
+            queryParameters,
+            new OpenChatRoomStatusParser());
+    }
+
+    @NonNull
+    public LineApiResponse<MembershipStatus> getMembershipStatus(
+        @NonNull InternalAccessToken accessToken,
+        @NonNull String roomId
+    ) {
+        final Uri uri = buildUri(apiBaseUrl, BASE_PATH_OPENCHAT_API,   "square/" + roomId + "/membership");
+
+        return httpClient.get(
+            uri,
+            buildRequestHeaders(accessToken),
+            Collections.emptyMap(),
+            new MembershipStatusParser());
+    }
+
+    @VisibleForTesting
+    private static class OpenChatRoomInfoParser extends JsonToObjectBaseResponseParser<OpenChatRoomInfo> {
+        @NonNull
+        @Override
+        protected OpenChatRoomInfo parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
+            return new OpenChatRoomInfo(jsonObject.getString("squareMid"),
+                jsonObject.getString("url"));
+        }
+    }
+
+    @VisibleForTesting
+    private static class OpenChatRoomStatusParser extends JsonToObjectBaseResponseParser<OpenChatRoomStatus> {
+        @NonNull
+        @Override
+        protected OpenChatRoomStatus parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
+            String status = jsonObject.getString("status").toUpperCase();
+            return OpenChatRoomStatus.valueOf(status);
+        }
+    }
+
+    @VisibleForTesting
+    private static class MembershipStatusParser extends JsonToObjectBaseResponseParser<MembershipStatus> {
+        @NonNull
+        @Override
+        protected MembershipStatus parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
+            String state = jsonObject.getString("state").toUpperCase();
+            return MembershipStatus.valueOf(state);
+        }
+    }
+
+    @NonNull
     private LineApiResponse<String> getOtt(
             @NonNull InternalAccessToken accessToken,
             @NonNull List<String> targetUserIds
@@ -300,6 +403,13 @@ public class TalkApiClient extends BaseApiClient {
                 buildRequestHeaders(accessToken),
                 postData,
                 new StringParser("token"));
+    }
+
+    @NonNull
+    private static Map<String, String> buildRequestHeaders(@NonNull InternalAccessToken accessToken) {
+        return buildParams(
+            REQUEST_HEADER_ACCESS_TOKEN,
+            TOKEN_TYPE_BEARER + ' ' + accessToken.getAccessToken());
     }
 
     @VisibleForTesting

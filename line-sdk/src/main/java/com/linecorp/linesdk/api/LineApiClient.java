@@ -13,6 +13,10 @@ import com.linecorp.linesdk.LineFriendshipStatus;
 import com.linecorp.linesdk.LineProfile;
 import com.linecorp.linesdk.SendMessageResponse;
 import com.linecorp.linesdk.message.MessageData;
+import com.linecorp.linesdk.openchat.MembershipStatus;
+import com.linecorp.linesdk.openchat.OpenChatParameters;
+import com.linecorp.linesdk.openchat.OpenChatRoomInfo;
+import com.linecorp.linesdk.openchat.OpenChatRoomStatus;
 
 import java.util.List;
 
@@ -352,4 +356,16 @@ public interface LineApiClient {
             @NonNull List<MessageData> messages,
             boolean isOttUsed
     );
+
+    @NonNull
+    LineApiResponse<Boolean> updateAgreementStatus(@NonNull Boolean agreed);
+
+    @NonNull
+    LineApiResponse<OpenChatRoomInfo> createOpenChatRoom(@NonNull OpenChatParameters openChatParameters);
+
+    @NonNull
+    LineApiResponse<OpenChatRoomStatus> getOpenChatRoomStatus(@NonNull String roomId);
+
+    @NonNull
+    LineApiResponse<MembershipStatus> getMembershipStatus(@NonNull String roomId);
 }
