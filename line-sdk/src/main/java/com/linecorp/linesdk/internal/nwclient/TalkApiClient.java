@@ -294,7 +294,7 @@ public class TalkApiClient {
     public LineApiResponse<OpenChatRoomInfo> createOpenChatRoom(
         @NonNull InternalAccessToken accessToken,
         @NonNull OpenChatParameters openChatParameters) {
-        final Uri uri = Uri.parse(apiBaseUrl + "square/v1/square");
+        final Uri uri = buildUri(apiBaseUrl, BASE_PATH_OPENCHAT_API,  "square");
 
         return httpClient.postWithJson(
             uri,
