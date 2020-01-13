@@ -73,6 +73,10 @@ public class TalkApiClient {
     private static final ResponseDataParser<LineFriendshipStatus> FRIENDSHIP_STATUS_PARSER = new FriendshipStatusParser();
     private static final ResponseDataParser<GetFriendsResponse> FRIENDS_PARSER = new FriendsParser();
     private static final ResponseDataParser<GetGroupsResponse> GROUP_PARSER = new GroupParser();
+    private static final ResponseDataParser<List<SendMessageResponse>> MULTI_SEND_RESPONSE_PARSER = new MultiSendResponseParser();
+    private static final ResponseDataParser<OpenChatRoomInfo> OPEN_CHAT_ROOM_INFO_PARSER = new OpenChatRoomInfoParser();
+    private static final ResponseDataParser<OpenChatRoomStatus> OPEN_CHAT_ROOM_STATUS_PARSER = new OpenChatRoomStatusParser();
+    private static final ResponseDataParser<MembershipStatus> OPEN_CHAT_MEMBERSHIP_PARSER = new MembershipStatusParser();
 
     public TalkApiClient(Context applicationContext, @NonNull Uri apiBaseUrl) {
         this(apiBaseUrl, new ChannelServiceHttpClient(applicationContext, BuildConfig.VERSION_NAME));
@@ -253,7 +257,7 @@ public class TalkApiClient {
             buildUri(apiBaseUrl, BASE_PATH_MESSAGE_API, "multisend"),
             buildRequestHeaders(accessToken),
             postData,
-            new MultiSendResponseParser());
+            MULTI_SEND_RESPONSE_PARSER);
     }
 
     @VisibleForTesting
@@ -273,7 +277,7 @@ public class TalkApiClient {
             buildUri(apiBaseUrl, BASE_PATH_MESSAGE_API, PATH_OTT_SHARE),
             buildRequestHeaders(accessToken),
             postData,
-            new MultiSendResponseParser());
+            MULTI_SEND_RESPONSE_PARSER);
     }
 
     @NonNull
@@ -300,7 +304,7 @@ public class TalkApiClient {
             uri,
             buildRequestHeaders(accessToken),
             openChatParameters.toJsonString(),
-            new OpenChatRoomInfoParser());
+            OPEN_CHAT_ROOM_INFO_PARSER);
     }
 
     @NonNull
@@ -315,7 +319,7 @@ public class TalkApiClient {
             uri,
             buildRequestHeaders(accessToken),
             queryParameters,
-            new OpenChatRoomStatusParser());
+            OPEN_CHAT_ROOM_STATUS_PARSER);
     }
 
     @NonNull
@@ -328,7 +332,7 @@ public class TalkApiClient {
             uri,
             buildRequestHeaders(accessToken),
             Collections.emptyMap(),
-            new MembershipStatusParser());
+            OPEN_CHAT_MEMBERSHIP_PARSER);
     }
 
     private LineApiResponse createInternalErrorResponse(Exception exception) {
