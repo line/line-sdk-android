@@ -12,7 +12,6 @@ import com.linecorp.linesdk.BuildConfig;
 import com.linecorp.linesdk.LineApiResponse;
 import com.linecorp.linesdk.LineIdToken;
 import com.linecorp.linesdk.Scope;
-import com.linecorp.linesdk.api.BaseApiClient;
 import com.linecorp.linesdk.internal.AccessTokenVerificationResult;
 import com.linecorp.linesdk.internal.IdTokenKeyType;
 import com.linecorp.linesdk.internal.InternalAccessToken;
@@ -38,11 +37,17 @@ import static java.util.Collections.emptyMap;
  * Internal LINE OAUTH API client to process internal process such as building request data and
  * parsing response data.
  */
-public class LineAuthenticationApiClient extends BaseApiClient {
+public class LineAuthenticationApiClient {
     private static final String TAG = "LineAuthApiClient";
 
     private static final String BASE_PATH_OAUTH_V21_API = "oauth2/v2.1";
     private static final String AVAILABLE_TOKEN_TYPE = "Bearer";
+
+    @NonNull
+    private final Uri apiBaseUrl;
+
+    @NonNull
+    private final ChannelServiceHttpClient httpClient;
 
     private static final ResponseDataParser<OneTimePassword> ONE_TIME_PASSWORD_PARSER =
             new OneTimePasswordParser();
@@ -76,7 +81,8 @@ public class LineAuthenticationApiClient extends BaseApiClient {
             @NonNull final Uri openidDiscoveryDocumentUrl,
             @NonNull final Uri apiBaseUrl,
             @NonNull final ChannelServiceHttpClient httpClient) {
-        super(apiBaseUrl, httpClient);
+        this.apiBaseUrl = apiBaseUrl;
+        this.httpClient = httpClient;
         this.openidDiscoveryDocumentUrl = openidDiscoveryDocumentUrl;
     }
 
