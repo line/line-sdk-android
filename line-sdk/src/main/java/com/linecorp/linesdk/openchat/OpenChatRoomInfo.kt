@@ -6,4 +6,5 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class OpenChatRoomInfo(
     val roomId: String,
-    val landingPageUrl: String) : Parcelable
+    val landingPageUrl: String
+) : Parcelable
