@@ -1,8 +1,5 @@
 package com.linecorp.linesdk.api;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import com.linecorp.linesdk.FriendSortField;
 import com.linecorp.linesdk.GetFriendsResponse;
 import com.linecorp.linesdk.GetGroupsResponse;
@@ -19,6 +16,9 @@ import com.linecorp.linesdk.openchat.OpenChatRoomInfo;
 import com.linecorp.linesdk.openchat.OpenChatRoomStatus;
 
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * An API client that provides you with access to the LINE Social API to perform operations such as
@@ -358,7 +358,7 @@ public interface LineApiClient {
     );
 
     @NonNull
-    LineApiResponse<Boolean> updateAgreementStatus(@NonNull Boolean agreed);
+    LineApiResponse<Boolean> updateOpenChatAgreementStatus(@NonNull Boolean agreed);
 
     @NonNull
     LineApiResponse<OpenChatRoomInfo> createOpenChatRoom(@NonNull OpenChatParameters openChatParameters);
@@ -367,5 +367,5 @@ public interface LineApiClient {
     LineApiResponse<OpenChatRoomStatus> getOpenChatRoomStatus(@NonNull String roomId);
 
     @NonNull
-    LineApiResponse<MembershipStatus> getMembershipStatus(@NonNull String roomId);
+    LineApiResponse<MembershipStatus> getOpenChatMembershipStatus(@NonNull String roomId);
 }

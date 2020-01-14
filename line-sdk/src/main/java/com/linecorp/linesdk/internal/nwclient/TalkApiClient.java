@@ -83,7 +83,7 @@ public class TalkApiClient {
     }
 
     @VisibleForTesting
-    public TalkApiClient(
+    TalkApiClient(
             @NonNull Uri apiBaseUrl,
             @NonNull ChannelServiceHttpClient httpClient) {
         this.apiBaseUrl = apiBaseUrl;
@@ -281,7 +281,7 @@ public class TalkApiClient {
     }
 
     @NonNull
-    public LineApiResponse<Boolean> updateAgreementStatus(
+    public LineApiResponse<Boolean> updateOpenChatAgreementStatus(
             @NonNull InternalAccessToken accessToken,
             @NonNull Boolean agreed) {
         final Uri uri = buildUri(apiBaseUrl, BASE_PATH_OPENCHAT_API, "terms/agreement");
@@ -323,7 +323,7 @@ public class TalkApiClient {
     }
 
     @NonNull
-    public LineApiResponse<MembershipStatus> getMembershipStatus(
+    public LineApiResponse<MembershipStatus> getOpenChatMembershipStatus(
             @NonNull InternalAccessToken accessToken,
             @NonNull String roomId) {
         final Uri uri = buildUri(apiBaseUrl, BASE_PATH_OPENCHAT_API, "square", roomId, "membership");
@@ -335,7 +335,7 @@ public class TalkApiClient {
                 OPEN_CHAT_MEMBERSHIP_PARSER);
     }
 
-    private LineApiResponse createInternalErrorResponse(Exception exception) {
+    private <T> LineApiResponse<T> createInternalErrorResponse(Exception exception) {
         return LineApiResponse.createAsError(LineApiResponseCode.INTERNAL_ERROR, new LineApiError(exception));
     }
 

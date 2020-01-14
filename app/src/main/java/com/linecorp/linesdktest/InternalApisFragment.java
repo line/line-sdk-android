@@ -303,7 +303,7 @@ public class InternalApisFragment extends BaseApisFragment implements SendMessag
 
     @OnClick(R.id.openchat_agreement_update_btn)
     void updateAgreementStatus() {
-        startApiAsyncTask("updateAgreementStatus", () -> lineApiClient.updateAgreementStatus(true));
+        startApiAsyncTask("updateOpenChatAgreementStatus", () -> lineApiClient.updateOpenChatAgreementStatus(true));
     }
 
     @OnClick(R.id.openchat_create_chat_btn)
@@ -348,7 +348,7 @@ public class InternalApisFragment extends BaseApisFragment implements SendMessag
                 .setView(input)
                 .setPositiveButton(string.ok, (dialog, whichButton) -> {
                     String roomId = input.getText().toString();
-                    startApiAsyncTask("getMembershipStatus", () -> lineApiClient.getMembershipStatus(roomId));
+                    startApiAsyncTask("getOpenChatMembershipStatus", () -> lineApiClient.getOpenChatMembershipStatus(roomId));
                 }).show();
     }
 

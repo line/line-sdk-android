@@ -263,8 +263,8 @@ public class LineApiClientImpl implements LineApiClient {
     }
 
     @NonNull
-    public LineApiResponse<Boolean> updateAgreementStatus(@NonNull Boolean agreed) {
-        return callWithAccessToken(accessToken -> talkApiClient.updateAgreementStatus(accessToken, agreed));
+    public LineApiResponse<Boolean> updateOpenChatAgreementStatus(@NonNull Boolean agreed) {
+        return callWithAccessToken(accessToken -> talkApiClient.updateOpenChatAgreementStatus(accessToken, agreed));
     }
 
     @NonNull
@@ -280,8 +280,8 @@ public class LineApiClientImpl implements LineApiClient {
     }
 
     @NonNull
-    public LineApiResponse<MembershipStatus> getMembershipStatus(@NonNull String roomId) {
-        return callWithAccessToken(accessToken -> talkApiClient.getMembershipStatus(accessToken, roomId));
+    public LineApiResponse<MembershipStatus> getOpenChatMembershipStatus(@NonNull String roomId) {
+        return callWithAccessToken(accessToken -> talkApiClient.getOpenChatMembershipStatus(accessToken, roomId));
     }
 
     @FunctionalInterface
