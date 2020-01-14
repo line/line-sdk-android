@@ -46,7 +46,6 @@ public abstract class BaseApisFragment extends Fragment {
     }
 
     protected Disposable startApiAsyncTask(String apiName, FunctionWithApiResponse function) {
-        addLog("== " + apiName + " ====================");
         progressDialog.setCancelable(false);
         progressDialog.show();
 
@@ -54,13 +53,11 @@ public abstract class BaseApisFragment extends Fragment {
                 .subscribeOn(Schedulers.io())
                 .map(name -> function.method())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(lineApiResponse -> {
-                    if (progressDialog != null) {
-                        progressDialog.dismiss();
-                    }
-                    addLog("[" + apiName + "] " + lineApiResponse.getResponseCode()
-                            + LOG_SEPARATOR + lineApiResponse);
-                });
+                .doFinally(() -> progressDialog.dismiss())
+                .subscribe(
+                        lineApiResponse -> addLog("\n==" + apiName + "== " + lineApiResponse.getResponseCode() + LOG_SEPARATOR + lineApiResponse),
+                        error -> addLog("\n==" + apiName + "== Error\n" + error.getMessage())
+                );
     }
 
     protected abstract void addLog(@NonNull String logText);
