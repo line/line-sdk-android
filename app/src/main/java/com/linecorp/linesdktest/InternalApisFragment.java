@@ -410,7 +410,7 @@ public class InternalApisFragment extends BaseApisFragment implements SendMessag
                 LineApiError lineApiError = (LineApiError) ((ActionResult.Error) result).getValue();
                 // post operations to lineApiError
             }
-            addLog(result.toString());
+            addLog("== create chatroom with UI ==\n" + result.toString());
         }
     }
 

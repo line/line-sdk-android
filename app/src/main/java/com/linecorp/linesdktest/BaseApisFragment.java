@@ -55,8 +55,8 @@ public abstract class BaseApisFragment extends Fragment {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doFinally(() -> progressDialog.dismiss())
                 .subscribe(
-                        lineApiResponse -> addLog("\n==" + apiName + "== " + lineApiResponse.getResponseCode() + LOG_SEPARATOR + lineApiResponse),
-                        error -> addLog("\n==" + apiName + "== Error\n" + error.getMessage())
+                        lineApiResponse -> addLog("\n== " + apiName + " == " + lineApiResponse.getResponseCode() + LOG_SEPARATOR + lineApiResponse),
+                        error -> addLog("\n== " + apiName + " == Error\n" + error.getMessage())
                 );
     }
 
