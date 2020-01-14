@@ -2,9 +2,6 @@ package com.linecorp.linesdk.api.internal;
 
 import android.text.TextUtils;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import com.linecorp.linesdk.FriendSortField;
 import com.linecorp.linesdk.GetFriendsResponse;
 import com.linecorp.linesdk.GetGroupsResponse;
@@ -31,14 +28,17 @@ import com.linecorp.linesdk.openchat.OpenChatRoomStatus;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 /**
  * Implementation of {@link LineApiClient}.
  */
 public class LineApiClientImpl implements LineApiClient {
     private static final LineApiResponse ERROR_RESPONSE_NO_TOKEN = LineApiResponse.createAsError(
-        LineApiResponseCode.INTERNAL_ERROR,
-        new LineApiError("access token is null")
-                                                                                                );
+            LineApiResponseCode.INTERNAL_ERROR,
+            new LineApiError("access token is null")
+    );
 
     @NonNull
     private final String channelId;
@@ -50,10 +50,10 @@ public class LineApiClientImpl implements LineApiClient {
     private final AccessTokenCache accessTokenCache;
 
     public LineApiClientImpl(
-        @NonNull String channelId,
-        @NonNull LineAuthenticationApiClient oauthApiClient,
-        @NonNull TalkApiClient talkApiClient,
-        @NonNull AccessTokenCache accessTokenCache) {
+            @NonNull String channelId,
+            @NonNull LineAuthenticationApiClient oauthApiClient,
+            @NonNull TalkApiClient talkApiClient,
+            @NonNull AccessTokenCache accessTokenCache) {
         this.channelId = channelId;
         this.oauthApiClient = oauthApiClient;
         this.talkApiClient = talkApiClient;
@@ -91,30 +91,30 @@ public class LineApiClientImpl implements LineApiClient {
         InternalAccessToken accessToken = accessTokenCache.getAccessToken();
         if (accessToken == null || TextUtils.isEmpty(accessToken.getRefreshToken())) {
             return LineApiResponse.createAsError(
-                LineApiResponseCode.INTERNAL_ERROR,
-                new LineApiError("access token or refresh token is not found."));
+                    LineApiResponseCode.INTERNAL_ERROR,
+                    new LineApiError("access token or refresh token is not found."));
         }
         LineApiResponse<RefreshTokenResult> response =
-            oauthApiClient.refreshToken(channelId, accessToken);
+                oauthApiClient.refreshToken(channelId, accessToken);
         if (!response.isSuccess()) {
             return LineApiResponse.createAsError(
-                response.getResponseCode(), response.getErrorData());
+                    response.getResponseCode(), response.getErrorData());
         }
         // Server returns new refreshToken if the current refreshToken must be replaced.
         // Otherwise, returns null.
         RefreshTokenResult refreshTokenResult = response.getResponseData();
         String refreshToken = TextUtils.isEmpty(refreshTokenResult.getRefreshToken())
-                                  ? accessToken.getRefreshToken() : refreshTokenResult.getRefreshToken();
+                ? accessToken.getRefreshToken() : refreshTokenResult.getRefreshToken();
         InternalAccessToken newToken = new InternalAccessToken(
-            refreshTokenResult.getAccessToken(),
-            refreshTokenResult.getExpiresInMillis(),
-            System.currentTimeMillis() /* issuedClientTimeMillis */,
-            refreshToken);
+                refreshTokenResult.getAccessToken(),
+                refreshTokenResult.getExpiresInMillis(),
+                System.currentTimeMillis() /* issuedClientTimeMillis */,
+                refreshToken);
         accessTokenCache.saveAccessToken(newToken);
         return LineApiResponse.createAsSuccess(new LineAccessToken(
-            newToken.getAccessToken(),
-            newToken.getExpiresInMillis(),
-            newToken.getIssuedClientTimeMillis()));
+                newToken.getAccessToken(),
+                newToken.getExpiresInMillis(),
+                newToken.getIssuedClientTimeMillis()));
     }
 
     @Override
@@ -126,26 +126,26 @@ public class LineApiClientImpl implements LineApiClient {
     @NonNull
     private LineApiResponse<LineCredential> verifyToken(@NonNull InternalAccessToken accessToken) {
         LineApiResponse<AccessTokenVerificationResult> response =
-            oauthApiClient.verifyAccessToken(accessToken);
+                oauthApiClient.verifyAccessToken(accessToken);
         if (!response.isSuccess()) {
             return LineApiResponse.createAsError(
-                response.getResponseCode(), response.getErrorData());
+                    response.getResponseCode(), response.getErrorData());
         }
         AccessTokenVerificationResult verificationResult = response.getResponseData();
         long verifiedClientTimeMillis = System.currentTimeMillis();
         accessTokenCache.saveAccessToken(
-            new InternalAccessToken(
-                accessToken.getAccessToken(),
-                verificationResult.getExpiresInMillis(),
-                verifiedClientTimeMillis,
-                accessToken.getRefreshToken()));
+                new InternalAccessToken(
+                        accessToken.getAccessToken(),
+                        verificationResult.getExpiresInMillis(),
+                        verifiedClientTimeMillis,
+                        accessToken.getRefreshToken()));
         return LineApiResponse.createAsSuccess(
-            new LineCredential(
-                new LineAccessToken(
-                    accessToken.getAccessToken(),
-                    verificationResult.getExpiresInMillis(),
-                    verifiedClientTimeMillis),
-                verificationResult.getScopes()));
+                new LineCredential(
+                        new LineAccessToken(
+                                accessToken.getAccessToken(),
+                                verificationResult.getExpiresInMillis(),
+                                verifiedClientTimeMillis),
+                        verificationResult.getScopes()));
     }
 
     @Override
@@ -154,13 +154,13 @@ public class LineApiClientImpl implements LineApiClient {
         InternalAccessToken internalAccessToken = accessTokenCache.getAccessToken();
         if (internalAccessToken == null) {
             return LineApiResponse.createAsError(
-                LineApiResponseCode.INTERNAL_ERROR,
-                new LineApiError("The cached access token does not exist."));
+                    LineApiResponseCode.INTERNAL_ERROR,
+                    new LineApiError("The cached access token does not exist."));
         }
         return LineApiResponse.createAsSuccess(new LineAccessToken(
-            internalAccessToken.getAccessToken(),
-            internalAccessToken.getExpiresInMillis(),
-            internalAccessToken.getIssuedClientTimeMillis()));
+                internalAccessToken.getAccessToken(),
+                internalAccessToken.getExpiresInMillis(),
+                internalAccessToken.getIssuedClientTimeMillis()));
     }
 
     @Override
@@ -180,26 +180,29 @@ public class LineApiClientImpl implements LineApiClient {
     @Override
     @TokenAutoRefresh
     @NonNull
-    public LineApiResponse<GetFriendsResponse> getFriends(@NonNull FriendSortField sort,
-                                                          @Nullable String nextPageRequestToken) {
+    public LineApiResponse<GetFriendsResponse> getFriends(
+            @NonNull FriendSortField sort,
+            @Nullable String nextPageRequestToken) {
         return getFriends(sort, nextPageRequestToken, false);
     }
 
     @Override
     @TokenAutoRefresh
     @NonNull
-    public LineApiResponse<GetFriendsResponse> getFriends(@NonNull FriendSortField sort,
-                                                          @Nullable String nextPageRequestToken,
-                                                          boolean isForOttShareMessage) {
+    public LineApiResponse<GetFriendsResponse> getFriends(
+            @NonNull FriendSortField sort,
+            @Nullable String nextPageRequestToken,
+            boolean isForOttShareMessage) {
         return callWithAccessToken(
-            accessToken -> talkApiClient.getFriends(accessToken, sort, nextPageRequestToken, isForOttShareMessage));
+                accessToken -> talkApiClient.getFriends(accessToken, sort, nextPageRequestToken, isForOttShareMessage));
     }
 
     @Override
     @TokenAutoRefresh
     @NonNull
-    public LineApiResponse<GetFriendsResponse> getFriendsApprovers(FriendSortField sort,
-                                                                   @Nullable String nextPageRequestToken) {
+    public LineApiResponse<GetFriendsResponse> getFriendsApprovers(
+            FriendSortField sort,
+            @Nullable String nextPageRequestToken) {
         return callWithAccessToken(accessToken -> talkApiClient.getFriendsApprovers(accessToken, sort, nextPageRequestToken));
     }
 
@@ -213,25 +216,28 @@ public class LineApiClientImpl implements LineApiClient {
     @Override
     @TokenAutoRefresh
     @NonNull
-    public LineApiResponse<GetGroupsResponse> getGroups(@Nullable String nextPageRequestToken,
-                                                        boolean isForOttShareMessage) {
+    public LineApiResponse<GetGroupsResponse> getGroups(
+            @Nullable String nextPageRequestToken,
+            boolean isForOttShareMessage) {
         return callWithAccessToken(
-            accessToken -> talkApiClient.getGroups(accessToken, nextPageRequestToken, isForOttShareMessage));
+                accessToken -> talkApiClient.getGroups(accessToken, nextPageRequestToken, isForOttShareMessage));
     }
 
     @Override
     @TokenAutoRefresh
     @NonNull
-    public LineApiResponse<GetFriendsResponse> getGroupApprovers(@NonNull String groupId,
-                                                                 @Nullable String nextPageRequestToken) {
+    public LineApiResponse<GetFriendsResponse> getGroupApprovers(
+            @NonNull String groupId,
+            @Nullable String nextPageRequestToken) {
         return callWithAccessToken(accessToken -> talkApiClient.getGroupApprovers(accessToken, groupId, nextPageRequestToken));
     }
 
     @Override
     @TokenAutoRefresh
     @NonNull
-    public LineApiResponse<String> sendMessage(@NonNull String targetUserId,
-                                               @NonNull List<MessageData> messages) {
+    public LineApiResponse<String> sendMessage(
+            @NonNull String targetUserId,
+            @NonNull List<MessageData> messages) {
         return callWithAccessToken(accessToken -> talkApiClient.sendMessage(accessToken, targetUserId, messages));
     }
 
@@ -239,9 +245,8 @@ public class LineApiClientImpl implements LineApiClient {
     @TokenAutoRefresh
     @NonNull
     public LineApiResponse<List<SendMessageResponse>> sendMessageToMultipleUsers(
-        @NonNull List<String> targetUserIds,
-        @NonNull List<MessageData> messages
-                                                                                ) {
+            @NonNull List<String> targetUserIds,
+            @NonNull List<MessageData> messages) {
         return sendMessageToMultipleUsers(targetUserIds, messages, false);
     }
 
@@ -249,13 +254,12 @@ public class LineApiClientImpl implements LineApiClient {
     @TokenAutoRefresh
     @NonNull
     public LineApiResponse<List<SendMessageResponse>> sendMessageToMultipleUsers(
-        @NonNull List<String> targetUserIds,
-        @NonNull List<MessageData> messages,
-        boolean isOttUsed
-                                                                                ) {
+            @NonNull List<String> targetUserIds,
+            @NonNull List<MessageData> messages,
+            boolean isOttUsed) {
         return callWithAccessToken(
-            accessToken -> talkApiClient.sendMessageToMultipleUsers(accessToken, targetUserIds, messages, isOttUsed)
-                                  );
+                accessToken -> talkApiClient.sendMessageToMultipleUsers(accessToken, targetUserIds, messages, isOttUsed)
+        );
     }
 
     @NonNull

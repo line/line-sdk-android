@@ -29,7 +29,7 @@ class CreateOpenChatActivity : AppCompatActivity() {
     private val lineApiClient: LineApiClient by lazy {
         val apiBaseUrl = intent.getStringExtra(ARG_API_BASE_URL).orEmpty()
         val channelId = intent.getStringExtra(ARG_CHANNEL_ID).orEmpty()
-        LineApiClientBuilder(this,  channelId)
+        LineApiClientBuilder(this, channelId)
             .apiBaseUri(Uri.parse(apiBaseUrl))
             .build()
     }

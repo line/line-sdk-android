@@ -5,9 +5,6 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.VisibleForTesting;
-
 import com.linecorp.linesdk.BuildConfig;
 import com.linecorp.linesdk.LineApiResponse;
 import com.linecorp.linesdk.LineIdToken;
@@ -28,6 +25,9 @@ import org.json.JSONObject;
 
 import java.util.List;
 import java.util.Map;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 
 import static com.linecorp.linesdk.utils.UriUtils.buildParams;
 import static com.linecorp.linesdk.utils.UriUtils.buildUri;
@@ -72,8 +72,8 @@ public class LineAuthenticationApiClient {
                                        @NonNull final Uri openidDiscoveryDocumentUrl,
                                        @NonNull final Uri apiBaseUrl) {
         this(openidDiscoveryDocumentUrl,
-             apiBaseUrl,
-             new ChannelServiceHttpClient(applicationContext, BuildConfig.VERSION_NAME));
+                apiBaseUrl,
+                new ChannelServiceHttpClient(applicationContext, BuildConfig.VERSION_NAME));
     }
 
     @VisibleForTesting
@@ -263,9 +263,9 @@ public class LineAuthenticationApiClient {
         final Uri uri = buildUri(openidDiscoveryDocumentUrl);
         final LineApiResponse<OpenIdDiscoveryDocument> response =
                 httpClient.get(uri,
-                               emptyMap(),
-                               emptyMap(),
-                               OPEN_ID_DISCOVERY_DOCUMENT_PARSER);
+                        emptyMap(),
+                        emptyMap(),
+                        OPEN_ID_DISCOVERY_DOCUMENT_PARSER);
 
         if (!response.isSuccess()) {
             Log.e(TAG, "getOpenIdDiscoveryDocument failed: " + response);
@@ -280,7 +280,7 @@ public class LineAuthenticationApiClient {
 
         if (!discoveryDocResponse.isSuccess()) {
             return LineApiResponse.createAsError(discoveryDocResponse.getResponseCode(),
-                                                 discoveryDocResponse.getErrorData());
+                    discoveryDocResponse.getErrorData());
         }
 
         final OpenIdDiscoveryDocument openIdDiscoveryDoc = discoveryDocResponse.getResponseData();
@@ -288,9 +288,9 @@ public class LineAuthenticationApiClient {
 
         final LineApiResponse<JWKSet> jwkSetResponse =
                 httpClient.get(jwksUri,
-                               emptyMap(),
-                               emptyMap(),
-                               JWK_SET_PARSER);
+                        emptyMap(),
+                        emptyMap(),
+                        JWK_SET_PARSER);
         if (!jwkSetResponse.isSuccess()) {
             Log.e(TAG, "getJWKSet failed: " + jwkSetResponse);
         }
