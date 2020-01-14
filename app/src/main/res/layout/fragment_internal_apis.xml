@@ -31,7 +31,14 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@android:color/black" />
+                    android:background="@color/colorPrimary" />
+
+                <Button
+                    android:id="@+id/openchat_agreement_get_status_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/apis_openchat_agreement_get_status"
+                    android:textAllCaps="false" />
 
                 <Button
                     android:id="@+id/openchat_agreement_update_btn"
@@ -76,7 +83,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@android:color/black" />
+                    android:background="@color/colorPrimary" />
 
                 <Button
                     android:id="@+id/get_friends_btn"
@@ -195,7 +202,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@android:color/black" />
+                    android:background="@color/colorPrimary" />
 
                 <Button
                     android:id="@+id/send_flex_hello_world_message"
@@ -223,7 +230,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@android:color/black" />
+                    android:background="@color/colorPrimary" />
 
                 <Button
                     android:id="@+id/revoke_access_token_btn"

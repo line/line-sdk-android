@@ -19,10 +19,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-
 import com.linecorp.linesdk.ActionResult;
 import com.linecorp.linesdk.FriendSortField;
 import com.linecorp.linesdk.GetFriendsResponse;
@@ -60,6 +56,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -301,6 +300,11 @@ public class InternalApisFragment extends BaseApisFragment implements SendMessag
         sendMessageDialog.show();
     }
 
+    @OnClick(R.id.openchat_agreement_get_status_btn)
+    void getAgreementStatus() {
+        startApiAsyncTask("getOpenChatAgreementStatus", () -> lineApiClient.getOpenChatAgreementStatus());
+    }
+
     @OnClick(R.id.openchat_agreement_update_btn)
     void updateAgreementStatus() {
         startApiAsyncTask("updateOpenChatAgreementStatus", () -> lineApiClient.updateOpenChatAgreementStatus(true));
@@ -341,7 +345,7 @@ public class InternalApisFragment extends BaseApisFragment implements SendMessag
     }
 
     @OnClick(R.id.openchat_membership_status_btn)
-    void getMembershipStatus() {
+    void getOpenChatMembershipStatus() {
         final EditText input = new EditText(getContext());
         new AlertDialog.Builder(getContext())
                 .setTitle("Input Room Id")
