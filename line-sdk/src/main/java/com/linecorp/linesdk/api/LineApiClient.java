@@ -358,6 +358,9 @@ public interface LineApiClient {
     );
 
     @NonNull
+    LineApiResponse<Boolean> getOpenChatAgreementStatus();
+
+    @NonNull
     LineApiResponse<Boolean> updateOpenChatAgreementStatus(@NonNull Boolean agreed);
 
     @NonNull
