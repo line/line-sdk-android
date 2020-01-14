@@ -4,9 +4,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.text.TextUtils;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import com.linecorp.linesdk.Constants;
 import com.linecorp.linesdk.api.internal.AutoRefreshLineApiClientProxy;
 import com.linecorp.linesdk.api.internal.LineApiClientImpl;
@@ -15,6 +12,9 @@ import com.linecorp.linesdk.internal.EncryptorHolder;
 import com.linecorp.linesdk.internal.nwclient.LineAuthenticationApiClient;
 import com.linecorp.linesdk.internal.nwclient.TalkApiClient;
 import com.linecorp.linesdk.utils.ObjectUtils;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * Represents a builder for creating {@link LineApiClient} objects with the desired settings.
@@ -33,7 +33,8 @@ public class LineApiClientBuilder {
 
     /**
      * Constructs a builder for a {@link LineApiClient} object with the given <i>channelId</i>.
-     * @param context The Android context.
+     *
+     * @param context   The Android context.
      * @param channelId The channel ID.
      * @throws IllegalArgumentException If <i>channelId</i> is {@code null}.
      */
@@ -76,17 +77,16 @@ public class LineApiClientBuilder {
      * @return The current {@link LineApiClientBuilder} instance.
      */
     @NonNull
-    LineApiClientBuilder openidDiscoveryDocumentUrl(@Nullable final Uri openidDiscoveryDocumentUrl) {
+    public LineApiClientBuilder openidDiscoveryDocumentUrl(@Nullable final Uri openidDiscoveryDocumentUrl) {
         this.openidDiscoveryDocumentUrl =
                 ObjectUtils.defaultIfNull(openidDiscoveryDocumentUrl,
-                                          Uri.parse(Constants.OPENID_DISCOVERY_DOCUMENT_URL));
+                        Uri.parse(Constants.OPENID_DISCOVERY_DOCUMENT_URL));
         return this;
     }
 
     @NonNull
-    LineApiClientBuilder apiBaseUri(@Nullable final Uri apiBaseUri) {
-        this.apiBaseUri = ObjectUtils.defaultIfNull(apiBaseUri,
-                                                    Uri.parse(Constants.API_SERVER_BASE_URI));
+    public LineApiClientBuilder apiBaseUri(@Nullable final Uri apiBaseUri) {
+        this.apiBaseUri = ObjectUtils.defaultIfNull(apiBaseUri, Uri.parse(Constants.API_SERVER_BASE_URI));
         return this;
     }
 
@@ -107,7 +107,7 @@ public class LineApiClientBuilder {
                 new TalkApiClient(context, apiBaseUri),
                 new AccessTokenCache(context, channelId));
         return isTokenAutoRefreshDisabled
-               ? lineApiClient
-               : AutoRefreshLineApiClientProxy.newProxy(lineApiClient);
+                ? lineApiClient
+                : AutoRefreshLineApiClientProxy.newProxy(lineApiClient);
     }
 }

@@ -17,8 +17,8 @@ import com.linecorp.linesdk.ActionResult
 import com.linecorp.linesdk.Constants
 import com.linecorp.linesdk.LineApiError
 import com.linecorp.linesdk.R
-import com.linecorp.linesdk.api.OpenChatApiClient
-import com.linecorp.linesdk.api.internal.OpenChatApiClientImpl
+import com.linecorp.linesdk.api.LineApiClient
+import com.linecorp.linesdk.api.LineApiClientBuilder
 import com.linecorp.linesdk.openchat.OpenChatRoomInfo
 import kotlinx.android.synthetic.main.activity_create_open_chat.progressBar
 
@@ -26,10 +26,12 @@ import kotlinx.android.synthetic.main.activity_create_open_chat.progressBar
 class CreateOpenChatActivity : AppCompatActivity() {
     private enum class CreateOpenChatStep { ChatroomInfo, UserProfile }
 
-    private val openChatApiClient: OpenChatApiClient by lazy {
+    private val lineApiClient: LineApiClient by lazy {
         val apiBaseUrl = intent.getStringExtra(ARG_API_BASE_URL).orEmpty()
         val channelId = intent.getStringExtra(ARG_CHANNEL_ID).orEmpty()
-        OpenChatApiClientImpl(this, Uri.parse(apiBaseUrl), channelId)
+        LineApiClientBuilder(this, channelId)
+            .apiBaseUri(Uri.parse(apiBaseUrl))
+            .build()
     }
 
     private lateinit var viewModel: OpenChatInfoViewModel
@@ -56,7 +58,7 @@ class CreateOpenChatActivity : AppCompatActivity() {
             object : ViewModelProvider.Factory {
                 override fun <T : ViewModel?> create(modelClass: Class<T>): T {
                     if (modelClass.isAssignableFrom(OpenChatInfoViewModel::class.java)) {
-                        return OpenChatInfoViewModel(openChatApiClient) as T
+                        return OpenChatInfoViewModel(lineApiClient) as T
                     }
                     error("Unknown ViewModel class")
                 }

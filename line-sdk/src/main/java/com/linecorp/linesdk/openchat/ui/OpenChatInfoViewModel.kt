@@ -6,7 +6,7 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.linecorp.linesdk.LineApiResponse
-import com.linecorp.linesdk.api.OpenChatApiClient
+import com.linecorp.linesdk.api.LineApiClient
 import com.linecorp.linesdk.openchat.OpenChatCategory
 import com.linecorp.linesdk.openchat.OpenChatParameters
 import com.linecorp.linesdk.openchat.OpenChatRoomInfo
@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class OpenChatInfoViewModel(
-    private val openChatApiClient: OpenChatApiClient
+    private val lineApiClient: LineApiClient
 ) : ViewModel() {
     val chatroomName: MutableLiveData<String> = MutableLiveData()
     val profileName: MutableLiveData<String> = MutableLiveData()
@@ -74,7 +74,7 @@ class OpenChatInfoViewModel(
 
     private suspend fun createChatRoomAsync(openChatParameters: OpenChatParameters): LineApiResponse<OpenChatRoomInfo> =
         withContext(Dispatchers.IO) {
-            openChatApiClient.createOpenChatRoom(openChatParameters)
+            lineApiClient.createOpenChatRoom(openChatParameters)
         }
 
     private fun generateOpenChatParameters(): OpenChatParameters =

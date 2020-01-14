@@ -303,7 +303,7 @@ public class InternalApisFragment extends BaseApisFragment implements SendMessag
 
     @OnClick(R.id.openchat_agreement_update_btn)
     void updateAgreementStatus() {
-        startApiAsyncTask("updateAgreementStatus", () -> openChatApiClient.updateAgreementStatus(true));
+        startApiAsyncTask("updateOpenChatAgreementStatus", () -> lineApiClient.updateOpenChatAgreementStatus(true));
     }
 
     @OnClick(R.id.openchat_create_chat_btn)
@@ -314,7 +314,7 @@ public class InternalApisFragment extends BaseApisFragment implements SendMessag
                 "Demo app owner",
                 OpenChatCategory.Game,
                 true);
-        startApiAsyncTask("createChatroom", () -> openChatApiClient.createOpenChatRoom(parameters));
+        startApiAsyncTask("createChatroom", () -> lineApiClient.createOpenChatRoom(parameters));
     }
 
     @OnClick(R.id.openchat_create_chat_ui_btn)
@@ -335,7 +335,7 @@ public class InternalApisFragment extends BaseApisFragment implements SendMessag
                 .setView(input)
                 .setPositiveButton(string.ok, (dialog, whichButton) -> {
                     String roomId = input.getText().toString();
-                    startApiAsyncTask("getChatroomStatus", () -> openChatApiClient.getOpenChatRoomStatus(roomId));
+                    startApiAsyncTask("getChatroomStatus", () -> lineApiClient.getOpenChatRoomStatus(roomId));
                 }).show();
 
     }
@@ -348,7 +348,7 @@ public class InternalApisFragment extends BaseApisFragment implements SendMessag
                 .setView(input)
                 .setPositiveButton(string.ok, (dialog, whichButton) -> {
                     String roomId = input.getText().toString();
-                    startApiAsyncTask("getMembershipStatus", () -> openChatApiClient.getMembershipStatus(roomId));
+                    startApiAsyncTask("getOpenChatMembershipStatus", () -> lineApiClient.getOpenChatMembershipStatus(roomId));
                 }).show();
     }
 

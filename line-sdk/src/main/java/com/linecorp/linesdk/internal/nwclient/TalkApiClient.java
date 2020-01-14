@@ -4,10 +4,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.text.TextUtils;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.VisibleForTesting;
-
 import com.linecorp.linesdk.BuildConfig;
 import com.linecorp.linesdk.FriendSortField;
 import com.linecorp.linesdk.GetFriendsResponse;
@@ -20,13 +16,16 @@ import com.linecorp.linesdk.LineFriendshipStatus;
 import com.linecorp.linesdk.LineGroup;
 import com.linecorp.linesdk.LineProfile;
 import com.linecorp.linesdk.SendMessageResponse;
-import com.linecorp.linesdk.api.BaseApiClient;
 import com.linecorp.linesdk.internal.InternalAccessToken;
 import com.linecorp.linesdk.internal.nwclient.core.ChannelServiceHttpClient;
 import com.linecorp.linesdk.internal.nwclient.core.ResponseDataParser;
 import com.linecorp.linesdk.message.MessageData;
 import com.linecorp.linesdk.message.MessageSendRequest;
 import com.linecorp.linesdk.message.OttRequest;
+import com.linecorp.linesdk.openchat.MembershipStatus;
+import com.linecorp.linesdk.openchat.OpenChatParameters;
+import com.linecorp.linesdk.openchat.OpenChatRoomInfo;
+import com.linecorp.linesdk.openchat.OpenChatRoomStatus;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,8 +33,13 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 
 import static com.linecorp.linesdk.utils.UriUtils.buildParams;
 import static com.linecorp.linesdk.utils.UriUtils.buildUri;
@@ -44,9 +48,12 @@ import static com.linecorp.linesdk.utils.UriUtils.buildUri;
  * Internal LINE Talk API client to process internal process such as building request data and
  * parsing response data.
  */
-public class TalkApiClient extends BaseApiClient {
+public class TalkApiClient {
+    private static final String REQUEST_HEADER_ACCESS_TOKEN = "Authorization";
+    private static final String TOKEN_TYPE_BEARER = "Bearer";
     private static final String BASE_PATH_COMMON_API = "v2";
     private static final String BASE_PATH_FRIENDSHIP_API = "friendship/v1";
+    private static final String BASE_PATH_OPENCHAT_API = "square/v1";
     /* package */ static final String BASE_PATH_GRAPH_API = "graph/v2";
     /* package */ static final String BASE_PATH_MESSAGE_API = "message/v3";
     /* package */ static final String PATH_FRIENDS = "friends";
@@ -56,21 +63,31 @@ public class TalkApiClient extends BaseApiClient {
     /* package */ static final String PATH_OTT_SHARE = "ott/share";
     /* package */ static final String PATH_OTT_ISSUE = "ott/issue";
 
+    @NonNull
+    private final Uri apiBaseUrl;
+
+    @NonNull
+    private final ChannelServiceHttpClient httpClient;
+
     private static final ResponseDataParser<LineProfile> PROFILE_PARSER = new ProfileParser();
-    private static final ResponseDataParser<LineFriendshipStatus> FRIENDSHIP_STATUS_PARSER =
-            new FriendshipStatusParser();
+    private static final ResponseDataParser<LineFriendshipStatus> FRIENDSHIP_STATUS_PARSER = new FriendshipStatusParser();
     private static final ResponseDataParser<GetFriendsResponse> FRIENDS_PARSER = new FriendsParser();
     private static final ResponseDataParser<GetGroupsResponse> GROUP_PARSER = new GroupParser();
+    private static final ResponseDataParser<List<SendMessageResponse>> MULTI_SEND_RESPONSE_PARSER = new MultiSendResponseParser();
+    private static final ResponseDataParser<OpenChatRoomInfo> OPEN_CHAT_ROOM_INFO_PARSER = new OpenChatRoomInfoParser();
+    private static final ResponseDataParser<OpenChatRoomStatus> OPEN_CHAT_ROOM_STATUS_PARSER = new OpenChatRoomStatusParser();
+    private static final ResponseDataParser<MembershipStatus> OPEN_CHAT_MEMBERSHIP_PARSER = new MembershipStatusParser();
 
     public TalkApiClient(Context applicationContext, @NonNull Uri apiBaseUrl) {
         this(apiBaseUrl, new ChannelServiceHttpClient(applicationContext, BuildConfig.VERSION_NAME));
     }
 
     @VisibleForTesting
-    protected TalkApiClient(
+    TalkApiClient(
             @NonNull Uri apiBaseUrl,
             @NonNull ChannelServiceHttpClient httpClient) {
-        super(apiBaseUrl, httpClient);
+        this.apiBaseUrl = apiBaseUrl;
+        this.httpClient = httpClient;
     }
 
     @NonNull
@@ -99,13 +116,10 @@ public class TalkApiClient extends BaseApiClient {
             @NonNull InternalAccessToken accessToken,
             @NonNull FriendSortField sortField,
             @Nullable String pageToken,
-            boolean isForOttShareMessage
-    ) {
+            boolean isForOttShareMessage) {
         final String pathSegment = (isForOttShareMessage) ? PATH_OTS_FRIENDS : PATH_FRIENDS;
         final Uri uri = buildUri(apiBaseUrl, BASE_PATH_GRAPH_API, pathSegment);
-        final Map<String, String> queryParams = buildParams(
-                "sort", sortField.getServerKey()
-        );
+        final Map<String, String> queryParams = buildParams("sort", sortField.getServerKey());
         if (!TextUtils.isEmpty(pageToken)) {
             queryParams.put("pageToken", pageToken);
         }
@@ -120,8 +134,7 @@ public class TalkApiClient extends BaseApiClient {
     public LineApiResponse<GetGroupsResponse> getGroups(
             @NonNull InternalAccessToken accessToken,
             @Nullable String pageToken,
-            boolean isForOttShareMessage
-    ) {
+            boolean isForOttShareMessage) {
         final String pathSegment = (isForOttShareMessage) ? PATH_OTS_GROUPS : PATH_GROUPS;
         final Uri uri = buildUri(apiBaseUrl, BASE_PATH_GRAPH_API, pathSegment);
         final Map<String, String> queryParams;
@@ -141,8 +154,7 @@ public class TalkApiClient extends BaseApiClient {
     public LineApiResponse<GetFriendsResponse> getFriendsApprovers(
             @NonNull InternalAccessToken accessToken,
             @NonNull FriendSortField sortField,
-            @Nullable String nextPageRequestToken
-    ) {
+            @Nullable String nextPageRequestToken) {
         final Uri uri = buildUri(apiBaseUrl, BASE_PATH_GRAPH_API,
                 "friends", "approvers");
         final Map<String, String> queryParams = buildParams(
@@ -163,10 +175,8 @@ public class TalkApiClient extends BaseApiClient {
     public LineApiResponse<GetFriendsResponse> getGroupApprovers(
             @NonNull InternalAccessToken accessToken,
             @NonNull String groupId,
-            @Nullable String nextPageRequestToken
-    ) {
-        final Uri uri = buildUri(apiBaseUrl, BASE_PATH_GRAPH_API,
-                "groups", groupId, "approvers");
+            @Nullable String nextPageRequestToken) {
+        final Uri uri = buildUri(apiBaseUrl, BASE_PATH_GRAPH_API, "groups", groupId, "approvers");
 
         final Map<String, String> queryParams;
         if (!TextUtils.isEmpty(nextPageRequestToken)) {
@@ -188,15 +198,12 @@ public class TalkApiClient extends BaseApiClient {
     public LineApiResponse<String> sendMessage(
             @NonNull InternalAccessToken accessToken,
             @NonNull String targetUserId,
-            @NonNull List<MessageData> messages
-    ) {
+            @NonNull List<MessageData> messages) {
         String postData;
         try {
             postData = MessageSendRequest.createSingleUserType(targetUserId, messages).toJsonString();
         } catch (JSONException e) {
-            return LineApiResponse.createAsError(
-                    LineApiResponseCode.INTERNAL_ERROR,
-                    new LineApiError(e));
+            return createInternalErrorResponse(e);
         }
 
         return httpClient.postWithJson(
@@ -210,8 +217,7 @@ public class TalkApiClient extends BaseApiClient {
     public LineApiResponse<List<SendMessageResponse>> sendMessageToMultipleUsers(
             @NonNull InternalAccessToken accessToken,
             @NonNull List<String> targetUserIds,
-            @NonNull List<MessageData> messages
-    ) {
+            @NonNull List<MessageData> messages) {
         return sendMessageToMultipleUsers(accessToken, targetUserIds, messages, false);
     }
 
@@ -220,8 +226,7 @@ public class TalkApiClient extends BaseApiClient {
             @NonNull InternalAccessToken accessToken,
             @NonNull List<String> targetUserIds,
             @NonNull List<MessageData> messages,
-            boolean isOttUsed
-    ) {
+            boolean isOttUsed) {
         if (isOttUsed) {
             LineApiResponse<String> ottResponse = getOtt(accessToken, targetUserIds);
             if (ottResponse.isSuccess()) {
@@ -240,22 +245,19 @@ public class TalkApiClient extends BaseApiClient {
     private LineApiResponse<List<SendMessageResponse>> sendMessageToMultipleUsersUsingUserIds(
             @NonNull InternalAccessToken accessToken,
             @NonNull List<String> targetUserIds,
-            @NonNull List<MessageData> messages
-    ) {
+            @NonNull List<MessageData> messages) {
         String postData;
         try {
             postData = MessageSendRequest.createMultiUsersType(targetUserIds, messages).toJsonString();
         } catch (JSONException e) {
-            return LineApiResponse.createAsError(
-                    LineApiResponseCode.INTERNAL_ERROR,
-                    new LineApiError(e));
+            return createInternalErrorResponse(e);
         }
 
         return httpClient.postWithJson(
                 buildUri(apiBaseUrl, BASE_PATH_MESSAGE_API, "multisend"),
                 buildRequestHeaders(accessToken),
                 postData,
-                new MultiSendResponseParser());
+                MULTI_SEND_RESPONSE_PARSER);
     }
 
     @VisibleForTesting
@@ -263,29 +265,114 @@ public class TalkApiClient extends BaseApiClient {
     protected LineApiResponse<List<SendMessageResponse>> sendMessageToMultipleUsersUsingOtt(
             @NonNull InternalAccessToken accessToken,
             @NonNull String ott,
-            @NonNull List<MessageData> messages
-    ) {
+            @NonNull List<MessageData> messages) {
         String postData;
         try {
             postData = MessageSendRequest.createOttType(ott, messages).toJsonString();
         } catch (JSONException e) {
-            return LineApiResponse.createAsError(
-                    LineApiResponseCode.INTERNAL_ERROR,
-                    new LineApiError(e));
+            return createInternalErrorResponse(e);
         }
 
         return httpClient.postWithJson(
                 buildUri(apiBaseUrl, BASE_PATH_MESSAGE_API, PATH_OTT_SHARE),
                 buildRequestHeaders(accessToken),
                 postData,
-                new MultiSendResponseParser());
+                MULTI_SEND_RESPONSE_PARSER);
+    }
+
+    @NonNull
+    public LineApiResponse<Boolean> updateOpenChatAgreementStatus(
+            @NonNull InternalAccessToken accessToken,
+            @NonNull Boolean agreed) {
+        final Uri uri = buildUri(apiBaseUrl, BASE_PATH_OPENCHAT_API, "terms/agreement");
+        final String postData = String.format("{ \"agreed\": %s }", (agreed) ? "true" : "false");
+
+        return httpClient.putWithJson(
+                uri,
+                buildRequestHeaders(accessToken),
+                postData,
+                null);
+    }
+
+    @NonNull
+    public LineApiResponse<OpenChatRoomInfo> createOpenChatRoom(
+            @NonNull InternalAccessToken accessToken,
+            @NonNull OpenChatParameters openChatParameters) {
+        final Uri uri = buildUri(apiBaseUrl, BASE_PATH_OPENCHAT_API, "square");
+
+        return httpClient.postWithJson(
+                uri,
+                buildRequestHeaders(accessToken),
+                openChatParameters.toJsonString(),
+                OPEN_CHAT_ROOM_INFO_PARSER);
+    }
+
+    @NonNull
+    public LineApiResponse<OpenChatRoomStatus> getOpenChatRoomStatus(
+            @NonNull InternalAccessToken accessToken,
+            @NonNull String roomId) {
+        final Uri uri = buildUri(apiBaseUrl, BASE_PATH_OPENCHAT_API, "square", roomId, "status");
+        final Map<String, String> queryParameters = new HashMap<>();
+        queryParameters.put("squareMid", roomId);
+
+        return httpClient.get(
+                uri,
+                buildRequestHeaders(accessToken),
+                queryParameters,
+                OPEN_CHAT_ROOM_STATUS_PARSER);
+    }
+
+    @NonNull
+    public LineApiResponse<MembershipStatus> getOpenChatMembershipStatus(
+            @NonNull InternalAccessToken accessToken,
+            @NonNull String roomId) {
+        final Uri uri = buildUri(apiBaseUrl, BASE_PATH_OPENCHAT_API, "square", roomId, "membership");
+
+        return httpClient.get(
+                uri,
+                buildRequestHeaders(accessToken),
+                Collections.emptyMap(),
+                OPEN_CHAT_MEMBERSHIP_PARSER);
+    }
+
+    private <T> LineApiResponse<T> createInternalErrorResponse(Exception exception) {
+        return LineApiResponse.createAsError(LineApiResponseCode.INTERNAL_ERROR, new LineApiError(exception));
+    }
+
+    @VisibleForTesting
+    private static class OpenChatRoomInfoParser extends JsonToObjectBaseResponseParser<OpenChatRoomInfo> {
+        @NonNull
+        @Override
+        protected OpenChatRoomInfo parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
+            return new OpenChatRoomInfo(jsonObject.getString("squareMid"),
+                    jsonObject.getString("url"));
+        }
+    }
+
+    @VisibleForTesting
+    private static class OpenChatRoomStatusParser extends JsonToObjectBaseResponseParser<OpenChatRoomStatus> {
+        @NonNull
+        @Override
+        protected OpenChatRoomStatus parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
+            String status = jsonObject.getString("status").toUpperCase();
+            return OpenChatRoomStatus.valueOf(status);
+        }
+    }
+
+    @VisibleForTesting
+    private static class MembershipStatusParser extends JsonToObjectBaseResponseParser<MembershipStatus> {
+        @NonNull
+        @Override
+        protected MembershipStatus parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
+            String state = jsonObject.getString("state").toUpperCase();
+            return MembershipStatus.valueOf(state);
+        }
     }
 
     @NonNull
     private LineApiResponse<String> getOtt(
             @NonNull InternalAccessToken accessToken,
-            @NonNull List<String> targetUserIds
-    ) {
+            @NonNull List<String> targetUserIds) {
         String postData;
         try {
             postData = new OttRequest(targetUserIds).toJsonString();
@@ -300,6 +387,13 @@ public class TalkApiClient extends BaseApiClient {
                 buildRequestHeaders(accessToken),
                 postData,
                 new StringParser("token"));
+    }
+
+    @NonNull
+    private static Map<String, String> buildRequestHeaders(@NonNull InternalAccessToken accessToken) {
+        return buildParams(
+                REQUEST_HEADER_ACCESS_TOKEN,
+                TOKEN_TYPE_BEARER + ' ' + accessToken.getAccessToken());
     }
 
     @VisibleForTesting
@@ -341,10 +435,10 @@ public class TalkApiClient extends BaseApiClient {
             LineProfile lineProfile = ProfileParser.parseLineProfile(jsonObject);
             String overriddenDisplayName = jsonObject.optString("displayNameOverridden", null);
             return new LineFriendProfile(lineProfile.getUserId(),
-                                         lineProfile.getDisplayName(),
-                                         lineProfile.getPictureUrl(),
-                                         lineProfile.getStatusMessage(),
-                                         overriddenDisplayName);
+                    lineProfile.getDisplayName(),
+                    lineProfile.getPictureUrl(),
+                    lineProfile.getStatusMessage(),
+                    overriddenDisplayName);
         }
 
         @NonNull
