@@ -42,9 +42,9 @@
     <string name="apis_send_message">send all Messages</string>
     <string name="apis_send_message_dialog">send message dialog</string>
     <string name="apis_send_template_message">send all Template Messages</string>
-    <string name="apis_section_title_internal_apis">Internal APIs</string>
-    <string name="apis_section_title_flex_message_apis">Flex Message APIs</string>
-    <string name="apis_section_title_graph_message_apis">Graph/Message APIs</string>
+    <string name="apis_section_title_internal_apis">Internal APIs > </string>
+    <string name="apis_section_title_flex_message_apis">Flex Message APIs > </string>
+    <string name="apis_section_title_graph_message_apis">Graph/Message APIs > </string>
     <string name="apis_revoke_access_token">revokeAccessToken</string>
     <string name="channel_id">Channel ID</string>
     <string name="sign_in">Sign-In</string>
@@ -53,12 +53,13 @@
     <string name="clear_receivers">Clear Friends/Groups</string>
     <string name="generate">Generate</string>
     <string name="uiLocale">UI Locale</string>
-    <string name="apis_section_title_openchat_apis">Openchat APIs</string>
-    <string name="apis_openchat_agreement_update">updateAgreementSatus</string>
-    <string name="apis_openchat_create_room">createChatroom</string>
+    <string name="apis_section_title_openchat_apis">Openchat APIs > </string>
+    <string name="apis_openchat_agreement_update">update openChat agreement status</string>
+    <string name="apis_openchat_create_room">create chatroom</string>
     <string name="apis_openchat_membership_status">membership status</string>
     <string name="apis_openchat_chatroom_status">chatroom status</string>
     <string name="apis_openchat_create_room_with_ui">create chatroom with UI</string>
+    <string name="apis_openchat_agreement_get_status">get openchat agreement status</string>
     <string-array name="supportedLocales">
         <item>ar</item>
         <item>de</item>

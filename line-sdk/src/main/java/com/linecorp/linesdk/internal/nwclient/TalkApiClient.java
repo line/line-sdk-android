@@ -74,6 +74,7 @@ public class TalkApiClient {
     private static final ResponseDataParser<GetFriendsResponse> FRIENDS_PARSER = new FriendsParser();
     private static final ResponseDataParser<GetGroupsResponse> GROUP_PARSER = new GroupParser();
     private static final ResponseDataParser<List<SendMessageResponse>> MULTI_SEND_RESPONSE_PARSER = new MultiSendResponseParser();
+    private static final ResponseDataParser<Boolean> OPEN_CHAT_AGREEMENT_STATUS_PARSER = new OpenChatAgreementStatusParser();
     private static final ResponseDataParser<OpenChatRoomInfo> OPEN_CHAT_ROOM_INFO_PARSER = new OpenChatRoomInfoParser();
     private static final ResponseDataParser<OpenChatRoomStatus> OPEN_CHAT_ROOM_STATUS_PARSER = new OpenChatRoomStatusParser();
     private static final ResponseDataParser<MembershipStatus> OPEN_CHAT_MEMBERSHIP_PARSER = new MembershipStatusParser();
@@ -281,6 +282,18 @@ public class TalkApiClient {
     }
 
     @NonNull
+    public LineApiResponse<Boolean> getOpenChatAgreementStatus(
+            @NonNull InternalAccessToken accessToken) {
+        final Uri uri = buildUri(apiBaseUrl, BASE_PATH_OPENCHAT_API, "terms/agreement");
+
+        return httpClient.get(
+                uri,
+                buildRequestHeaders(accessToken),
+                Collections.emptyMap(),
+                OPEN_CHAT_AGREEMENT_STATUS_PARSER);
+    }
+
+    @NonNull
     public LineApiResponse<Boolean> updateOpenChatAgreementStatus(
             @NonNull InternalAccessToken accessToken,
             @NonNull Boolean agreed) {
@@ -338,6 +351,16 @@ public class TalkApiClient {
     private <T> LineApiResponse<T> createInternalErrorResponse(Exception exception) {
         return LineApiResponse.createAsError(LineApiResponseCode.INTERNAL_ERROR, new LineApiError(exception));
     }
+
+    @VisibleForTesting
+    private static class OpenChatAgreementStatusParser extends JsonToObjectBaseResponseParser<Boolean> {
+        @NonNull
+        @Override
+        protected Boolean parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
+            return jsonObject.getBoolean("agreed");
+        }
+    }
+
 
     @VisibleForTesting
     private static class OpenChatRoomInfoParser extends JsonToObjectBaseResponseParser<OpenChatRoomInfo> {

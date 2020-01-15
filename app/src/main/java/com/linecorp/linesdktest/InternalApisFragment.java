@@ -19,10 +19,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-
 import com.linecorp.linesdk.ActionResult;
 import com.linecorp.linesdk.FriendSortField;
 import com.linecorp.linesdk.GetFriendsResponse;
@@ -60,6 +56,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.constraintlayout.widget.Group;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -75,6 +75,22 @@ public class InternalApisFragment extends BaseApisFragment implements SendMessag
     @Nullable
     @BindView(R.id.log)
     TextView logView;
+
+    @Nullable
+    @BindView(R.id.openchat_api_group)
+    Group openChatApiGroup;
+
+    @Nullable
+    @BindView(R.id.graph_message_api_group)
+    Group graphMessageApiGroup;
+
+    @Nullable
+    @BindView(R.id.flex_message_api_group)
+    Group flexMessageApiGroup;
+
+    @Nullable
+    @BindView(R.id.internal_api_group)
+    Group internalApiGroup;
 
     @Nullable
     private LineOauthApiClientForTest internalOauthApiClient;
@@ -301,6 +317,31 @@ public class InternalApisFragment extends BaseApisFragment implements SendMessag
         sendMessageDialog.show();
     }
 
+    @OnClick(R.id.graph_message_api_text)
+    void toggleGraphMessageApiButtons() {
+        toggleGroupVisibility(graphMessageApiGroup);
+    }
+
+    @OnClick(R.id.flex_message_api_text)
+    void toggleFlexMessageApiButtons() {
+        toggleGroupVisibility(flexMessageApiGroup);
+    }
+
+    @OnClick(R.id.internal_api_text)
+    void toggleInternalApiButtons() {
+        toggleGroupVisibility(internalApiGroup);
+    }
+
+    @OnClick(R.id.openchat_api_text)
+    void toggleOpenChatApiButtons() {
+        toggleGroupVisibility(openChatApiGroup);
+    }
+
+    @OnClick(R.id.openchat_agreement_get_status_btn)
+    void getAgreementStatus() {
+        startApiAsyncTask("getOpenChatAgreementStatus", () -> lineApiClient.getOpenChatAgreementStatus());
+    }
+
     @OnClick(R.id.openchat_agreement_update_btn)
     void updateAgreementStatus() {
         startApiAsyncTask("updateOpenChatAgreementStatus", () -> lineApiClient.updateOpenChatAgreementStatus(true));
@@ -335,19 +376,23 @@ public class InternalApisFragment extends BaseApisFragment implements SendMessag
                 .setView(input)
                 .setPositiveButton(string.ok, (dialog, whichButton) -> {
                     String roomId = input.getText().toString();
+                    if (roomId.isEmpty()) return;
+
                     startApiAsyncTask("getChatroomStatus", () -> lineApiClient.getOpenChatRoomStatus(roomId));
                 }).show();
 
     }
 
     @OnClick(R.id.openchat_membership_status_btn)
-    void getMembershipStatus() {
+    void getOpenChatMembershipStatus() {
         final EditText input = new EditText(getContext());
         new AlertDialog.Builder(getContext())
                 .setTitle("Input Room Id")
                 .setView(input)
                 .setPositiveButton(string.ok, (dialog, whichButton) -> {
                     String roomId = input.getText().toString();
+                    if (roomId.isEmpty()) return;
+
                     startApiAsyncTask("getOpenChatMembershipStatus", () -> lineApiClient.getOpenChatMembershipStatus(roomId));
                 }).show();
     }
@@ -365,7 +410,7 @@ public class InternalApisFragment extends BaseApisFragment implements SendMessag
                 LineApiError lineApiError = (LineApiError) ((ActionResult.Error) result).getValue();
                 // post operations to lineApiError
             }
-            addLog(result.toString());
+            addLog("== create chatroom with UI ==\n" + result.toString());
         }
     }
 
@@ -576,6 +621,14 @@ public class InternalApisFragment extends BaseApisFragment implements SendMessag
                 new CarouselLayoutTemplate.CarouselColumn("carousel item 1", actionList),
                 new CarouselLayoutTemplate.CarouselColumn("carousel item 2", actionList));
         return new CarouselLayoutTemplate(carouselColumnList);
+    }
+
+    private void toggleGroupVisibility(Group group) {
+        if (group.getVisibility() == View.VISIBLE) {
+            group.setVisibility(View.GONE);
+        } else {
+            group.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
