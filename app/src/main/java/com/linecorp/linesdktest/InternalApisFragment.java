@@ -322,12 +322,12 @@ public class InternalApisFragment extends BaseApisFragment implements SendMessag
         toggleGroupVisibility(graphMessageApiGroup);
     }
 
-    @OnClick(R.id.flex_message_api_group)
+    @OnClick(R.id.flex_message_api_text)
     void toggleFlexMessageApiButtons() {
         toggleGroupVisibility(flexMessageApiGroup);
     }
 
-    @OnClick(R.id.internal_api_group)
+    @OnClick(R.id.internal_api_text)
     void toggleInternalApiButtons() {
         toggleGroupVisibility(internalApiGroup);
     }
