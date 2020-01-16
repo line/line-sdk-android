@@ -5,17 +5,17 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.text.TextUtils;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import com.linecorp.linesdk.Constants;
 
 import java.util.StringTokenizer;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 /**
  * Class represents a version of LINE application.
  */
-/* package */ class LineAppVersion {
+public class LineAppVersion {
     @Nullable
     public static LineAppVersion getLineAppVersion(@NonNull Context context) {
         PackageInfo packageInfo;
