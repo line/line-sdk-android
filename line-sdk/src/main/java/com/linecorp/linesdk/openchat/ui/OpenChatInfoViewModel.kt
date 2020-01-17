@@ -33,6 +33,9 @@ class OpenChatInfoViewModel(
     val isCreatingChatRoom: LiveData<Boolean> get() = _isCreatingChatRoom
     private val _isCreatingChatRoom: MutableLiveData<Boolean> = MutableLiveData()
 
+    val shouldShowAgreementWarning: LiveData<Boolean> get() = _shouldShowAgreementWarning
+    private val _shouldShowAgreementWarning: MutableLiveData<Boolean> = MutableLiveData()
+
     val isValid: LiveData<Boolean> = Transformations.map(chatroomName, String::isNotEmpty)
     val isProfileValid: LiveData<Boolean> = Transformations.map(profileName, String::isNotEmpty)
 
@@ -42,6 +45,8 @@ class OpenChatInfoViewModel(
         description.value = ""
         category.value = DEFAULT_CATEGORY
         isSearchIncluded.value = true
+
+        checkAgreementStatus()
     }
 
     fun getCategoryString(): String {
@@ -54,6 +59,13 @@ class OpenChatInfoViewModel(
 
     fun getSelectedCategory(position: Int): OpenChatCategory =
         OpenChatCategory.values().getOrElse(position) { DEFAULT_CATEGORY }
+
+    private fun checkAgreementStatus() {
+        viewModelScope.launch {
+            val result = checkAgreementStatusAsync()
+            _shouldShowAgreementWarning.value = !result.isSuccess || !result.responseData
+        }
+    }
 
     fun createChatroom() {
         val openChatParameters = generateOpenChatParameters()
@@ -73,9 +85,10 @@ class OpenChatInfoViewModel(
     }
 
     private suspend fun createChatRoomAsync(openChatParameters: OpenChatParameters): LineApiResponse<OpenChatRoomInfo> =
-        withContext(Dispatchers.IO) {
-            lineApiClient.createOpenChatRoom(openChatParameters)
-        }
+        withContext(Dispatchers.IO) { lineApiClient.createOpenChatRoom(openChatParameters) }
+
+    private suspend fun checkAgreementStatusAsync(): LineApiResponse<Boolean> =
+        withContext(Dispatchers.IO) { lineApiClient.openChatAgreementStatus }
 
     private fun generateOpenChatParameters(): OpenChatParameters =
         OpenChatParameters(

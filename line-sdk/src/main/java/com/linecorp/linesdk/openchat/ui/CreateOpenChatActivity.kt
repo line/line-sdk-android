@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -19,9 +20,9 @@ import com.linecorp.linesdk.LineApiError
 import com.linecorp.linesdk.R
 import com.linecorp.linesdk.api.LineApiClient
 import com.linecorp.linesdk.api.LineApiClientBuilder
+import com.linecorp.linesdk.auth.internal.LineAppVersion
 import com.linecorp.linesdk.openchat.OpenChatRoomInfo
 import kotlinx.android.synthetic.main.activity_create_open_chat.progressBar
-
 
 class CreateOpenChatActivity : AppCompatActivity() {
     private enum class CreateOpenChatStep { ChatroomInfo, UserProfile }
@@ -84,7 +85,33 @@ class CreateOpenChatActivity : AppCompatActivity() {
         viewModel.isCreatingChatRoom.observe(this, Observer { isCreatingChatRoom ->
             progressBar.visibility = if (isCreatingChatRoom) VISIBLE else GONE
         })
+
+        viewModel.shouldShowAgreementWarning.observe(this, Observer { shouldShowWarning ->
+            if (shouldShowWarning) {
+                showAgreementWarningDialog()
+            }
+        })
     }
+
+    private fun showAgreementWarningDialog() {
+        val isLineAppInstalled: Boolean = LineAppVersion.getLineAppVersion(this) != null
+
+        AlertDialog.Builder(this)
+            .setMessage(R.string.login_openchat_not_agree_with_terms)
+            .setOnDismissListener { finish() }
+            .apply {
+                if (isLineAppInstalled) {
+                    setPositiveButton(R.string.openchat_open_line) { _, _ -> launchLineApp() }
+                    setNegativeButton(android.R.string.cancel) { _, _ -> finish() }
+                } else {
+                    setPositiveButton(android.R.string.ok) { _, _ -> finish() }
+                }
+            }
+            .show()
+    }
+
+    private fun launchLineApp() =
+        startActivity(packageManager.getLaunchIntentForPackage(Constants.LINE_APP_PACKAGE_NAME))
 
     private fun addFragment(step: CreateOpenChatStep, addToBackStack: Boolean = true) =
         supportFragmentManager.beginTransaction().run {
