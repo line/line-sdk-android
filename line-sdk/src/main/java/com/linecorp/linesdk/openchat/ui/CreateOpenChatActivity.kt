@@ -54,12 +54,13 @@ class CreateOpenChatActivity : AppCompatActivity() {
     fun goToNextScreen() = addFragment(CreateOpenChatStep.UserProfile)
 
     private fun initViewModel() {
+        val sharedPreferences = getSharedPreferences("openchat", Context.MODE_PRIVATE)
         viewModel = ViewModelProviders.of(
             this,
             object : ViewModelProvider.Factory {
                 override fun <T : ViewModel?> create(modelClass: Class<T>): T {
                     if (modelClass.isAssignableFrom(OpenChatInfoViewModel::class.java)) {
-                        return OpenChatInfoViewModel(lineApiClient) as T
+                        return OpenChatInfoViewModel(sharedPreferences, lineApiClient) as T
                     }
                     error("Unknown ViewModel class")
                 }
