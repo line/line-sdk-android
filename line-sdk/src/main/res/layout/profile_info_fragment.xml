@@ -39,7 +39,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/room_name_guide"
+        android:id="@+id/displayNameGuide"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/openchat_create_profile_input_guide"

@@ -14,6 +14,7 @@ import com.linecorp.linesdk.databinding.ProfileInfoFragmentBinding
 import com.linecorp.linesdk.openchat.addAfterTextChangedAction
 import kotlinx.android.synthetic.main.activity_create_open_chat.toolbar
 import kotlinx.android.synthetic.main.profile_info_fragment.displayNameEditText
+import kotlinx.android.synthetic.main.profile_info_fragment.displayNameGuide
 
 class ProfileInfoFragment : Fragment() {
 
@@ -49,6 +50,11 @@ class ProfileInfoFragment : Fragment() {
     private fun setupViews() {
         setupToolbar()
         setupProfileName()
+        setupProfileNameGuide()
+    }
+
+    private fun setupProfileNameGuide() {
+        displayNameGuide.text = resources.getString(R.string.openchat_create_profile_input_guide, viewModel.chatroomName.value)
     }
 
     private fun setupProfileName() =
