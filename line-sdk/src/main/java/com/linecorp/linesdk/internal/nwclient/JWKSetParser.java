@@ -1,6 +1,6 @@
 package com.linecorp.linesdk.internal.nwclient;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.linecorp.linesdk.internal.JWKSet;
 import com.linecorp.linesdk.internal.JWKSet.JWK;
@@ -12,7 +12,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JWKSetParser extends JsonToObjectBaseResponseParser<JWKSet> {
+final class JWKSetParser extends JsonToObjectBaseResponseParser<JWKSet> {
     @NonNull
     @Override
     protected JWKSet parseJsonToObject(@NonNull final JSONObject jsonObject) throws JSONException {

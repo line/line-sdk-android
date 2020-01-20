@@ -15,7 +15,7 @@ import static org.junit.Assert.assertTrue;
  * Test for {@link LineAccessToken}.
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = TestConfig.TARGET_SDK_VERSION)
+@Config(sdk = TestConfig.TARGET_SDK_VERSION)
 public class LineAccessTokenTest {
     @Test
     public void testParcelable() {

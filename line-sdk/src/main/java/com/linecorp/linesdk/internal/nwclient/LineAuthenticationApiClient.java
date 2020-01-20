@@ -2,8 +2,6 @@ package com.linecorp.linesdk.internal.nwclient;
 
 import android.content.Context;
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.annotation.VisibleForTesting;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -28,6 +26,9 @@ import org.json.JSONObject;
 import java.util.List;
 import java.util.Map;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
+
 import static com.linecorp.linesdk.utils.UriUtils.buildParams;
 import static com.linecorp.linesdk.utils.UriUtils.buildUri;
 import static java.util.Collections.emptyMap;
@@ -41,6 +42,12 @@ public class LineAuthenticationApiClient {
 
     private static final String BASE_PATH_OAUTH_V21_API = "oauth2/v2.1";
     private static final String AVAILABLE_TOKEN_TYPE = "Bearer";
+
+    @NonNull
+    private final Uri apiBaseUrl;
+
+    @NonNull
+    private final ChannelServiceHttpClient httpClient;
 
     private static final ResponseDataParser<OneTimePassword> ONE_TIME_PASSWORD_PARSER =
             new OneTimePasswordParser();
@@ -60,17 +67,13 @@ public class LineAuthenticationApiClient {
 
     @NonNull
     private final Uri openidDiscoveryDocumentUrl;
-    @NonNull
-    private final Uri apiBaseUrl;
-    @NonNull
-    private final ChannelServiceHttpClient httpClient;
 
     public LineAuthenticationApiClient(@NonNull final Context applicationContext,
                                        @NonNull final Uri openidDiscoveryDocumentUrl,
                                        @NonNull final Uri apiBaseUrl) {
         this(openidDiscoveryDocumentUrl,
-             apiBaseUrl,
-             new ChannelServiceHttpClient(applicationContext, BuildConfig.VERSION_NAME));
+                apiBaseUrl,
+                new ChannelServiceHttpClient(applicationContext, BuildConfig.VERSION_NAME));
     }
 
     @VisibleForTesting
@@ -78,17 +81,15 @@ public class LineAuthenticationApiClient {
             @NonNull final Uri openidDiscoveryDocumentUrl,
             @NonNull final Uri apiBaseUrl,
             @NonNull final ChannelServiceHttpClient httpClient) {
-        this.openidDiscoveryDocumentUrl = openidDiscoveryDocumentUrl;
         this.apiBaseUrl = apiBaseUrl;
         this.httpClient = httpClient;
+        this.openidDiscoveryDocumentUrl = openidDiscoveryDocumentUrl;
     }
 
     @NonNull
     public LineApiResponse<OneTimePassword> getOneTimeIdAndPassword(@NonNull String channelId) {
         final Uri uri = buildUri(apiBaseUrl, BASE_PATH_OAUTH_V21_API, "otp");
-        final Map<String, String> postData = buildParams(
-                "client_id", channelId
-        );
+        final Map<String, String> postData = buildParams("client_id", channelId);
         return httpClient.post(
                 uri,
                 emptyMap() /* requestHeaders */,
@@ -100,7 +101,7 @@ public class LineAuthenticationApiClient {
             extends JsonToObjectBaseResponseParser<OneTimePassword> {
         @NonNull
         @Override
-        OneTimePassword parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
+        protected OneTimePassword parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
             return new OneTimePassword(
                     jsonObject.getString("otpId"),
                     jsonObject.getString("otp"));
@@ -134,7 +135,7 @@ public class LineAuthenticationApiClient {
             extends JsonToObjectBaseResponseParser<IssueAccessTokenResult> {
         @NonNull
         @Override
-        IssueAccessTokenResult parseJsonToObject(
+        protected IssueAccessTokenResult parseJsonToObject(
                 @NonNull JSONObject jsonObject) throws JSONException {
             String tokenType = jsonObject.getString("token_type");
             if (!AVAILABLE_TOKEN_TYPE.equals(tokenType)) {
@@ -186,7 +187,7 @@ public class LineAuthenticationApiClient {
             extends JsonToObjectBaseResponseParser<AccessTokenVerificationResult> {
         @NonNull
         @Override
-        AccessTokenVerificationResult parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
+        protected AccessTokenVerificationResult parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
             return new AccessTokenVerificationResult(
                     jsonObject.getString("client_id"),
                     jsonObject.getLong("expires_in") * 1000,
@@ -214,7 +215,7 @@ public class LineAuthenticationApiClient {
             extends JsonToObjectBaseResponseParser<RefreshTokenResult> {
         @NonNull
         @Override
-        RefreshTokenResult parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
+        protected RefreshTokenResult parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
             String tokenType = jsonObject.getString("token_type");
             if (!AVAILABLE_TOKEN_TYPE.equals(tokenType)) {
                 throw new JSONException("Illegal token type. token_type=" + tokenType);
@@ -262,9 +263,9 @@ public class LineAuthenticationApiClient {
         final Uri uri = buildUri(openidDiscoveryDocumentUrl);
         final LineApiResponse<OpenIdDiscoveryDocument> response =
                 httpClient.get(uri,
-                               emptyMap(),
-                               emptyMap(),
-                               OPEN_ID_DISCOVERY_DOCUMENT_PARSER);
+                        emptyMap(),
+                        emptyMap(),
+                        OPEN_ID_DISCOVERY_DOCUMENT_PARSER);
 
         if (!response.isSuccess()) {
             Log.e(TAG, "getOpenIdDiscoveryDocument failed: " + response);
@@ -279,17 +280,17 @@ public class LineAuthenticationApiClient {
 
         if (!discoveryDocResponse.isSuccess()) {
             return LineApiResponse.createAsError(discoveryDocResponse.getResponseCode(),
-                                                 discoveryDocResponse.getErrorData());
+                    discoveryDocResponse.getErrorData());
         }
 
-        final OpenIdDiscoveryDocument OpenIdDiscoveryDoc = discoveryDocResponse.getResponseData();
-        final Uri jwksUri = Uri.parse(OpenIdDiscoveryDoc.getJwksUri());
+        final OpenIdDiscoveryDocument openIdDiscoveryDoc = discoveryDocResponse.getResponseData();
+        final Uri jwksUri = Uri.parse(openIdDiscoveryDoc.getJwksUri());
 
         final LineApiResponse<JWKSet> jwkSetResponse =
                 httpClient.get(jwksUri,
-                               emptyMap(),
-                               emptyMap(),
-                               JWK_SET_PARSER);
+                        emptyMap(),
+                        emptyMap(),
+                        JWK_SET_PARSER);
         if (!jwkSetResponse.isSuccess()) {
             Log.e(TAG, "getJWKSet failed: " + jwkSetResponse);
         }

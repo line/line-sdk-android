@@ -16,7 +16,7 @@ import static org.junit.Assert.fail;
  * Test for {@link ScopeTest}.
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = TestConfig.TARGET_SDK_VERSION)
+@Config(sdk = TestConfig.TARGET_SDK_VERSION)
 public class ScopeTest {
     private static final List<Scope> TEST_SCOPE_LIST = Arrays.asList(
             Scope.PROFILE,

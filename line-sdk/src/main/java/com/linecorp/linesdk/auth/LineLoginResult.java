@@ -2,16 +2,15 @@ package com.linecorp.linesdk.auth;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.linecorp.linesdk.LineApiError;
+import com.linecorp.linesdk.LineApiResponse;
 import com.linecorp.linesdk.LineApiResponseCode;
 import com.linecorp.linesdk.LineCredential;
 import com.linecorp.linesdk.LineIdToken;
 import com.linecorp.linesdk.LineProfile;
-
 
 import static com.linecorp.linesdk.utils.ParcelUtils.readEnum;
 import static com.linecorp.linesdk.utils.ParcelUtils.writeEnum;
@@ -20,23 +19,22 @@ import static com.linecorp.linesdk.utils.ParcelUtils.writeEnum;
  * Represents a login result that is returned from the LINE Platform.
  */
 public class LineLoginResult implements Parcelable {
-    public static final LineLoginResult CANCEL =
-            new LineLoginResult(LineApiResponseCode.CANCEL, LineApiError.DEFAULT);
-
-    public static final Parcelable.Creator<LineLoginResult> CREATOR = new Parcelable.Creator<LineLoginResult>() {
+    public static final Creator<LineLoginResult> CREATOR = new Creator<LineLoginResult>() {
         @Override
-        public LineLoginResult createFromParcel(Parcel in) {
+        public LineLoginResult createFromParcel(final Parcel in) {
             return new LineLoginResult(in);
         }
 
         @Override
-        public LineLoginResult[] newArray(int size) {
+        public LineLoginResult[] newArray(final int size) {
             return new LineLoginResult[size];
         }
     };
 
     @NonNull
     private final LineApiResponseCode responseCode;
+    @Nullable
+    private final String nonce;
     @Nullable
     private final LineProfile lineProfile;
     @Nullable
@@ -48,52 +46,56 @@ public class LineLoginResult implements Parcelable {
     @NonNull
     private final LineApiError errorData;
 
-    public LineLoginResult(
-            @NonNull LineProfile lineProfile,
-            @Nullable LineIdToken lineIdToken,
-            @Nullable Boolean friendshipStatusChanged,
-            @NonNull LineCredential lineCredential) {
-        this(LineApiResponseCode.SUCCESS,
-             lineProfile,
-             lineIdToken,
-             friendshipStatusChanged,
-             lineCredential,
-             LineApiError.DEFAULT);
+    private LineLoginResult(final Builder builder) {
+        responseCode = builder.responseCode;
+        nonce = builder.nonce;
+        lineProfile = builder.lineProfile;
+        lineIdToken = builder.lineIdToken;
+        friendshipStatusChanged = builder.friendshipStatusChanged;
+        lineCredential = builder.lineCredential;
+        errorData = builder.errorData;
     }
 
-    public LineLoginResult(
-            @NonNull LineApiResponseCode resultCode, @NonNull LineApiError errorData) {
-        this(resultCode,
-             null /* lineProfile */,
-             null /* lineIdToken */,
-             null /* friendshipStatusChanged */,
-             null /* lineCredential */,
-             errorData);
-    }
-
-    @VisibleForTesting
-    LineLoginResult(
-            @NonNull LineApiResponseCode responseCode,
-            @Nullable LineProfile lineProfile,
-            @Nullable LineIdToken lineIdToken,
-            @Nullable Boolean friendshipStatusChanged,
-            @Nullable LineCredential lineCredential,
-            @NonNull LineApiError errorData) {
-        this.responseCode = responseCode;
-        this.lineProfile = lineProfile;
-        this.lineIdToken = lineIdToken;
-        this.friendshipStatusChanged = friendshipStatusChanged;
-        this.lineCredential = lineCredential;
-        this.errorData = errorData;
-    }
-
-    private LineLoginResult(@NonNull Parcel in) {
+    private LineLoginResult(@NonNull final Parcel in) {
         responseCode = readEnum(in, LineApiResponseCode.class);
+        nonce = in.readString();
         lineProfile = in.readParcelable(LineProfile.class.getClassLoader());
         lineIdToken = in.readParcelable(LineIdToken.class.getClassLoader());
         friendshipStatusChanged = (Boolean) in.readValue(Boolean.class.getClassLoader());
         lineCredential = in.readParcelable(LineCredential.class.getClassLoader());
         errorData = in.readParcelable(LineApiError.class.getClassLoader());
+    }
+
+    public static LineLoginResult error(@NonNull final LineApiResponseCode resultCode,
+                                        @NonNull final LineApiError errorData) {
+        return new Builder()
+                .responseCode(resultCode)
+                .errorData(errorData)
+                .build();
+    }
+
+    public static LineLoginResult error(@NonNull final LineApiResponse<?> apiResponse) {
+        return error(apiResponse.getResponseCode(), apiResponse.getErrorData());
+    }
+
+    public static LineLoginResult internalError(@NonNull final LineApiError errorData) {
+        return error(LineApiResponseCode.INTERNAL_ERROR, errorData);
+    }
+
+    public static LineLoginResult internalError(@NonNull final String errorMessage) {
+        return internalError(new LineApiError(errorMessage));
+    }
+
+    public static LineLoginResult internalError(@NonNull final Exception e) {
+        return internalError(new LineApiError(e));
+    }
+
+    public static LineLoginResult authenticationAgentError(@NonNull final LineApiError errorData) {
+        return error(LineApiResponseCode.AUTHENTICATION_AGENT_ERROR, errorData);
+    }
+
+    public static LineLoginResult canceledError() {
+        return error(LineApiResponseCode.CANCEL, LineApiError.DEFAULT);
     }
 
     /**
@@ -108,8 +110,9 @@ public class LineLoginResult implements Parcelable {
      * @hide
      */
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
+    public void writeToParcel(final Parcel dest, final int flags) {
         writeEnum(dest, responseCode);
+        dest.writeString(nonce);
         dest.writeParcelable(lineProfile, flags);
         dest.writeParcelable(lineIdToken, flags);
         dest.writeValue(friendshipStatusChanged);
@@ -135,6 +138,16 @@ public class LineLoginResult implements Parcelable {
     @NonNull
     public LineApiResponseCode getResponseCode() {
         return responseCode;
+    }
+
+    /**
+     * Gets the `nonce` value used for performing login in LINE.
+     *
+     * @return The `nonce` value used for performing login in LINE.
+     */
+    @Nullable
+    public String getNonce() {
+        return nonce;
     }
 
     /**
@@ -165,7 +178,7 @@ public class LineLoginResult implements Parcelable {
      */
     @NonNull
     public Boolean getFriendshipStatusChanged() {
-        if (friendshipStatusChanged == null) return false;
+        if (friendshipStatusChanged == null) { return false; }
 
         return friendshipStatusChanged;
     }
@@ -197,13 +210,14 @@ public class LineLoginResult implements Parcelable {
      * @hide
      */
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) { return true; }
         if (o == null || getClass() != o.getClass()) { return false; }
 
-        LineLoginResult that = (LineLoginResult) o;
+        final LineLoginResult that = (LineLoginResult) o;
 
         if (responseCode != that.responseCode) { return false; }
+        if (nonce != null ? !nonce.equals(that.nonce) : that.nonce != null) { return false; }
         if (lineProfile != null ? !lineProfile.equals(that.lineProfile) : that.lineProfile != null) {
             return false;
         }
@@ -225,6 +239,7 @@ public class LineLoginResult implements Parcelable {
     @Override
     public int hashCode() {
         int result = responseCode.hashCode();
+        result = 31 * result + (nonce != null ? nonce.hashCode() : 0);
         result = 31 * result + (lineProfile != null ? lineProfile.hashCode() : 0);
         result = 31 * result + (lineIdToken != null ? lineIdToken.hashCode() : 0);
         result = 31 * result + (friendshipStatusChanged != null ? friendshipStatusChanged.hashCode() : 0);
@@ -240,11 +255,66 @@ public class LineLoginResult implements Parcelable {
     public String toString() {
         return "LineLoginResult{" +
                "responseCode=" + responseCode +
+               ", nonce='" + nonce + '\'' +
                ", lineProfile=" + lineProfile +
                ", lineIdToken=" + lineIdToken +
                ", friendshipStatusChanged=" + friendshipStatusChanged +
                ", lineCredential=" + lineCredential +
                ", errorData=" + errorData +
                '}';
+    }
+
+    /**
+     * @hide
+     */
+    public static final class Builder {
+        private LineApiResponseCode responseCode = LineApiResponseCode.SUCCESS;
+        private String nonce;
+        private LineProfile lineProfile;
+        private LineIdToken lineIdToken;
+        private Boolean friendshipStatusChanged;
+        private LineCredential lineCredential;
+        private LineApiError errorData = LineApiError.DEFAULT;
+
+        public Builder() {}
+
+        public Builder responseCode(final LineApiResponseCode responseCode) {
+            this.responseCode = responseCode;
+            return this;
+        }
+
+        public Builder nonce(final String nonce) {
+            this.nonce = nonce;
+            return this;
+        }
+
+        public Builder lineProfile(final LineProfile lineProfile) {
+            this.lineProfile = lineProfile;
+            return this;
+        }
+
+        public Builder lineIdToken(final LineIdToken lineIdToken) {
+            this.lineIdToken = lineIdToken;
+            return this;
+        }
+
+        public Builder friendshipStatusChanged(final Boolean friendshipStatusChanged) {
+            this.friendshipStatusChanged = friendshipStatusChanged;
+            return this;
+        }
+
+        public Builder lineCredential(final LineCredential lineCredential) {
+            this.lineCredential = lineCredential;
+            return this;
+        }
+
+        public Builder errorData(final LineApiError errorData) {
+            this.errorData = errorData;
+            return this;
+        }
+
+        public LineLoginResult build() {
+            return new LineLoginResult(this);
+        }
     }
 }

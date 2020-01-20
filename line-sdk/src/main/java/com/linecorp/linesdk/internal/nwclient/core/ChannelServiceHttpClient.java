@@ -3,11 +3,12 @@ package com.linecorp.linesdk.internal.nwclient.core;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.VisibleForTesting;
-import android.support.annotation.WorkerThread;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
+import androidx.annotation.WorkerThread;
 
 import com.linecorp.android.security.TLSSocketFactory;
 import com.linecorp.linesdk.BuildConfig;
@@ -73,6 +74,10 @@ public class ChannelServiceHttpClient {
         this.readTimeoutMillis = readTimeoutMillis;
     }
 
+    private enum HttpMethod {
+        POST, GET, DELETE, PUT
+    }
+
     @WorkerThread
     @NonNull
     public <T> LineApiResponse<T> post(
@@ -97,9 +102,7 @@ public class ChannelServiceHttpClient {
                 logResponseHeadersForDebug(conn);
             }
 
-            LineApiResponse<T> response =
-                    getChannelServiceResponse(conn, responseDataParser, errorResponseParser);
-            return response;
+            return getChannelServiceResponse(conn, responseDataParser, errorResponseParser);
         } catch (IOException e) {
             LineApiResponse<T> response = LineApiResponse.createAsError(
                     LineApiResponseCode.NETWORK_ERROR, new LineApiError(e));
@@ -119,10 +122,31 @@ public class ChannelServiceHttpClient {
             @NonNull Map<String, String> requestHeaders,
             @NonNull String postData,
             @NonNull ResponseDataParser<T> responseDataParser) {
+        return sendRequestWithJson(HttpMethod.POST, uri, requestHeaders, postData, responseDataParser);
+    }
+
+    @WorkerThread
+    @NonNull
+    public <T> LineApiResponse<T> putWithJson(
+            @NonNull Uri uri,
+            @NonNull Map<String, String> requestHeaders,
+            @NonNull String postData,
+            @Nullable ResponseDataParser<T> responseDataParser) {
+        return sendRequestWithJson(HttpMethod.PUT, uri, requestHeaders, postData, responseDataParser);
+    }
+
+    @WorkerThread
+    @NonNull
+    private <T> LineApiResponse<T> sendRequestWithJson(
+            @NonNull HttpMethod method,
+            @NonNull Uri uri,
+            @NonNull Map<String, String> requestHeaders,
+            @NonNull String postData,
+            @Nullable ResponseDataParser<T> responseDataParser) {
         byte[] postDataBytes = postData.getBytes();
         HttpURLConnection conn = null;
         try {
-            conn = openPostConnectionWithJson(uri, postDataBytes.length);
+            conn = openConnectionWithJson(uri, postDataBytes.length, method);
             setRequestHeaders(conn, requestHeaders);
             if (BuildConfig.DEBUG) {
                 logRequestForDebug(conn, postDataBytes);
@@ -136,9 +160,7 @@ public class ChannelServiceHttpClient {
                 logResponseHeadersForDebug(conn);
             }
 
-            LineApiResponse<T> response =
-                    getChannelServiceResponse(conn, responseDataParser, errorResponseParser);
-            return response;
+            return getChannelServiceResponse(conn, responseDataParser, errorResponseParser);
         } catch (IOException e) {
             LineApiResponse<T> response = LineApiResponse.createAsError(
                     LineApiResponseCode.NETWORK_ERROR, new LineApiError(e));
@@ -157,7 +179,7 @@ public class ChannelServiceHttpClient {
             @NonNull Uri uri,
             @NonNull Map<String, String> requestHeaders,
             @NonNull Map<String, String> queryParameters,
-            @NonNull ResponseDataParser<T> responseDataParser) {
+            @Nullable ResponseDataParser<T> responseDataParser) {
         final Uri fullUri = appendQueryParams(uri, queryParameters);
 
         HttpURLConnection conn = null;
@@ -171,9 +193,7 @@ public class ChannelServiceHttpClient {
             if (BuildConfig.DEBUG) {
                 logResponseHeadersForDebug(conn);
             }
-            LineApiResponse<T> response =
-                    getChannelServiceResponse(conn, responseDataParser, errorResponseParser);
-            return response;
+            return getChannelServiceResponse(conn, responseDataParser, errorResponseParser);
         } catch (IOException e) {
             LineApiResponse<T> response = LineApiResponse.createAsError(
                     LineApiResponseCode.NETWORK_ERROR, new LineApiError(e));
@@ -191,7 +211,7 @@ public class ChannelServiceHttpClient {
     public <T> LineApiResponse<T> delete(
             @NonNull Uri uri,
             @NonNull Map<String, String> requestHeaders,
-            @NonNull ResponseDataParser<T> responseDataParser) {
+            @Nullable ResponseDataParser<T> responseDataParser) {
         HttpURLConnection conn = null;
         try {
             conn = openDeleteConnection(uri);
@@ -203,9 +223,7 @@ public class ChannelServiceHttpClient {
             if (BuildConfig.DEBUG) {
                 logResponseHeadersForDebug(conn);
             }
-            LineApiResponse<T> response =
-                    getChannelServiceResponse(conn, responseDataParser, errorResponseParser);
-            return response;
+            return getChannelServiceResponse(conn, responseDataParser, errorResponseParser);
         } catch (IOException e) {
             LineApiResponse<T> response = LineApiResponse.createAsError(
                     LineApiResponseCode.NETWORK_ERROR, new LineApiError(e));
@@ -229,14 +247,14 @@ public class ChannelServiceHttpClient {
         conn.setRequestProperty("Content-Length", String.valueOf(postDataSizeByte));
         conn.setConnectTimeout(connectTimeoutMillis);
         conn.setReadTimeout(readTimeoutMillis);
-        conn.setRequestMethod("POST");
+        conn.setRequestMethod(HttpMethod.POST.name());
         conn.setDoOutput(true);
         return conn;
     }
 
     @NonNull
-    private HttpURLConnection openPostConnectionWithJson(
-            @NonNull Uri uri, int postDataSizeByte) throws IOException {
+    private HttpURLConnection openConnectionWithJson(
+            @NonNull Uri uri, int postDataSizeByte, HttpMethod method) throws IOException {
         HttpURLConnection conn = openHttpConnection(uri);
         conn.setInstanceFollowRedirects(true);
         conn.setRequestProperty("User-Agent", userAgentGenerator.getUserAgent());
@@ -245,7 +263,7 @@ public class ChannelServiceHttpClient {
         conn.setRequestProperty("Content-Length", String.valueOf(postDataSizeByte));
         conn.setConnectTimeout(connectTimeoutMillis);
         conn.setReadTimeout(readTimeoutMillis);
-        conn.setRequestMethod("POST");
+        conn.setRequestMethod(method.name());
         conn.setDoOutput(true);
         return conn;
     }
@@ -258,7 +276,7 @@ public class ChannelServiceHttpClient {
         conn.setRequestProperty("Accept-Encoding", "gzip");
         conn.setConnectTimeout(connectTimeoutMillis);
         conn.setReadTimeout(readTimeoutMillis);
-        conn.setRequestMethod("GET");
+        conn.setRequestMethod(HttpMethod.GET.name());
         return conn;
     }
 
@@ -270,7 +288,7 @@ public class ChannelServiceHttpClient {
         conn.setRequestProperty("Accept-Encoding", "gzip");
         conn.setConnectTimeout(connectTimeoutMillis);
         conn.setReadTimeout(readTimeoutMillis);
-        conn.setRequestMethod("DELETE");
+        conn.setRequestMethod(HttpMethod.DELETE.name());
         return conn;
     }
 
@@ -320,7 +338,7 @@ public class ChannelServiceHttpClient {
     @NonNull
     private static <T> LineApiResponse<T> getChannelServiceResponse(
             @NonNull HttpURLConnection conn,
-            @NonNull ResponseDataParser<T> responseDataParser,
+            @Nullable ResponseDataParser<T> responseDataParser,
             @NonNull ResponseDataParser<String> errorResponseParser) throws IOException {
         InputStream inputStream = getInputStreamFrom(conn);
         int httpResponseCode = conn.getResponseCode();
@@ -332,6 +350,11 @@ public class ChannelServiceHttpClient {
                                 httpResponseCode,
                                 errorResponseParser.getResponseData(inputStream)));
             }
+
+            if (responseDataParser == null) {
+                return LineApiResponse.createAsSuccess(null);
+            }
+
             return LineApiResponse.createAsSuccess(responseDataParser.getResponseData(inputStream));
         } catch (IOException e) {
             // Evaluates response data parsing error as INTERNAL_ERROR

@@ -1,7 +1,7 @@
 package com.linecorp.linesdk.internal.nwclient;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.linecorp.linesdk.internal.nwclient.core.JsonResponseParser;
 
@@ -44,7 +44,7 @@ public class JsonToObjectBaseResponseParserTest {
 
         @NonNull
         @Override
-        Object parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
+        protected Object parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
             latestJsonObject = jsonObject;
             if (isJsonExceptionThrown) {
                 throw new JSONException("test");

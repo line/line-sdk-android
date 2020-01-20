@@ -1,7 +1,7 @@
 package com.linecorp.linesdk;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.util.List;
 
@@ -11,22 +11,22 @@ import java.util.List;
  */
 public class GetFriendsResponse {
     @NonNull
-    private List<LineProfile> friends;
+    private List<LineFriendProfile> friends;
 
     @Nullable
     private String nextPageRequestToken;
 
-    public GetFriendsResponse(@NonNull List<LineProfile> friends) {
+    public GetFriendsResponse(@NonNull List<LineFriendProfile> friends) {
         this.friends = friends;
     }
 
-    public GetFriendsResponse(@NonNull List<LineProfile> friends, @Nullable String pageToken) {
+    public GetFriendsResponse(@NonNull List<LineFriendProfile> friends, @Nullable String pageToken) {
         this.friends = friends;
         this.nextPageRequestToken = pageToken;
     }
 
     @NonNull
-    public List<LineProfile> getFriends() {
+    public List<LineFriendProfile> getFriends() {
         return friends;
     }
 

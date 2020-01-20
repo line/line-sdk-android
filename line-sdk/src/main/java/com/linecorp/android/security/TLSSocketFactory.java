@@ -2,9 +2,10 @@ package com.linecorp.android.security;
 
 
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.linecorp.linesdk.BuildConfig;
 
@@ -43,7 +44,7 @@ public class TLSSocketFactory extends SSLSocketFactory {
 
     @NonNull
     private final SSLSocketFactory sslSocketFactory;
-    private boolean removeUnsafeCiphers = true;
+    private boolean removeUnsafeCiphers;
 
     @NonNull
     private Class<?> openSslSocketClass;

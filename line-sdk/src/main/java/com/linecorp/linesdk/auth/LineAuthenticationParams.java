@@ -2,8 +2,8 @@ package com.linecorp.linesdk.auth;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.linecorp.linesdk.Scope;
 
@@ -43,6 +43,14 @@ public class LineAuthenticationParams implements Parcelable {
 
     /**
      * OPTIONAL. <br></br>
+     * A string used to prevent replay attacks. This value is returned in an ID token.
+     * If this parameter is not specified, LINE SDK will generate a value for it.
+     */
+    @Nullable
+    private final String nonce;
+
+    /**
+     * OPTIONAL. <br></br>
      * Displays an option to add a bot as a friend during login.
      */
     @Nullable
@@ -58,12 +66,14 @@ public class LineAuthenticationParams implements Parcelable {
 
     private LineAuthenticationParams(final Builder builder) {
         scopes = builder.scopes;
+        nonce = builder.nonce;
         botPrompt = builder.botPrompt;
         uiLocale = builder.uiLocale;
     }
 
     private LineAuthenticationParams(@NonNull final Parcel in) {
         scopes = Scope.convertToScopeList(in.createStringArrayList());
+        nonce = in.readString();
         botPrompt = readEnum(in, BotPrompt.class);
         uiLocale = (Locale) in.readSerializable();
     }
@@ -76,6 +86,7 @@ public class LineAuthenticationParams implements Parcelable {
     @Override
     public void writeToParcel(final Parcel dest, final int flags) {
         dest.writeStringList(Scope.convertToCodeList(scopes));
+        dest.writeString(nonce);
         writeEnum(dest, botPrompt);
         dest.writeSerializable(uiLocale);
     }
@@ -96,6 +107,15 @@ public class LineAuthenticationParams implements Parcelable {
     @NonNull
     public List<Scope> getScopes() {
         return scopes;
+    }
+
+    /**
+     * A string used to prevent replay attacks. This value is returned in an ID token.
+     * @return nonce string
+     */
+    @Nullable
+    public String getNonce() {
+        return nonce;
     }
 
     /**
@@ -139,6 +159,7 @@ public class LineAuthenticationParams implements Parcelable {
      */
     public static final class Builder {
         private List<Scope> scopes;
+        private String nonce;
         private BotPrompt botPrompt;
         private Locale uiLocale;
 
@@ -151,6 +172,17 @@ public class LineAuthenticationParams implements Parcelable {
          */
         public Builder scopes(final List<Scope> val) {
             scopes = val;
+            return this;
+        }
+
+        /**
+         * Sets nonce to the builder.
+         * @param val A string used to prevent replay attacks. This value is returned in an ID token.
+         * If this parameter is not specified, LINE SDK will generate a value for it.
+         * @return The builder itself.
+         */
+        public Builder nonce(final String val) {
+            nonce = val;
             return this;
         }
 

@@ -1,7 +1,5 @@
 package com.linecorp.linesdk.api.internal;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.linecorp.linesdk.FriendSortField;
@@ -23,8 +21,15 @@ import com.linecorp.linesdk.internal.RefreshTokenResult;
 import com.linecorp.linesdk.internal.nwclient.LineAuthenticationApiClient;
 import com.linecorp.linesdk.internal.nwclient.TalkApiClient;
 import com.linecorp.linesdk.message.MessageData;
+import com.linecorp.linesdk.openchat.MembershipStatus;
+import com.linecorp.linesdk.openchat.OpenChatParameters;
+import com.linecorp.linesdk.openchat.OpenChatRoomInfo;
+import com.linecorp.linesdk.openchat.OpenChatRoomStatus;
 
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * Implementation of {@link LineApiClient}.
@@ -99,7 +104,7 @@ public class LineApiClientImpl implements LineApiClient {
         // Otherwise, returns null.
         RefreshTokenResult refreshTokenResult = response.getResponseData();
         String refreshToken = TextUtils.isEmpty(refreshTokenResult.getRefreshToken())
-                              ? accessToken.getRefreshToken() : refreshTokenResult.getRefreshToken();
+                ? accessToken.getRefreshToken() : refreshTokenResult.getRefreshToken();
         InternalAccessToken newToken = new InternalAccessToken(
                 refreshTokenResult.getAccessToken(),
                 refreshTokenResult.getExpiresInMillis(),
@@ -175,60 +180,113 @@ public class LineApiClientImpl implements LineApiClient {
     @Override
     @TokenAutoRefresh
     @NonNull
-    public LineApiResponse<GetFriendsResponse> getFriends(@NonNull FriendSortField sort,
-                                                          @Nullable String nextPageRequestToken) {
-        return callWithAccessToken(
-                accessToken -> talkApiClient.getFriends(accessToken, sort, nextPageRequestToken)
-        );
+    public LineApiResponse<GetFriendsResponse> getFriends(
+            @NonNull FriendSortField sort,
+            @Nullable String nextPageRequestToken) {
+        return getFriends(sort, nextPageRequestToken, false);
     }
 
     @Override
     @TokenAutoRefresh
     @NonNull
-    public LineApiResponse<GetFriendsResponse> getFriendsApprovers(FriendSortField sort,
-                                                                   @Nullable String nextPageRequestToken) {
+    public LineApiResponse<GetFriendsResponse> getFriends(
+            @NonNull FriendSortField sort,
+            @Nullable String nextPageRequestToken,
+            boolean isForOttShareMessage) {
         return callWithAccessToken(
-                accessToken -> talkApiClient.getFriendsApprovers(accessToken, sort, nextPageRequestToken)
-        );
+                accessToken -> talkApiClient.getFriends(accessToken, sort, nextPageRequestToken, isForOttShareMessage));
+    }
+
+    @Override
+    @TokenAutoRefresh
+    @NonNull
+    public LineApiResponse<GetFriendsResponse> getFriendsApprovers(
+            FriendSortField sort,
+            @Nullable String nextPageRequestToken) {
+        return callWithAccessToken(accessToken -> talkApiClient.getFriendsApprovers(accessToken, sort, nextPageRequestToken));
     }
 
     @Override
     @TokenAutoRefresh
     @NonNull
     public LineApiResponse<GetGroupsResponse> getGroups(@Nullable String nextPageRequestToken) {
-        return callWithAccessToken(
-                accessToken -> talkApiClient.getGroups(accessToken, nextPageRequestToken)
-        );
+        return getGroups(nextPageRequestToken, false);
     }
 
     @Override
     @TokenAutoRefresh
     @NonNull
-    public LineApiResponse<GetFriendsResponse> getGroupApprovers(@NonNull String groupId,
-                                                                 @Nullable String nextPageRequestToken) {
+    public LineApiResponse<GetGroupsResponse> getGroups(
+            @Nullable String nextPageRequestToken,
+            boolean isForOttShareMessage) {
         return callWithAccessToken(
-                accessToken -> talkApiClient.getGroupApprovers(accessToken, groupId, nextPageRequestToken)
-        );
+                accessToken -> talkApiClient.getGroups(accessToken, nextPageRequestToken, isForOttShareMessage));
     }
 
     @Override
     @TokenAutoRefresh
     @NonNull
-    public LineApiResponse<String> sendMessage(@NonNull String targetUserId,
-                                               @NonNull List<MessageData> messages) {
-        return callWithAccessToken(
-                accessToken -> talkApiClient.sendMessage(accessToken, targetUserId, messages)
-        );
+    public LineApiResponse<GetFriendsResponse> getGroupApprovers(
+            @NonNull String groupId,
+            @Nullable String nextPageRequestToken) {
+        return callWithAccessToken(accessToken -> talkApiClient.getGroupApprovers(accessToken, groupId, nextPageRequestToken));
+    }
+
+    @Override
+    @TokenAutoRefresh
+    @NonNull
+    public LineApiResponse<String> sendMessage(
+            @NonNull String targetUserId,
+            @NonNull List<MessageData> messages) {
+        return callWithAccessToken(accessToken -> talkApiClient.sendMessage(accessToken, targetUserId, messages));
     }
 
     @Override
     @TokenAutoRefresh
     @NonNull
     public LineApiResponse<List<SendMessageResponse>> sendMessageToMultipleUsers(
-            @NonNull List<String> targetUserIds, @NonNull List<MessageData> messages) {
+            @NonNull List<String> targetUserIds,
+            @NonNull List<MessageData> messages) {
+        return sendMessageToMultipleUsers(targetUserIds, messages, false);
+    }
+
+    @Override
+    @TokenAutoRefresh
+    @NonNull
+    public LineApiResponse<List<SendMessageResponse>> sendMessageToMultipleUsers(
+            @NonNull List<String> targetUserIds,
+            @NonNull List<MessageData> messages,
+            boolean isOttUsed) {
         return callWithAccessToken(
-                accessToken -> talkApiClient.sendMessageToMultipleUsers(accessToken, targetUserIds, messages)
+                accessToken -> talkApiClient.sendMessageToMultipleUsers(accessToken, targetUserIds, messages, isOttUsed)
         );
+    }
+
+    @NonNull
+    public LineApiResponse<Boolean> getOpenChatAgreementStatus() {
+        return callWithAccessToken(accessToken -> talkApiClient.getOpenChatAgreementStatus(accessToken));
+    }
+
+    @NonNull
+    public LineApiResponse<Boolean> updateOpenChatAgreementStatus(@NonNull Boolean agreed) {
+        return callWithAccessToken(accessToken -> talkApiClient.updateOpenChatAgreementStatus(accessToken, agreed));
+    }
+
+    @NonNull
+    public LineApiResponse<OpenChatRoomInfo> createOpenChatRoom(@NonNull OpenChatParameters openChatParameters) {
+        return callWithAccessToken(accessToken -> talkApiClient.createOpenChatRoom(accessToken, openChatParameters));
+
+    }
+
+    @NonNull
+    public LineApiResponse<OpenChatRoomStatus> getOpenChatRoomStatus(@NonNull String roomId) {
+        return callWithAccessToken(accessToken -> talkApiClient.getOpenChatRoomStatus(accessToken, roomId));
+
+    }
+
+    @NonNull
+    public LineApiResponse<MembershipStatus> getOpenChatMembershipStatus(@NonNull String roomId) {
+        return callWithAccessToken(accessToken -> talkApiClient.getOpenChatMembershipStatus(accessToken, roomId));
     }
 
     @FunctionalInterface

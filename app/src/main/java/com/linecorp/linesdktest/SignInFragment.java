@@ -3,14 +3,15 @@ package com.linecorp.linesdktest;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -23,6 +24,9 @@ import com.linecorp.linesdk.auth.LineAuthenticationTestConfigFactory;
 import com.linecorp.linesdk.auth.LineLoginApi;
 import com.linecorp.linesdk.auth.LineLoginResult;
 import com.linecorp.linesdktest.settings.TestSetting;
+
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,6 +52,10 @@ public class SignInFragment extends Fragment {
 
     @Nullable
     private Locale uiLocale;
+
+    @Nullable
+    @BindView(R.id.signin_nonce)
+    EditText nonceEditText;
 
     @Nullable
     @BindView(R.id.signin_bot_prompt_normal_radio)
@@ -104,20 +112,30 @@ public class SignInFragment extends Fragment {
     }
 
     private void buildScopeCheckBoxes() {
-        final List<Scope> scopes = (BuildConfig.INCLUDE_INTERNAL_API_TEST)?
-            Arrays.asList(Scope.PROFILE,
-                    Scope.FRIEND,
-                    Scope.GROUP,
-                    Scope.MESSAGE,
-                    Scope.OPENID_CONNECT,
-                    Scope.OC_EMAIL,
-                    Scope.OC_PHONE_NUMBER,
-                    Scope.OC_GENDER,
-                    Scope.OC_BIRTHDATE,
-                    Scope.OC_ADDRESS,
-                    Scope.OC_REAL_NAME)
-        :
-            Arrays.asList(Scope.PROFILE, Scope.OPENID_CONNECT);
+        final List<Scope> scopes = (BuildConfig.INCLUDE_INTERNAL_API_TEST) ?
+                Arrays.asList(
+                        Scope.PROFILE,
+                        Scope.OPENID_CONNECT,
+                        Scope.OC_EMAIL,
+                        Scope.OC_PHONE_NUMBER,
+                        Scope.OC_GENDER,
+                        Scope.OC_BIRTHDATE,
+                        Scope.OC_ADDRESS,
+                        Scope.OC_REAL_NAME,
+                        Scope.FRIEND,
+                        Scope.GROUP,
+                        Scope.MESSAGE,
+                        Scope.ONE_TIME_SHARE,
+                        Scope.OPEN_CHAT_TERM_STATUS,
+                        Scope.OPEN_CHAT_TERM_AGREE,
+                        Scope.OPEN_CHAT_ROOM_CREATE,
+                        Scope.OPEN_CHAT_ROOM_STATUS,
+                        Scope.OPEN_CHAT_ROOM_MEMBERSHIP
+                ) :
+                Arrays.asList(
+                        Scope.PROFILE,
+                        Scope.OPENID_CONNECT
+                );
 
 
         final FragmentActivity activity = getActivity();
@@ -143,20 +161,21 @@ public class SignInFragment extends Fragment {
             addLog("==========================");
         } else {
             addLog("Illegal response : onActivityResult("
-                   + requestCode + ", " + resultCode + ", " + data + ")");
+                    + requestCode + ", " + resultCode + ", " + data + ")");
         }
     }
 
     @NonNull
     private LineAuthenticationConfig createLineAuthenticationConfigForTest() {
         return LineAuthenticationTestConfigFactory.createTestConfig(channelId,
-                                                                    !useLineAppAuthCheckbox.isChecked());
+                !useLineAppAuthCheckbox.isChecked());
     }
 
     @NonNull
     private LineAuthenticationParams createAuthenticationParamsForTest() {
         return new LineAuthenticationParams.Builder()
                 .scopes(getCheckedScopes())
+                .nonce(StringUtils.trimToNull(nonceEditText.getText().toString()))
                 .botPrompt(getBotPrompt())
                 .uiLocale(uiLocale)
                 .build();
@@ -194,6 +213,12 @@ public class SignInFragment extends Fragment {
         }
     }
 
+    @OnClick(R.id.generate_nonce_btn)
+    @SuppressWarnings("unused")
+    public void onGenerateNonceBtnClick() {
+        nonceEditText.setText(RandomStringUtils.randomAlphanumeric(8));
+    }
+
     @OnClick(R.id.scope_all_checkbox)
     @SuppressWarnings("unused")
     public void onScopeAllCheckboxClick() {
@@ -214,8 +239,8 @@ public class SignInFragment extends Fragment {
                     createAuthenticationParamsForTest());
             startActivityForResult(intent, REQUEST_CODE);
             addLog("Sign-in is started. [" + LOG_SEPARATOR
-                   + "    channelId : " + channelId + LOG_SEPARATOR
-                   + "]");
+                    + "    channelId : " + channelId + LOG_SEPARATOR
+                    + "]");
         } catch (Exception e) {
             addLog(e.toString());
         }

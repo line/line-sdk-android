@@ -3,9 +3,9 @@ package com.linecorp.linesdktest;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -31,6 +31,7 @@ import com.linecorp.linesdktest.settings.TestSettingManager;
 
 import org.apache.commons.lang3.LocaleUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -194,10 +195,13 @@ public class MenuFragment extends Fragment {
             lineLoginButton.setChannelId(channelId);
         }
 
-        // set locale
         lineLoginButton.setAuthenticationParams(
                 new LineAuthenticationParams.Builder()
-                        .scopes(Arrays.asList(Scope.PROFILE))
+                        // set scopes
+                        .scopes(Arrays.asList(Scope.PROFILE, Scope.OPENID_CONNECT))
+                        // set nonce
+                        .nonce(RandomStringUtils.randomAlphanumeric(8))
+                        // set locale
                         .uiLocale(getSelectedUILocale())
                         .build()
         );

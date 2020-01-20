@@ -2,10 +2,10 @@ package com.linecorp.linesdktest;
 
 import android.R.layout;
 import android.R.string;
+import android.app.Activity;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -14,10 +14,12 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.Adapter;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.linecorp.linesdk.ActionResult;
 import com.linecorp.linesdk.FriendSortField;
 import com.linecorp.linesdk.GetFriendsResponse;
 import com.linecorp.linesdk.GetGroupsResponse;
@@ -25,8 +27,9 @@ import com.linecorp.linesdk.LineAccessToken;
 import com.linecorp.linesdk.LineApiError;
 import com.linecorp.linesdk.LineApiResponse;
 import com.linecorp.linesdk.LineApiResponseCode;
+import com.linecorp.linesdk.LineFriendProfile;
 import com.linecorp.linesdk.LineGroup;
-import com.linecorp.linesdk.LineProfile;
+import com.linecorp.linesdk.dialog.SendMessageDialog;
 import com.linecorp.linesdk.message.AudioMessage;
 import com.linecorp.linesdk.message.ImageMessage;
 import com.linecorp.linesdk.message.LocationMessage;
@@ -41,6 +44,10 @@ import com.linecorp.linesdk.message.template.ClickActionForTemplateMessage;
 import com.linecorp.linesdk.message.template.ConfirmLayoutTemplate;
 import com.linecorp.linesdk.message.template.ImageCarouselLayoutTemplate;
 import com.linecorp.linesdk.message.template.UriAction;
+import com.linecorp.linesdk.openchat.OpenChatCategory;
+import com.linecorp.linesdk.openchat.OpenChatParameters;
+import com.linecorp.linesdk.openchat.OpenChatRoomInfo;
+import com.linecorp.linesdk.openchat.ui.CreateOpenChatActivity;
 import com.linecorp.linesdktest.apiclient.LineOauthApiClientForTest;
 import com.linecorp.linesdktest.settings.TestSetting;
 import com.linecorp.linesdktest.util.FlexMessageGenerator;
@@ -49,13 +56,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.constraintlayout.widget.Group;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static java.util.Arrays.asList;
 
-public class InternalApisFragment extends BaseApisFragment {
+public class InternalApisFragment extends BaseApisFragment implements SendMessageDialog.OnSendListener {
+    private static final int REQUEST_CODE_CREATE_OPEN_CHATROOM = 4021;
     private final FlexMessageGenerator flexMessageGenerator = new FlexMessageGenerator();
 
     private final ReceiverList receivers = new ReceiverList();
@@ -63,6 +75,22 @@ public class InternalApisFragment extends BaseApisFragment {
     @Nullable
     @BindView(R.id.log)
     TextView logView;
+
+    @Nullable
+    @BindView(R.id.openchat_api_group)
+    Group openChatApiGroup;
+
+    @Nullable
+    @BindView(R.id.graph_message_api_group)
+    Group graphMessageApiGroup;
+
+    @Nullable
+    @BindView(R.id.flex_message_api_group)
+    Group flexMessageApiGroup;
+
+    @Nullable
+    @BindView(R.id.internal_api_group)
+    Group internalApiGroup;
 
     @Nullable
     private LineOauthApiClientForTest internalOauthApiClient;
@@ -188,14 +216,14 @@ public class InternalApisFragment extends BaseApisFragment {
         selectReceivers(
                 receiverIDs ->
                         startApiAsyncTask("getGroupsApprovers", () -> {
-                                              String groupId = receiverIDs.get(0);
-                                              LineApiResponse<GetFriendsResponse> response =
-                                                      lineApiClient.getGroupApprovers(
-                                                              groupId, null);
-                                              return response;
-                                          }
-                        )
-        );
+                                    String groupId = receiverIDs.get(0);
+                                    LineApiResponse<GetFriendsResponse> response =
+                                            lineApiClient.getGroupApprovers(
+                                                    groupId, null);
+                                    return response;
+                                }
+                                         )
+                       );
     }
 
     @OnClick(R.id.send_all_message_btn)
@@ -277,6 +305,124 @@ public class InternalApisFragment extends BaseApisFragment {
     @OnClick(R.id.send_flex_carousel_container_message)
     void sendFlexCarouselContainerMessage() {
         sendMessages(flexMessageGenerator.createFlexCarouselContainerMessage());
+    }
+
+    @OnClick(R.id.send_message_dialog)
+    void sendMessageDialog() {
+        SendMessageDialog sendMessageDialog = new SendMessageDialog(getContext(), lineApiClient);
+        sendMessageDialog.setMessageData(flexMessageGenerator.createFlexCarouselContainerMessage());
+        sendMessageDialog.setOnSendListener(this);
+        sendMessageDialog.setOnCancelListener(
+                dialog -> Toast.makeText(getContext(), "Sending message is canceled.", Toast.LENGTH_LONG).show());
+        sendMessageDialog.show();
+    }
+
+    @OnClick(R.id.graph_message_api_text)
+    void toggleGraphMessageApiButtons() {
+        toggleGroupVisibility(graphMessageApiGroup);
+    }
+
+    @OnClick(R.id.flex_message_api_text)
+    void toggleFlexMessageApiButtons() {
+        toggleGroupVisibility(flexMessageApiGroup);
+    }
+
+    @OnClick(R.id.internal_api_text)
+    void toggleInternalApiButtons() {
+        toggleGroupVisibility(internalApiGroup);
+    }
+
+    @OnClick(R.id.openchat_api_text)
+    void toggleOpenChatApiButtons() {
+        toggleGroupVisibility(openChatApiGroup);
+    }
+
+    @OnClick(R.id.openchat_agreement_get_status_btn)
+    void getAgreementStatus() {
+        startApiAsyncTask("getOpenChatAgreementStatus", () -> lineApiClient.getOpenChatAgreementStatus());
+    }
+
+    @OnClick(R.id.openchat_agreement_update_btn)
+    void updateAgreementStatus() {
+        startApiAsyncTask("updateOpenChatAgreementStatus", () -> lineApiClient.updateOpenChatAgreementStatus(true));
+    }
+
+    @OnClick(R.id.openchat_create_chat_btn)
+    void createChatroom() {
+        OpenChatParameters parameters = new OpenChatParameters(
+                "Demo openchat room",
+                "This is a demo chatroom description",
+                "Demo app owner",
+                OpenChatCategory.Game,
+                true);
+        startApiAsyncTask("createChatroom", () -> lineApiClient.createOpenChatRoom(parameters));
+    }
+
+    @OnClick(R.id.openchat_create_chat_ui_btn)
+    void createChatroomWithUi() {
+        Intent intent = CreateOpenChatActivity.createIntent(
+            getActivity(),
+            channelId,
+            BuildConfig.API_SERVER_BASE_URI);
+
+        startActivityForResult(intent, REQUEST_CODE_CREATE_OPEN_CHATROOM);
+    }
+
+    @OnClick(R.id.openchat_chatroom_status_btn)
+    void getChatroomStatus() {
+        final EditText input = new EditText(getContext());
+        new AlertDialog.Builder(getContext())
+                .setTitle("Input Room Id")
+                .setView(input)
+                .setPositiveButton(string.ok, (dialog, whichButton) -> {
+                    String roomId = input.getText().toString();
+                    if (roomId.isEmpty()) return;
+
+                    startApiAsyncTask("getChatroomStatus", () -> lineApiClient.getOpenChatRoomStatus(roomId));
+                }).show();
+
+    }
+
+    @OnClick(R.id.openchat_membership_status_btn)
+    void getOpenChatMembershipStatus() {
+        final EditText input = new EditText(getContext());
+        new AlertDialog.Builder(getContext())
+                .setTitle("Input Room Id")
+                .setView(input)
+                .setPositiveButton(string.ok, (dialog, whichButton) -> {
+                    String roomId = input.getText().toString();
+                    if (roomId.isEmpty()) return;
+
+                    startApiAsyncTask("getOpenChatMembershipStatus", () -> lineApiClient.getOpenChatMembershipStatus(roomId));
+                }).show();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+
+        if (requestCode == REQUEST_CODE_CREATE_OPEN_CHATROOM && resultCode == Activity.RESULT_OK) {
+            ActionResult result = CreateOpenChatActivity.getChatRoomCreationResult(intent);
+            if (result instanceof ActionResult.Success) {
+                OpenChatRoomInfo openChatRoomInfo = (OpenChatRoomInfo)((ActionResult.Success) result).getValue();
+                // post operations to openChatRoomInfo
+            } else {
+                LineApiError lineApiError = (LineApiError) ((ActionResult.Error) result).getValue();
+                // post operations to lineApiError
+            }
+            addLog("== create chatroom with UI ==\n" + result.toString());
+        }
+    }
+
+
+    @Override
+    public void onSendSuccess(DialogInterface dialog) {
+        Toast.makeText(getContext(), "Message sent successfully.", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onSendFailure(DialogInterface dialog) {
+        Toast.makeText(getContext(), "Message sent failure.", Toast.LENGTH_LONG).show();
     }
 
     @NonNull
@@ -477,6 +623,14 @@ public class InternalApisFragment extends BaseApisFragment {
         return new CarouselLayoutTemplate(carouselColumnList);
     }
 
+    private void toggleGroupVisibility(Group group) {
+        if (group.getVisibility() == View.VISIBLE) {
+            group.setVisibility(View.GONE);
+        } else {
+            group.setVisibility(View.VISIBLE);
+        }
+    }
+
     @Override
     protected void addLog(@NonNull String logText) {
         Log.d("LineSdkTest", logText);
@@ -489,8 +643,8 @@ public class InternalApisFragment extends BaseApisFragment {
         private final List<Receiver> friends = new ArrayList<>();
         private final List<Receiver> groups = new ArrayList<>();
 
-        private void addFriends(final List<LineProfile> friendList) {
-            for (final LineProfile friend : friendList) {
+        private void addFriends(final List<LineFriendProfile> friendList) {
+            for (final LineFriendProfile friend : friendList) {
                 friends.add(new Receiver(friend));
             }
         }
@@ -533,10 +687,10 @@ public class InternalApisFragment extends BaseApisFragment {
         final String id;
         final String displayName;
 
-        private Receiver(final LineProfile friend) {
+        private Receiver(final LineFriendProfile friend) {
             type = Type.Friend;
             id = friend.getUserId();
-            displayName = friend.getDisplayName();
+            displayName = friend.getAvailableDisplayName();
         }
 
         private Receiver(final LineGroup group) {

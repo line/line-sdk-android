@@ -15,7 +15,7 @@ import static org.junit.Assert.assertTrue;
  * Test for {@link LineProfile}.
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = TestConfig.TARGET_SDK_VERSION)
+@Config(sdk = TestConfig.TARGET_SDK_VERSION)
 public class LineProfileTest {
     @Test
     public void testParcelable() {
@@ -27,7 +27,7 @@ public class LineProfileTest {
 
         parcel.setDataPosition(0);
 
-        LineProfile actual = (LineProfile) LineProfile.CREATOR.createFromParcel(parcel);
+        LineProfile actual = LineProfile.CREATOR.createFromParcel(parcel);
         assertTrue(expected.equals(actual));
     }
 

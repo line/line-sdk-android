@@ -1,6 +1,6 @@
 package com.linecorp.linesdk.message.flex.container;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.linecorp.linesdk.utils.JSONUtils;
 

@@ -2,15 +2,15 @@ package com.linecorp.linesdktest;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 
 import com.linecorp.linesdk.LineApiResponse;
 import com.linecorp.linesdk.api.LineApiClient;
 import com.linecorp.linesdk.api.LineApiTestClientFactory;
 import com.linecorp.linesdktest.settings.TestSetting;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -23,10 +23,10 @@ public abstract class BaseApisFragment extends Fragment {
     @Nullable
     protected String channelId;
 
-    @Nullable
+    @NonNull
     protected LineApiClient lineApiClient;
 
-    @Nullable
+    @NonNull
     protected ProgressDialog progressDialog;
 
     @NonNull
@@ -42,25 +42,22 @@ public abstract class BaseApisFragment extends Fragment {
         Bundle arguments = getArguments();
         channelId = arguments.getString(ARG_KEY_CHANNEL_ID);
         lineApiClient = LineApiTestClientFactory.createLineApiClient(getContext(), channelId);
-        progressDialog = new ProgressDialog(getActivity());
+        progressDialog = new ProgressDialog(requireActivity());
     }
 
     protected Disposable startApiAsyncTask(String apiName, FunctionWithApiResponse function) {
-        addLog("== " + apiName + " ====================");
         progressDialog.setCancelable(false);
         progressDialog.show();
 
         return Single.just(apiName)
-                     .subscribeOn(Schedulers.io())
-                     .map(name -> function.method())
-                     .observeOn(AndroidSchedulers.mainThread())
-                     .subscribe(lineApiResponse -> {
-                         if (progressDialog != null) {
-                             progressDialog.dismiss();
-                         }
-                         addLog("[" + apiName + "] " + lineApiResponse.getResponseCode()
-                                + LOG_SEPARATOR + lineApiResponse);
-                     });
+                .subscribeOn(Schedulers.io())
+                .map(name -> function.method())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doFinally(() -> progressDialog.dismiss())
+                .subscribe(
+                        lineApiResponse -> addLog("\n== " + apiName + " == " + lineApiResponse.getResponseCode() + LOG_SEPARATOR + lineApiResponse),
+                        error -> addLog("\n== " + apiName + " == Error\n" + error.getMessage())
+                );
     }
 
     protected abstract void addLog(@NonNull String logText);

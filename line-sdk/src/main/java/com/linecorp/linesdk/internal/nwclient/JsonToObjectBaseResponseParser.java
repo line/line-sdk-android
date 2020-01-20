@@ -1,7 +1,7 @@
 package com.linecorp.linesdk.internal.nwclient;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 
 import com.linecorp.linesdk.internal.nwclient.core.JsonResponseParser;
 import com.linecorp.linesdk.internal.nwclient.core.ResponseDataParser;
@@ -15,15 +15,15 @@ import java.io.InputStream;
 /**
  * {@link ResponseDataParser} to parse an any object from a json data.
  */
-/* package */ abstract class JsonToObjectBaseResponseParser<T> implements ResponseDataParser<T> {
+public abstract class JsonToObjectBaseResponseParser<T> implements ResponseDataParser<T> {
     @NonNull
     private final JsonResponseParser jsonResponseParser;
 
-    JsonToObjectBaseResponseParser() {
+    public JsonToObjectBaseResponseParser() {
         this(new JsonResponseParser());
     }
 
-    JsonToObjectBaseResponseParser(@NonNull String charsetName) {
+    public JsonToObjectBaseResponseParser(@NonNull String charsetName) {
         this(new JsonResponseParser(charsetName));
     }
 
@@ -43,5 +43,5 @@ import java.io.InputStream;
     }
 
     @NonNull
-    abstract T parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException;
+    protected abstract T parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException;
 }

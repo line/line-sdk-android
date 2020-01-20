@@ -1,25 +1,24 @@
 package com.linecorp.linesdk.internal.nwclient;
 
-import com.linecorp.linesdk.BuildConfig;
 import com.linecorp.linesdk.LineIdToken;
 import com.linecorp.linesdk.TestConfig;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.internal.matchers.StartsWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.util.Date;
 
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assert.fail;
 
 /**
  * Test for {@link IdTokenValidator}.
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = TestConfig.TARGET_SDK_VERSION)
+@Config(sdk = TestConfig.TARGET_SDK_VERSION)
 public class IdTokenValidatorTest {
     private static final String ISSUER = "https://access.line.me";
     private static final String CHANNEL_ID = "testChannelId";
@@ -34,6 +33,7 @@ public class IdTokenValidatorTest {
     private static IdTokenValidator buildValidator(final LineIdToken idToken) {
         return new IdTokenValidator.Builder()
                 .idToken(idToken)
+                .expectedIssuer(ISSUER)
                 .expectedUserId(USER_ID)
                 .expectedChannelId(CHANNEL_ID)
                 .expectedNonce(NONCE)
@@ -46,7 +46,7 @@ public class IdTokenValidatorTest {
             validator.validate();
             fail("should fail here");
         } catch (final Exception e) {
-            assertThat(e.getMessage(), new StartsWith(expectedErrorMessage));
+            assertThat(e.getMessage(), startsWith(expectedErrorMessage));
         }
     }
 

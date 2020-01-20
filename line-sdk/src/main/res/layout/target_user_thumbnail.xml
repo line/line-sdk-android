@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingBottom="13dp"
+    android:paddingLeft="8dp"
+    android:paddingRight="3.5dp"
+    android:paddingTop="13dp">
+
+    <com.linecorp.linesdk.dialog.internal.CircleImageView
+        android:id="@+id/imageViewTargetUser"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginLeft="34.5dp"
+        android:src="@drawable/img_x" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/textViewDisplayName"
+        android:layout_width="48dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewTargetUser"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="3.5dp"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:singleLine="true"
+        android:textColor="@color/target_user_thumbnail_text"
+        android:textSize="12sp" />
+</androidx.constraintlayout.widget.ConstraintLayout>

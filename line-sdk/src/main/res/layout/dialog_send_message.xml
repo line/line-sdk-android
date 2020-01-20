@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/header"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:background="@color/header_background"
+        android:gravity="center_vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:text="@string/select_target_title"
+        android:textSize="16sp"
+        android:textColor="@color/header_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/tab_background"
+        android:elevation="3dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/header"
+        app:tabIndicatorColor="@color/tab_indicator"
+        app:tabMaxWidth="0dp"
+        app:tabMode="fixed"
+        app:tabGravity="fill"
+        app:tabSelectedTextColor="@color/tab_text_selected"
+        app:tabBackground="@drawable/tab_background"
+        app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/buttonConfirm"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="@android:string/ok"
+        android:textColor="@color/share_button_text"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:background="@drawable/common_btn_background"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/horizontalScrollView"
+        app:layout_constraintTop_toBottomOf="@id/tabLayout" />
+
+    <HorizontalScrollView
+        android:id="@+id/horizontalScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fadingEdge="none"
+        android:scrollbars="none"
+        android:background="@color/selected_panel_background"
+        app:layout_constraintTop_toBottomOf="@+id/viewPager"
+        app:layout_constraintBottom_toTopOf="@id/buttonConfirm">
+
+        <LinearLayout
+            android:id="@+id/linearLayoutTargetUserList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp" />
+    </HorizontalScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

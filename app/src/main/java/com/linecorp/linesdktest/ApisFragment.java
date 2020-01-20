@@ -1,8 +1,8 @@
 package com.linecorp.linesdktest;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,14 +10,18 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.linecorp.linesdktest.settings.TestSetting;
+import com.linecorp.linesdktest.util.FlexMessageGenerator;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class ApisFragment extends BaseApisFragment {
+    private final FlexMessageGenerator flexMessageGenerator = new FlexMessageGenerator();
+
     @Nullable
-    @BindView(R.id.log) TextView logView;
+    @BindView(R.id.log)
+    TextView logView;
 
     @NonNull
     static ApisFragment newFragment(@NonNull TestSetting setting) {

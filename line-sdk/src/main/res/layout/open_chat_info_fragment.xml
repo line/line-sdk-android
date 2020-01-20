@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".openchat.ui.OpenChatInfoFragment">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.linecorp.linesdk.openchat.ui.OpenChatInfoViewModel" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/openchat_background">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/background"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
+
+            <EditText
+                android:id="@+id/nameEditText"
+                android:layout_width="0dp"
+                android:layout_height="121dp"
+                android:layout_marginEnd="13dp"
+                android:background="@color/background"
+                android:drawablePadding="18dp"
+                android:gravity="center_vertical"
+                android:hint="@string/openchat_create_room_name_placeholder"
+                android:imeOptions="actionNext"
+                android:includeFontPadding="true"
+                android:maxLength="@integer/max_chatroom_name_length"
+                android:paddingTop="30dp"
+                android:paddingBottom="19dp"
+                android:text="@{viewModel.chatroomName}"
+                android:textColor="@color/target_item_text"
+                android:textColorHint="@color/text_hint"
+                android:textSize="18sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/nameMaxTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginBottom="10dp"
+                android:textColor="@color/text_hint"
+                android:textSize="13sp"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/nameEditText"
+                tools:text="3/50" />
+
+            <View
+                android:id="@+id/name_divider"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/openchat_divider"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/nameMaxTextView" />
+
+            <EditText
+                android:id="@+id/descriptionEditText"
+                android:layout_width="0dp"
+                android:layout_height="112dp"
+                android:background="@color/background"
+                android:drawablePadding="18dp"
+                android:gravity="center_vertical"
+                android:hint="@string/openchat_create_room_description_placeholder"
+                android:includeFontPadding="true"
+                android:maxLength="@integer/max_chatroom_description_length"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="@{viewModel.description}"
+                android:textColor="@color/target_item_text"
+                android:textColorHint="@color/text_hint"
+                android:textSize="15sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/name_divider" />
+
+            <TextView
+                android:id="@+id/descriptionMaxTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/descriptionEditText"
+                android:layout_marginBottom="9dp"
+                android:gravity="center_vertical"
+                android:textColor="@color/openchat_text_color"
+                android:textSize="13sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/descriptionEditText"
+                tools:text="8/200" />
+
+            <TextView
+                android:id="@+id/description_detail"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="9dp"
+                android:gravity="center_vertical"
+                android:text="@string/openchat_create_room_description_guide"
+                android:textColor="@color/openchat_text_color"
+                android:textSize="13sp"
+                app:layout_constraintRight_toLeftOf="@+id/descriptionMaxTextView"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/descriptionEditText" />
+
+
+            <View
+                android:id="@+id/description_divider"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/openchat_divider"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/description_detail" />
+
+            <TextView
+                android:id="@+id/category_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@string/openchat_create_room_category"
+                android:textColor="@color/target_item_text"
+                android:textSize="16sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/description_divider" />
+
+            <TextView
+                android:id="@+id/categoryLabelTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/openchat_category"
+                android:textSize="14sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/category_title" />
+
+            <TextView
+                android:id="@+id/category_guide"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="@string/openchat_create_room_category_guide"
+                android:textColor="@color/openchat_text_color"
+                android:textSize="12sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/categoryLabelTextView" />
+
+            <View
+                android:id="@+id/category_divider"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/openchat_divider"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/category_guide" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/searchIncludedContainer"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:minHeight="67dp"
+                android:orientation="vertical"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/category_divider">
+
+                <TextView
+                    android:id="@+id/search_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@string/openchat_create_room_search"
+                    android:textColor="@color/target_item_text"
+                    android:textSize="16sp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/search_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="14dp"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:text="@string/openchat_create_room_search_guide"
+                    android:textColor="@color/openchat_text_color"
+                    android:textSize="12sp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/search_title" />
+
+                <CheckBox
+                    android:id="@+id/searchIncludedCheckBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:button="@drawable/list_checkbox_img"
+                    android:checked="@{viewModel.isSearchIncluded}"
+                    android:clickable="true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</layout>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.linecorp.linesdk.openchat.ui.OpenChatInfoViewModel" />
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/background"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+
+    <EditText
+        android:id="@+id/displayNameEditText"
+        android:layout_width="0dp"
+        android:layout_height="121dp"
+        android:layout_marginEnd="13dp"
+        android:background="@color/background"
+        android:drawablePadding="18dp"
+        android:gravity="center_vertical"
+        android:hint="@string/openchat_create_profile_input_placeholder"
+        android:imeOptions="actionNext"
+        android:includeFontPadding="true"
+        android:paddingTop="30dp"
+        android:paddingBottom="19dp"
+        android:textColor="@color/target_item_text"
+        android:textColorHint="@color/text_hint"
+        android:textSize="18sp"
+        android:maxLength="@integer/max_profile_name_length"
+        android:text="@{viewModel.profileName}"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/displayNameGuide"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/openchat_create_profile_input_guide"
+        android:textColor="@color/text_hint"
+        android:textSize="13sp"
+        android:maxLines="2"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/displayNameEditText" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

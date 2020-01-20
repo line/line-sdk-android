@@ -1,6 +1,6 @@
 package com.linecorp.linesdk.internal.nwclient;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.linecorp.linesdk.internal.nwclient.core.ResponseDataParser;
 
@@ -10,7 +10,7 @@ import java.io.InputStream;
 /**
  * {@link ResponseDataParser} for in case of no result.
  */
-public class NoResultResponseParser implements ResponseDataParser<Object> {
+final class NoResultResponseParser implements ResponseDataParser<Object> {
     private static final Object NO_RESULT = new Object();
 
     @NonNull

@@ -1,6 +1,6 @@
 package com.linecorp.linesdktest.util;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.linecorp.linesdk.message.FlexMessage;
 import com.linecorp.linesdk.message.flex.action.UriAction;

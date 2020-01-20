@@ -1,7 +1,7 @@
 package com.linecorp.linesdk.internal.nwclient.core;
 
 import android.net.Uri;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.linecorp.linesdk.BuildConfig;
 import com.linecorp.linesdk.LineApiError;
@@ -42,7 +42,7 @@ import static org.mockito.Mockito.verify;
  * Test for {@link ChannelServiceHttpClient}.
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = TestConfig.TARGET_SDK_VERSION)
+@Config(sdk = TestConfig.TARGET_SDK_VERSION)
 public class ChannelServiceHttpClientTest {
     private static final String CHARSET = "UTF-8";
     private static final String USER_AGENT = "testUserAgent";

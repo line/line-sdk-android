@@ -1,8 +1,9 @@
 package com.linecorp.linesdk.internal.nwclient;
 
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import com.linecorp.linesdk.LineIdToken;
 
@@ -15,7 +16,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SigningKeyResolver;
 
-public final class IdTokenParser {
+final class IdTokenParser {
     private static final String TAG = "IdTokenParser";
 
     // allowed clock skew: 10000 days
@@ -37,7 +38,7 @@ public final class IdTokenParser {
                                       .parseClaimsJws(idTokenStr)
                                       .getBody();
 
-            return buildIdToken(claims);
+            return buildIdToken(idTokenStr, claims);
         } catch (final Exception e) {
             Log.e(TAG, "failed to parse IdToken: " + idTokenStr, e);
             throw e;
@@ -45,8 +46,9 @@ public final class IdTokenParser {
     }
 
     @NonNull
-    private static LineIdToken buildIdToken(final Claims claims) {
+    private static LineIdToken buildIdToken(final String idTokenStr, final Claims claims) {
         return new LineIdToken.Builder()
+                .rawString(idTokenStr)
                 .issuer(claims.getIssuer())
                 .subject(claims.getSubject())
                 .audience(claims.getAudience())

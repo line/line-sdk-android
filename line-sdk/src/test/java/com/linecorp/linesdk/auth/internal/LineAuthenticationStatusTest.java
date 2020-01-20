@@ -2,7 +2,6 @@ package com.linecorp.linesdk.auth.internal;
 
 import android.os.Parcel;
 
-import com.linecorp.linesdk.BuildConfig;
 import com.linecorp.linesdk.TestConfig;
 
 import org.junit.Before;
@@ -17,7 +16,7 @@ import static org.junit.Assert.assertTrue;
  * Test for {@link LineAppVersion}.
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = TestConfig.TARGET_SDK_VERSION)
+@Config(sdk = TestConfig.TARGET_SDK_VERSION)
 public class LineAuthenticationStatusTest {
 
     private LineAuthenticationStatus lineAuthenticationStatus;

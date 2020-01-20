@@ -1,4 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="text_login_btn">#FFFFFF</color>
+
+    <drawable name="button_01_normal">#07bf3f</drawable>
+    <drawable name="button_01_pressed">#06a637</drawable>
+    <drawable name="button_01_disabled">#c9ccd4</drawable>
+
+
+    <color name="target_item_text">#1e1e1e</color>
+    <color name="target_item_normal">#ffffff</color>
+    <color name="target_item_pressed">#f9f9f9</color>
+    <color name="target_item_background_pressed">#f9f9f9</color>
+
+    <color name="text_highlight">#07bf3f</color>
+
+    <color name="header_text">#ffffff</color>
+    <color name="primary_text">#ffffff</color>
+    <color name="share_button_text">#ffffff</color>
+    <color name="background">#ffffff</color>
+    <color name="header_background">#464e66</color>
+    <color name="selected_panel_background">#f9f9f9</color>
+    <color name="tab_background">#f9f9f9</color>
+    <color name="tab_indicator">#464e66</color>
+    <color name="tab_text_selected">#464e66</color>
+    <color name="target_user_thumbnail_text">#404040</color>
+
+    <color name="openchat_divider">#efefef</color>
+    <color name="openchat_text_color">#b7b7b7</color>
+    <color name="text_hint">#b8b8b8b8</color>
+    <color name="openchat_background">#efefef</color>
+    <color name="openchat_category">#608bc5</color>
 </resources>

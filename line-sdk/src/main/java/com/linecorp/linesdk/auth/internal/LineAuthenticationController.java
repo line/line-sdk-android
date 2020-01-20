@@ -6,16 +6,15 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.MainThread;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.VisibleForTesting;
 import android.text.TextUtils;
 
+import androidx.annotation.MainThread;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
+
 import com.linecorp.linesdk.LineAccessToken;
-import com.linecorp.linesdk.LineApiError;
 import com.linecorp.linesdk.LineApiResponse;
-import com.linecorp.linesdk.LineApiResponseCode;
 import com.linecorp.linesdk.LineCredential;
 import com.linecorp.linesdk.LineIdToken;
 import com.linecorp.linesdk.LineProfile;
@@ -27,6 +26,7 @@ import com.linecorp.linesdk.internal.AccessTokenCache;
 import com.linecorp.linesdk.internal.InternalAccessToken;
 import com.linecorp.linesdk.internal.IssueAccessTokenResult;
 import com.linecorp.linesdk.internal.OneTimePassword;
+import com.linecorp.linesdk.internal.OpenIdDiscoveryDocument;
 import com.linecorp.linesdk.internal.nwclient.IdTokenValidator;
 import com.linecorp.linesdk.internal.nwclient.IdTokenValidator.Builder;
 import com.linecorp.linesdk.internal.nwclient.LineAuthenticationApiClient;
@@ -111,7 +111,6 @@ import java.util.List;
     private class RequestTokenRequestTask
             extends AsyncTask<Void, Void, LineApiResponse<OneTimePassword>> {
 
-        @SuppressWarnings("OverloadedVarargsMethod")
         @Override
         protected LineApiResponse<OneTimePassword> doInBackground(
                 @Nullable Void... params) {
@@ -123,7 +122,7 @@ import java.util.List;
                 @NonNull LineApiResponse<OneTimePassword> response) {
             if (!response.isSuccess()) {
                 authenticationStatus.authenticationIntentHandled();
-                activity.onAuthenticationFinished(toErrorResult(response));
+                activity.onAuthenticationFinished(LineLoginResult.error(response));
                 return;
             }
             OneTimePassword oneTimePassword = response.getResponseData();
@@ -156,9 +155,7 @@ import java.util.List;
                 authenticationStatus.setSentRedirectUri(request.getRedirectUri());
             } catch (ActivityNotFoundException e) {
                 authenticationStatus.authenticationIntentHandled();
-                activity.onAuthenticationFinished(new LineLoginResult(
-                        LineApiResponseCode.INTERNAL_ERROR,
-                        new LineApiError(e)));
+                activity.onAuthenticationFinished(LineLoginResult.internalError(e));
             }
         }
     }
@@ -175,13 +172,11 @@ import java.util.List;
                 browserAuthenticationApi.getAuthenticationResultFrom(intent);
         if (!authResult.isSuccess()) {
             authenticationStatus.authenticationIntentHandled();
-            activity.onAuthenticationFinished(
-                    new LineLoginResult(
-                            authResult.isAuthenticationAgentError()
-                                    ? LineApiResponseCode.AUTHENTICATION_AGENT_ERROR
-                                    : LineApiResponseCode.INTERNAL_ERROR,
-                            authResult.getLineApiError()
-                    ));
+            final LineLoginResult errorResult =
+                    authResult.isAuthenticationAgentError()
+                    ? LineLoginResult.authenticationAgentError(authResult.getLineApiError())
+                    : LineLoginResult.internalError(authResult.getLineApiError());
+            activity.onAuthenticationFinished(errorResult);
             return;
         }
         new AccessTokenRequestTask().execute(authResult);
@@ -224,13 +219,12 @@ import java.util.List;
                 return;
             }
 
-            activity.onAuthenticationFinished(LineLoginResult.CANCEL);
+            activity.onAuthenticationFinished(LineLoginResult.canceledError());
         }
     }
 
     private class AccessTokenRequestTask extends AsyncTask<BrowserAuthenticationApi.Result, Void, LineLoginResult> {
 
-        @SuppressWarnings("OverloadedVarargsMethod")
         @Override
         protected LineLoginResult doInBackground(@Nullable BrowserAuthenticationApi.Result... params) {
             BrowserAuthenticationApi.Result authResult = params[0];
@@ -240,9 +234,7 @@ import java.util.List;
             if (TextUtils.isEmpty(requestToken)
                     || oneTimePassword == null
                     || TextUtils.isEmpty(sentRedirectUri)) {
-                return new LineLoginResult(
-                        LineApiResponseCode.INTERNAL_ERROR,
-                        new LineApiError("Requested data is missing."));
+                return LineLoginResult.internalError("Requested data is missing.");
             }
 
             // Acquire access token
@@ -250,9 +242,9 @@ import java.util.List;
                     authApiClient.issueAccessToken(
                             config.getChannelId(), requestToken, oneTimePassword, sentRedirectUri);
             if (!accessTokenResponse.isSuccess()) {
-                return toErrorResult(accessTokenResponse);
+                return LineLoginResult.error(accessTokenResponse);
             }
-            
+
             IssueAccessTokenResult issueAccessTokenResult = accessTokenResponse.getResponseData();
             InternalAccessToken accessToken = issueAccessTokenResult.getAccessToken();
             List<Scope> scopes = issueAccessTokenResult.getScopes();
@@ -263,7 +255,7 @@ import java.util.List;
                 // Acquire account information
                 LineApiResponse<LineProfile> profileResponse = talkApiClient.getProfile(accessToken);
                 if (!profileResponse.isSuccess()) {
-                    return toErrorResult(profileResponse);
+                    return LineLoginResult.error(profileResponse);
                 }
                 lineProfile = profileResponse.getResponseData();
                 userId = lineProfile.getUserId();
@@ -273,34 +265,49 @@ import java.util.List;
             accessTokenCache.saveAccessToken(accessToken);
 
             final LineIdToken idToken = issueAccessTokenResult.getIdToken();
-
             if (idToken != null) {
-                IdTokenValidator idTokenValidator = new Builder()
-                        .idToken(idToken)
-                        .expectedUserId(userId)
-                        .expectedChannelId(config.getChannelId())
-                        .expectedNonce(authenticationStatus.getOpenIdNonce())
-                        .build();
-
                 try {
-                    idTokenValidator.validate();
+                    validateIdToken(idToken, userId);
                 } catch (final Exception e) {
-                    return new LineLoginResult(LineApiResponseCode.INTERNAL_ERROR,
-                                               new LineApiError(e.getMessage()));
+                    return LineLoginResult.internalError(e.getMessage());
                 }
             }
 
-            return new LineLoginResult(
-                    lineProfile,
-                    idToken,
-                    authResult.getFriendshipStatusChanged(),
-                    new LineCredential(
+            return new LineLoginResult.Builder()
+                    .nonce(authenticationStatus.getOpenIdNonce())
+                    .lineProfile(lineProfile)
+                    .lineIdToken(idToken)
+                    .friendshipStatusChanged(authResult.getFriendshipStatusChanged())
+                    .lineCredential(new LineCredential(
                             new LineAccessToken(
                                     accessToken.getAccessToken(),
                                     accessToken.getExpiresInMillis(),
                                     accessToken.getIssuedClientTimeMillis()),
                             scopes
-                    ));
+                    ))
+                    .build();
+        }
+
+        private void validateIdToken(final LineIdToken idToken, final String userId) {
+            final LineApiResponse<OpenIdDiscoveryDocument> response =
+                    authApiClient.getOpenIdDiscoveryDocument();
+            if (!response.isSuccess()) {
+                throw new RuntimeException("Failed to get OpenId Discovery Document. "
+                                           + " Response Code: " + response.getResponseCode()
+                                           + " Error Data: " + response.getErrorData());
+            }
+
+            final OpenIdDiscoveryDocument openIdDiscoveryDoc = response.getResponseData();
+
+            final IdTokenValidator idTokenValidator = new Builder()
+                    .idToken(idToken)
+                    .expectedIssuer(openIdDiscoveryDoc.getIssuer())
+                    .expectedUserId(userId)
+                    .expectedChannelId(config.getChannelId())
+                    .expectedNonce(authenticationStatus.getOpenIdNonce())
+                    .build();
+
+            idTokenValidator.validate();
         }
 
         @Override
@@ -308,10 +315,5 @@ import java.util.List;
             authenticationStatus.authenticationIntentHandled();
             activity.onAuthenticationFinished(lineLoginResult);
         }
-    }
-
-    @NonNull
-    private static LineLoginResult toErrorResult(@NonNull LineApiResponse<?> response) {
-        return new LineLoginResult(response.getResponseCode(), response.getErrorData());
     }
 }

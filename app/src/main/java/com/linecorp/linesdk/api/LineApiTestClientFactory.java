@@ -2,9 +2,10 @@ package com.linecorp.linesdk.api;
 
 import android.content.Context;
 import android.net.Uri;
-import android.support.annotation.NonNull;
 
 import com.linecorp.linesdktest.BuildConfig;
+
+import androidx.annotation.NonNull;
 
 /**
  * Class to create {@link LineApiClient} for test.

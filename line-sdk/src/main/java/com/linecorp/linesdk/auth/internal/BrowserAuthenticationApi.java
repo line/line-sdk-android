@@ -8,14 +8,16 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.VisibleForTesting;
-import android.support.customtabs.CustomTabsIntent;
-import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
+import androidx.browser.customtabs.CustomTabsIntent;
+import androidx.core.content.ContextCompat;
+
 import com.linecorp.linesdk.BuildConfig;
+import com.linecorp.linesdk.Constants;
 import com.linecorp.linesdk.LineApiError;
 import com.linecorp.linesdk.Scope;
 import com.linecorp.linesdk.auth.LineAuthenticationConfig;
@@ -80,7 +82,6 @@ import static com.linecorp.linesdk.utils.UriUtils.buildParams;
 
     private static final LineAppVersion AUTO_LOGIN_FOR_LINE_SDK_ENABLED_VERSION =
             new LineAppVersion(6, 9, 0);
-
     @NonNull
     private final LineAuthenticationStatus authenticationStatus;
 
@@ -104,7 +105,12 @@ import static com.linecorp.linesdk.utils.UriUtils.buildParams;
 
         final String openIdNonce;
         if (params.getScopes().contains(Scope.OPENID_CONNECT)) {
-            openIdNonce = createRandomString(8);
+            if (!TextUtils.isEmpty(params.getNonce())) {
+                openIdNonce = params.getNonce();
+            } else {
+                // generate a random string for it, if no `nonce` param specified
+                openIdNonce = createRandomString(8);
+            }
         } else {
             openIdNonce = null;
         }
@@ -165,8 +171,7 @@ import static com.linecorp.linesdk.utils.UriUtils.buildParams;
         if (params.getUILocale() != null) {
             loginQueryParams.put("ui_locales", params.getUILocale().toString());
         }
-        final Uri loginUri = appendQueryParams(config.getWebLoginPageUrl(), loginQueryParams);
-        return loginUri;
+        return appendQueryParams(config.getWebLoginPageUrl(), loginQueryParams);
     }
 
     @VisibleForTesting
@@ -221,7 +226,7 @@ import static com.linecorp.linesdk.utils.UriUtils.buildParams;
         if (shouldLaunchLineApp) {
             Intent lineAppIntent = new Intent(Intent.ACTION_VIEW);
             lineAppIntent.setData(loginUri);
-            lineAppIntent.setPackage(BuildConfig.LINE_APP_PACKAGE_NAME);
+            lineAppIntent.setPackage(Constants.LINE_APP_PACKAGE_NAME);
             return new AuthenticationIntentHolder(
                     lineAppIntent, startActivityOptions, true /* isLineAppAuthentication */);
         }
@@ -289,8 +294,8 @@ import static com.linecorp.linesdk.utils.UriUtils.buildParams;
         }
 
         return !TextUtils.isEmpty(requestToken)
-                ? Result.createAsSuccess(requestToken, friendshipStatusChanged)
-                : Result.createAsAuthenticationAgentError(
+               ? Result.createAsSuccess(requestToken, friendshipStatusChanged)
+               : Result.createAsAuthenticationAgentError(
                 resultDataUri.getQueryParameter("error"),
                 resultDataUri.getQueryParameter("error_description"));
     }

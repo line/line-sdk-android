@@ -1,7 +1,7 @@
 package com.linecorp.linesdk;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
@@ -85,6 +85,18 @@ public class Scope {
      * LINE internal use only. Permission to get the user's real name.
      */
     public static final Scope OC_REAL_NAME = new Scope("real_name");
+
+    /**
+     * @hide
+     * LINE internal use only. Permission to use share message feature.
+     */
+    public static final Scope ONE_TIME_SHARE = new Scope("onetime.share");
+
+    public static final Scope OPEN_CHAT_TERM_STATUS = new Scope("square.term.status");
+    public static final Scope OPEN_CHAT_TERM_AGREE = new Scope("square.term.agree");
+    public static final Scope OPEN_CHAT_ROOM_CREATE = new Scope("square.create");
+    public static final Scope OPEN_CHAT_ROOM_STATUS = new Scope("square.info");
+    public static final Scope OPEN_CHAT_ROOM_MEMBERSHIP = new Scope("square.membership");
 
     private static final String SCOPE_DELIMITER = " ";
 

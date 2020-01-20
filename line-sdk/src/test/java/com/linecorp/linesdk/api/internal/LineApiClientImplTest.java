@@ -49,7 +49,7 @@ import static org.mockito.Mockito.verify;
  * Test for {@link LineApiClient}.
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = TestConfig.TARGET_SDK_VERSION)
+@Config(sdk = TestConfig.TARGET_SDK_VERSION)
 public class LineApiClientImplTest {
     private static final String CHANNEL_ID = "123";
     private static final InternalAccessToken ACCESS_TOKEN =

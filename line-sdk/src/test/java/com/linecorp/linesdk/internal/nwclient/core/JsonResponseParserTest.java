@@ -18,7 +18,7 @@ import static org.junit.Assert.assertTrue;
  * Test for {@link JsonResponseParser}.
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = TestConfig.TARGET_SDK_VERSION)
+@Config(sdk = TestConfig.TARGET_SDK_VERSION)
 public class JsonResponseParserTest {
     private static final String CHARSET_NAME = "UTF-8";
 

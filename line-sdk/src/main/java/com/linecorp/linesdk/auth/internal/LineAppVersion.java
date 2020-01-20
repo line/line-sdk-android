@@ -3,24 +3,25 @@ package com.linecorp.linesdk.auth.internal;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
-import com.linecorp.linesdk.BuildConfig;
+import com.linecorp.linesdk.Constants;
 
 import java.util.StringTokenizer;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * Class represents a version of LINE application.
  */
-/* package */ class LineAppVersion {
+public class LineAppVersion {
     @Nullable
     public static LineAppVersion getLineAppVersion(@NonNull Context context) {
         PackageInfo packageInfo;
         try {
             packageInfo = context.getPackageManager()
-                    .getPackageInfo(BuildConfig.LINE_APP_PACKAGE_NAME, PackageManager.GET_META_DATA);
+                    .getPackageInfo(Constants.LINE_APP_PACKAGE_NAME, PackageManager.GET_META_DATA);
         } catch (PackageManager.NameNotFoundException e) {
             return null;
         }
