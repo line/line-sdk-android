@@ -2,6 +2,7 @@ package com.linecorp.linesdk.openchat.ui
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.core.content.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -44,7 +45,7 @@ class OpenChatInfoViewModel(
 
     init {
         chatroomName.value = ""
-        profileName.value = getProfileName()
+        profileName.value = getSavedProfileName()
         description.value = ""
         category.value = DEFAULT_CATEGORY
         isSearchIncluded.value = true
@@ -100,16 +101,14 @@ class OpenChatInfoViewModel(
             isSearchIncluded.value ?: true
         )
 
-    private fun saveProfileName() {
-        sharedPreferences.edit()
-            .putString("profileName", profileName.value)
-            .apply()
-    }
+    private fun saveProfileName() =
+        sharedPreferences.edit { putString(KEY_PROFILE_NAME, profileName.value) }
 
-    private fun getProfileName(): String =
-        sharedPreferences.getString("profileName", null).orEmpty()
+    private fun getSavedProfileName(): String =
+        sharedPreferences.getString(KEY_PROFILE_NAME, null).orEmpty()
 
     companion object {
         private val DEFAULT_CATEGORY = OpenChatCategory.NotSelected
+        private const val KEY_PROFILE_NAME: String = "key_profile_name"
     }
 }
