@@ -1,6 +1,8 @@
 package com.linecorp.linesdk.openchat.ui
 
 import android.content.Context
+import android.content.SharedPreferences
+import androidx.core.content.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -16,6 +18,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class OpenChatInfoViewModel(
+    private val sharedPreferences: SharedPreferences,
     private val lineApiClient: LineApiClient
 ) : ViewModel() {
     val chatroomName: MutableLiveData<String> = MutableLiveData()
@@ -42,7 +45,7 @@ class OpenChatInfoViewModel(
 
     init {
         chatroomName.value = ""
-        profileName.value = ""
+        profileName.value = getSavedProfileName()
         description.value = ""
         category.value = DEFAULT_CATEGORY
         isSearchIncluded.value = true
@@ -66,8 +69,9 @@ class OpenChatInfoViewModel(
     }
 
     fun createChatroom() {
-        val openChatParameters = generateOpenChatParameters()
+        saveProfileName()
 
+        val openChatParameters = generateOpenChatParameters()
         viewModelScope.launch {
             _isCreatingChatRoom.value = true
 
@@ -97,7 +101,14 @@ class OpenChatInfoViewModel(
             isSearchIncluded.value ?: true
         )
 
+    private fun saveProfileName() =
+        sharedPreferences.edit { putString(KEY_PROFILE_NAME, profileName.value) }
+
+    private fun getSavedProfileName(): String =
+        sharedPreferences.getString(KEY_PROFILE_NAME, null).orEmpty()
+
     companion object {
         private val DEFAULT_CATEGORY = OpenChatCategory.NotSelected
+        private const val KEY_PROFILE_NAME: String = "key_profile_name"
     }
 }
