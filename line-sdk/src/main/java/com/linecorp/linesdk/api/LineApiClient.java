@@ -336,7 +336,7 @@ public interface LineApiClient {
      *                      specify up to 10 users.
      * @param messages      The messages to send. Available message types are: text, audio, image,
      *                      location, video, and template. You can send up to five messages.
-     * @param isOttUsed     True if you want to send messages using OTT instead of using the user ids;
+     * @param isOttUsed     True if you want to send messages using OTT instead of using the user IDs;
      *                      false otherwise.
      * @return A {@link LineApiResponse} object. If the API call is successful, the
      * {@link LineApiResponse} object contains the {@link SendMessageResponse} objects that contain
