@@ -1,5 +1,6 @@
 package com.linecorp.linesdk.openchat.ui
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -49,13 +50,10 @@ class OpenChatInfoViewModel(
         checkAgreementStatus()
     }
 
-    fun getCategoryString(): String {
-        // TODO: use translation strings corresponding to system locale
-        return category.value?.defaultString.orEmpty()
-    }
-
-    fun getCategoryStringArray(): Array<String> =
-        OpenChatCategory.values().map(OpenChatCategory::defaultString).toTypedArray()
+    fun getCategoryStringArray(context: Context): Array<String> =
+        OpenChatCategory.values()
+            .map{ category -> context.resources.getString(category.resourceId)}
+            .toTypedArray()
 
     fun getSelectedCategory(position: Int): OpenChatCategory =
         OpenChatCategory.values().getOrElse(position) { DEFAULT_CATEGORY }
@@ -100,6 +98,6 @@ class OpenChatInfoViewModel(
         )
 
     companion object {
-        private val DEFAULT_CATEGORY = OpenChatCategory.Game
+        private val DEFAULT_CATEGORY = OpenChatCategory.NotSelected
     }
 }

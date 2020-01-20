@@ -3,23 +3,14 @@ package com.linecorp.linesdk.dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.google.android.material.tabs.TabLayout;
-
-import androidx.appcompat.app.AppCompatDialog;
-import androidx.viewpager.widget.ViewPager;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
+import com.google.android.material.tabs.TabLayout;
 import com.linecorp.linesdk.R;
 import com.linecorp.linesdk.api.LineApiClient;
 import com.linecorp.linesdk.dialog.internal.SendMessageContract;
@@ -30,8 +21,12 @@ import com.linecorp.linesdk.dialog.internal.UserThumbnailView;
 import com.linecorp.linesdk.message.MessageData;
 
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDialog;
+import androidx.viewpager.widget.ViewPager;
 
 /**
  * @hide
@@ -148,10 +143,6 @@ public class SendMessageDialog extends AppCompatDialog implements SendMessageCon
 
     @Override
     public void onExceedMaxTargetUserCount(int count) {
-        Toast.makeText(getContext(),
-                String.format(Locale.getDefault(), "You can only select up to %1$d.", count),
-                Toast.LENGTH_LONG)
-                .show();
     }
 
     @Override

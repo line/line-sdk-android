@@ -46,18 +46,6 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/room_name_guide"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:maxLines="2"
-                android:text="@string/openchat_create_room_name_guide"
-                android:textColor="@color/text_hint"
-                android:textSize="13sp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toLeftOf="@+id/nameMaxTextView"
-                app:layout_constraintTop_toBottomOf="@+id/nameEditText" />
-
-            <TextView
                 android:id="@+id/nameMaxTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -157,7 +145,6 @@
                 android:layout_marginTop="2dp"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="@{viewModel.getCategoryString()}"
                 android:textColor="@color/openchat_category"
                 android:textSize="14sp"
                 app:layout_constraintLeft_toLeftOf="parent"

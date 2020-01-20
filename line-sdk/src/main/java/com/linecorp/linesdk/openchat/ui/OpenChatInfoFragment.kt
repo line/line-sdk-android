@@ -65,7 +65,9 @@ class OpenChatInfoFragment : Fragment() {
         })
 
         viewModel.category.observe(this, Observer { category ->
-            categoryLabelTextView.text = category?.defaultString.orEmpty()
+            category?.resourceId?.let {resourceId ->
+                categoryLabelTextView.text = resources.getString(resourceId)
+            }
         })
     }
 
@@ -118,7 +120,7 @@ class OpenChatInfoFragment : Fragment() {
 
     private fun showCategorySelectionDialog() =
         AlertDialog.Builder(requireContext())
-            .setItems(viewModel.getCategoryStringArray()) { _, which ->
+            .setItems(viewModel.getCategoryStringArray(requireContext())) { _, which ->
                 val selectedCategory = viewModel.getSelectedCategory(which)
                 viewModel.category.value = selectedCategory
             }
