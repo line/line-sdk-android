@@ -28,7 +28,7 @@ import java.util.List;
  *      ]
  * }</pre>
  *
- * <p>Message data using multiple user ids:
+ * <p>Message data using multiple user IDs:
  * <pre>
  * {
  *      "to": [

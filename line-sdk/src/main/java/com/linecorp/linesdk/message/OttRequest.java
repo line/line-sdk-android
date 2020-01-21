@@ -9,7 +9,7 @@ import org.json.JSONObject;
 import java.util.List;
 
 /**
- * Represents user ids to be sent via the OTT(One time token) API.
+ * Represents user IDs to be sent via the OTT(One time token) API.
  *
  * <p>Example:
  * <pre>
