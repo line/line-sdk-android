@@ -60,9 +60,12 @@ android {
 
 configurations {
     doclava
+    javadocs
 }
 
 dependencies {
+    javadocs 'androidx.annotation:annotation:1.1.0'
+
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.browser:browser:1.2.0'
     implementation 'com.google.android.material:material:1.0.0'
@@ -140,6 +143,8 @@ task javadoc_public(type: Javadoc) {
 
     source = javadocParams.source
     classpath += javadocParams.classpath
+    classpath += configurations.compile
+    classpath += configurations.javadocs
     include javadocParams.includes.public
 
     failOnError false
@@ -148,6 +153,9 @@ task javadoc_public(type: Javadoc) {
         options {
             doclet 'com.google.doclava.Doclava'
             docletpath = configurations.doclava.files.asType(List)
+
+            exclude '**/BuildConfig.java'
+            exclude '**/R.java'
 
             locale javadocParams.locale
             encoding javadocParams.encoding
