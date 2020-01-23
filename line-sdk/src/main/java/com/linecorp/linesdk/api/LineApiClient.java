@@ -357,18 +357,33 @@ public interface LineApiClient {
             boolean isOttUsed
     );
 
+    /**
+     * @hide
+     */
     @NonNull
     LineApiResponse<Boolean> getOpenChatAgreementStatus();
 
+    /**
+     * @hide
+     */
     @NonNull
     LineApiResponse<Boolean> updateOpenChatAgreementStatus(@NonNull Boolean agreed);
 
+    /**
+     * @hide
+     */
     @NonNull
     LineApiResponse<OpenChatRoomInfo> createOpenChatRoom(@NonNull OpenChatParameters openChatParameters);
 
+    /**
+     * @hide
+     */
     @NonNull
     LineApiResponse<OpenChatRoomStatus> getOpenChatRoomStatus(@NonNull String roomId);
 
+    /**
+     * @hide
+     */
     @NonNull
     LineApiResponse<MembershipStatus> getOpenChatMembershipStatus(@NonNull String roomId);
 }
