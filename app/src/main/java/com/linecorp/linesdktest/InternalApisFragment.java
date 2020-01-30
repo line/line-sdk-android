@@ -342,11 +342,6 @@ public class InternalApisFragment extends BaseApisFragment implements SendMessag
         startApiAsyncTask("getOpenChatAgreementStatus", () -> lineApiClient.getOpenChatAgreementStatus());
     }
 
-    @OnClick(R.id.openchat_agreement_update_btn)
-    void updateAgreementStatus() {
-        startApiAsyncTask("updateOpenChatAgreementStatus", () -> lineApiClient.updateOpenChatAgreementStatus(true));
-    }
-
     @OnClick(R.id.openchat_create_chat_btn)
     void createChatroom() {
         OpenChatParameters parameters = new OpenChatParameters(
