@@ -268,11 +268,6 @@ public class LineApiClientImpl implements LineApiClient {
     }
 
     @NonNull
-    public LineApiResponse<Boolean> updateOpenChatAgreementStatus(@NonNull Boolean agreed) {
-        return callWithAccessToken(accessToken -> talkApiClient.updateOpenChatAgreementStatus(accessToken, agreed));
-    }
-
-    @NonNull
     public LineApiResponse<OpenChatRoomInfo> createOpenChatRoom(@NonNull OpenChatParameters openChatParameters) {
         return callWithAccessToken(accessToken -> talkApiClient.createOpenChatRoom(accessToken, openChatParameters));
 

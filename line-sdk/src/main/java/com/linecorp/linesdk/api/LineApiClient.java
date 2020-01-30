@@ -367,12 +367,6 @@ public interface LineApiClient {
      * @hide
      */
     @NonNull
-    LineApiResponse<Boolean> updateOpenChatAgreementStatus(@NonNull Boolean agreed);
-
-    /**
-     * @hide
-     */
-    @NonNull
     LineApiResponse<OpenChatRoomInfo> createOpenChatRoom(@NonNull OpenChatParameters openChatParameters);
 
     /**
