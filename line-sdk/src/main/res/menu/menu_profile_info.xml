@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menu_item_create_profile_done"
-        android:title="@android:string/ok"
+        android:title="@string/common_done"
         app:showAsAction="always"
         tools:ignore="AppCompatResource" />
 </menu>
