@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 <string name="btn_line_login">Log masuk dengan LINE</string>
+<string name="common_cancel">Batal</string>
 <string name="common_next">Seterusnya</string>
+<string name="open_line">Buka LINE</string>
 <string name="openchat_create_profile_input_guide">Tetapkan nama panggilan anda untuk digunakan dalam \"%1$s\".</string>
 <string name="openchat_create_profile_input_max_count">Panjang maksimum dicapai.</string>
 <string name="openchat_create_profile_input_placeholder">Masukkan nama panggilan</string>
@@ -14,6 +16,7 @@
 <string name="openchat_create_room_search">Izinkan carian</string>
 <string name="openchat_create_room_search_guide">Orang lain akan dapat mencari OpenChat anda.</string>
 <string name="openchat_create_room_title">Cipta OpenChat</string>
+<string name="openchat_not_agree_with_terms">Anda belum bersetuju dengan Terma dan Syarat Penggunaan OpenChat.\nPergi ke OpenChat pada aplikasi LINE dan bersetuju dengan Terma dan Syarat Penggunaan untuk meneruskan.</string>
 <string name="search_no_fiend">Anda tidak ada kawan yang boleh dipilih.</string>
 <string name="search_no_group">Anda tidak ada kumpulan yang boleh dipilih.</string>
 <string name="search_no_results">Tiada hasil pencarian</string>

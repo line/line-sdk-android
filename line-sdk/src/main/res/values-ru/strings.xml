@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 <string name="btn_line_login">Войти в LINE</string>
+<string name="common_cancel">Отмена</string>
 <string name="common_next">Далее</string>
+<string name="open_line">Открыть LINE</string>
 <string name="openchat_create_profile_input_guide">Укажите свой псевдоним для клуба \"%1$s\".</string>
 <string name="openchat_create_profile_input_max_count">Достигнута максимальная длина записи.</string>
 <string name="openchat_create_profile_input_placeholder">Введите псевдоним</string>
@@ -14,6 +16,7 @@
 <string name="openchat_create_room_search">Показывать в поиске</string>
 <string name="openchat_create_room_search_guide">Ваш OpenChat будет доступен для поиска.</string>
 <string name="openchat_create_room_title">Создать группу OpenChat</string>
+<string name="openchat_not_agree_with_terms">Вы еще не согласились с Правилами и условиями использования OpenChat.\nЧтобы продолжить, перейдите в OpenChat в приложении LINE и примите Правила и условия использования.</string>
 <string name="search_no_fiend">Пока друзей нет</string>
 <string name="search_no_group">У вас нет созданных групп</string>
 <string name="search_no_results">Ничего не найдено.</string>

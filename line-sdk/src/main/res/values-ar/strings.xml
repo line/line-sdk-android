@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 <string name="btn_line_login">تسجيل دخول باستخدام LINE</string>
+<string name="common_cancel">إلغاء</string>
 <string name="common_next">التالي</string>
+<string name="open_line">فتح LINE</string>
 <string name="openchat_create_profile_input_guide">تعيين اسمك المستعار لاستخدامه في \"%1$s\".</string>
 <string name="openchat_create_profile_input_max_count">تم بلوغ الحد الأقصى للطول.</string>
 <string name="openchat_create_profile_input_placeholder">أدخل الاسم المستعار</string>
@@ -14,6 +16,7 @@
 <string name="openchat_create_room_search">تمكين البحث</string>
 <string name="openchat_create_room_search_guide">سيتمكن الآخرون من البحث عن OpenChat الخاص بك.</string>
 <string name="openchat_create_room_title">إنشاء OpenChat</string>
+<string name="openchat_not_agree_with_terms">أنت لم توافق على شروط وبنود استخدام OpenChat حتى الآن.\nاذهب إلى OpenChat في تطبيق LINE ووافق على شروط وبنود الاستخدام للاستمرار .</string>
 <string name="search_no_fiend">لا يوجد لديك أي أصدقاء للاختيار من بينهم.</string>
 <string name="search_no_group">لا توجد لديك أي مجموعات للاختيار من بينها.</string>
 <string name="search_no_results">لا توجد نتائج</string>
