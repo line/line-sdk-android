@@ -27,7 +27,7 @@ public class LineFriendProfile extends LineProfile {
             };
 
     /**
-     * Friend's nickname which changed by owner user
+     * Friend's nickname as set by the user who added them as a friend, only displayed to that user.
      */
     @Nullable
     private final String overriddenDisplayName;
@@ -38,7 +38,7 @@ public class LineFriendProfile extends LineProfile {
      * @param displayName Friend's display name.
      * @param pictureUrl Friend's profile image URL.
      * @param statusMessage Friend's status message.
-     * @param overriddenDisplayName Friend's nickname which changed by owner user
+     * @param overriddenDisplayName Friend's nickname as set by the user who added them as a friend, only displayed to that user.
      */
     public LineFriendProfile(@NonNull final String userId,
                              @NonNull final String displayName,
@@ -61,8 +61,8 @@ public class LineFriendProfile extends LineProfile {
     }
 
     /**
-     * get the friend's nickname which changed by owner user
-     * @return The friend's nickname which changed by owner user
+     * Get the friend's nickname as set by the user who added them as a friend, only displayed to that user.
+     * @return The friend's nickname as set by the user who added them as a friend, only displayed to that user.
      */
     @Nullable
     public String getOverriddenDisplayName() {
@@ -70,8 +70,8 @@ public class LineFriendProfile extends LineProfile {
     }
 
     /**
-     * get the friend's nickname which changed by owner user, or the original display name.
-     * @return The friend's nickname which changed by owner user, if not available, return the original display name
+     * Get the friend's name as displayed to the user who added them as a friend.
+     * @return Either the nickname that the user manually set for this friend, or the original display name if no nickname was set.
      */
     @NonNull
     public String getAvailableDisplayName() {
