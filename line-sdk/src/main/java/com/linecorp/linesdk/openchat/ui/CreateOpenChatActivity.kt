@@ -98,12 +98,12 @@ class CreateOpenChatActivity : AppCompatActivity() {
         val isLineAppInstalled: Boolean = LineAppVersion.getLineAppVersion(this) != null
 
         AlertDialog.Builder(this)
-            .setMessage(R.string.login_openchat_not_agree_with_terms)
+            .setMessage(R.string.openchat_not_agree_with_terms)
             .setOnDismissListener { finish() }
             .apply {
                 if (isLineAppInstalled) {
-                    setPositiveButton(R.string.openchat_open_line) { _, _ -> launchLineApp() }
-                    setNegativeButton(android.R.string.cancel) { _, _ -> finish() }
+                    setPositiveButton(R.string.open_line) { _, _ -> launchLineApp() }
+                    setNegativeButton(R.string.common_cancel) { _, _ -> finish() }
                 } else {
                     setPositiveButton(android.R.string.ok) { _, _ -> finish() }
                 }

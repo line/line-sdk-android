@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 <string name="btn_line_login">Login con LINE</string>
+<string name="common_cancel">Annulla</string>
 <string name="common_next">Avanti</string>
+<string name="open_line">Apri LINE</string>
 <string name="openchat_create_profile_input_guide">Imposta il nickname da usare in \"%1$s\".</string>
 <string name="openchat_create_profile_input_max_count">Hai raggiunto la lunghezza massima.</string>
 <string name="openchat_create_profile_input_placeholder">Inserisci nickname</string>
@@ -14,6 +16,7 @@
 <string name="openchat_create_room_search">Consenti ricerca</string>
 <string name="openchat_create_room_search_guide">Gli altri potranno cercare la tua OpenChat.</string>
 <string name="openchat_create_room_title">Crea OpenChat</string>
+<string name="openchat_not_agree_with_terms">Non hai ancora accettato Termini e condizioni d\'uso di OpenChat.\nAccedi a OpenChat nell\'app LINE e accetta i termini e le condizioni d\'uso per continuare.</string>
 <string name="search_no_fiend">Non hai amici da scegliere.</string>
 <string name="search_no_group">Non hai gruppi da scegliere.</string>
 <string name="search_no_results">Nessun Risultato</string>

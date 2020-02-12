@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 <string name="btn_line_login">LINE ile oturum açın</string>
+<string name="common_cancel">İptal</string>
 <string name="common_next">İleri</string>
+<string name="open_line">LINE\'ı Aç</string>
 <string name="openchat_create_profile_input_guide">\"%1$s\" içinde kullanılacak takma adınızı belirleyin.</string>
 <string name="openchat_create_profile_input_max_count">Uzunluk sınırına ulaşıldı.</string>
 <string name="openchat_create_profile_input_placeholder">Takma adı girin</string>
@@ -14,6 +16,7 @@
 <string name="openchat_create_room_search">Aramaya izin ver</string>
 <string name="openchat_create_room_search_guide">Diğer kişiler OpenChat\'iniz için arama yapabilecek.</string>
 <string name="openchat_create_room_title">OpenChat oluştur</string>
+<string name="openchat_not_agree_with_terms">Henüz OpenChat Kullanım Koşulları ve Şartları\'nı kabul etmediniz.\nDevam etmek için LINE uygulamasında OpenChat\'e gidip Kullanım Koşulları ve Şartları\'nı kabul edin.</string>
 <string name="search_no_fiend">Seçebileceğiniz bir arkadaşınız yok.</string>
 <string name="search_no_group">Seçebileceğiniz bir grup yok.</string>
 <string name="search_no_results">Sonuç Yok</string>

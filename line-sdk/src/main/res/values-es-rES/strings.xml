@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 <string name="btn_line_login">Iniciar sesión con LINE</string>
+<string name="common_cancel">Cancelar</string>
 <string name="common_next">Siguiente</string>
+<string name="open_line">Abrir LINE</string>
 <string name="openchat_create_profile_input_guide">Ponte un alias para \"%1$s\".</string>
 <string name="openchat_create_profile_input_max_count">Uf, muy largo.</string>
 <string name="openchat_create_profile_input_placeholder">Alias</string>
@@ -14,6 +16,7 @@
 <string name="openchat_create_room_search">Búsqueda abierta</string>
 <string name="openchat_create_room_search_guide">Podrán buscar tu OpenChat.</string>
 <string name="openchat_create_room_title">Crear OpenChat</string>
+<string name="openchat_not_agree_with_terms">En tu LINE, abre OpenChat y acepta los términos de uso de OpenChat.\n</string>
 <string name="search_no_fiend">No hay Amigos para elegir</string>
 <string name="search_no_group">No hay grupos para elegir.</string>
 <string name="search_no_results">No hay resultados.</string>

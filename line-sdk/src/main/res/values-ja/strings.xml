@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 <string name="btn_line_login">LINEでログイン</string>
+<string name="common_cancel">キャンセル</string>
 <string name="common_next">次へ</string>
+<string name="open_line">LINEを開く</string>
 <string name="openchat_create_profile_input_guide">「%1$s」で使用するニックネームを設定できます。</string>
 <string name="openchat_create_profile_input_max_count">これ以上入力できません</string>
 <string name="openchat_create_profile_input_placeholder">ニックネームを入力</string>
@@ -14,6 +16,7 @@
 <string name="openchat_create_room_search">検索を許可</string>
 <string name="openchat_create_room_search_guide">他のユーザーがメイン画面からこのオープンチャットを検索することができます。</string>
 <string name="openchat_create_room_title">オープンチャットを作成</string>
+<string name="openchat_not_agree_with_terms">まだLINEオープンチャットの利用規約への同意が完了していません。\nLINEアプリでオープンチャットを開き、利用規約への同意を完了してください。</string>
 <string name="search_no_fiend">選択できる友だちがいません。</string>
 <string name="search_no_group">選択できるグループがありません。</string>
 <string name="search_no_results">検索結果がありません。</string>
