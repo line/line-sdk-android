@@ -2,6 +2,7 @@
 <resources>
 <string name="btn_line_login">ล็อกอินด้วย LINE</string>
 <string name="common_cancel">ยกเลิก</string>
+<string name="common_done">เสร็จสิ้น</string>
 <string name="common_next">ต่อไป</string>
 <string name="open_line">เปิด LINE</string>
 <string name="openchat_create_profile_input_guide">ตั้งชื่อเล่นเพื่อใช้ใน \"%1$s\"</string>

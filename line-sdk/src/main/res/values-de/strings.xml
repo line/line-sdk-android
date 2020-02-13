@@ -2,6 +2,7 @@
 <resources>
 <string name="btn_line_login">Mit LINE anmelden</string>
 <string name="common_cancel">Abbrechen</string>
+<string name="common_done">Fertig</string>
 <string name="common_next">Weiter</string>
 <string name="open_line">LINE öffnen</string>
 <string name="openchat_create_profile_input_guide">Lege den Alias fest, der in „%1$s“ verwendet werden soll.</string>

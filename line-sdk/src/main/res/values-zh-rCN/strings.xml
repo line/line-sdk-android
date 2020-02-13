@@ -2,6 +2,7 @@
 <resources>
 <string name="btn_line_login">用LINE帐号登录</string>
 <string name="common_cancel">取消</string>
+<string name="common_done">完成</string>
 <string name="common_next">下一步</string>
 <string name="open_line">打开LINE</string>
 <string name="openchat_create_profile_input_guide">设置要用于“%1$s”的昵称。</string>

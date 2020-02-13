@@ -2,6 +2,7 @@
 <resources>
 <string name="btn_line_login">LINE으로 로그인</string>
 <string name="common_cancel">취소</string>
+<string name="common_done">완료</string>
 <string name="common_next">다음</string>
 <string name="open_line">LINE 열기</string>
 <string name="openchat_create_profile_input_guide">%1$s에서 사용할 닉네임을 설정할 수 있습니다.</string>

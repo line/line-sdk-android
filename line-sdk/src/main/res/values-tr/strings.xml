@@ -2,6 +2,7 @@
 <resources>
 <string name="btn_line_login">LINE ile oturum açın</string>
 <string name="common_cancel">İptal</string>
+<string name="common_done">Tamam</string>
 <string name="common_next">İleri</string>
 <string name="open_line">LINE\'ı Aç</string>
 <string name="openchat_create_profile_input_guide">\"%1$s\" içinde kullanılacak takma adınızı belirleyin.</string>

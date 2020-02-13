@@ -2,6 +2,7 @@
 <resources>
 <string name="btn_line_login">與LINE連動</string>
 <string name="common_cancel">取消</string>
+<string name="common_done">完成</string>
 <string name="common_next">下一步</string>
 <string name="open_line">打開LINE</string>
 <string name="openchat_create_profile_input_guide">請設定您要在「%1$s」中使用的暱稱。</string>

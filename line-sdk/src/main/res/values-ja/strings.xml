@@ -2,6 +2,7 @@
 <resources>
 <string name="btn_line_login">LINEでログイン</string>
 <string name="common_cancel">キャンセル</string>
+<string name="common_done">完了</string>
 <string name="common_next">次へ</string>
 <string name="open_line">LINEを開く</string>
 <string name="openchat_create_profile_input_guide">「%1$s」で使用するニックネームを設定できます。</string>
