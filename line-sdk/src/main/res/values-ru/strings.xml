@@ -2,6 +2,7 @@
 <resources>
 <string name="btn_line_login">Войти в LINE</string>
 <string name="common_cancel">Отмена</string>
+<string name="common_done">Готово</string>
 <string name="common_next">Далее</string>
 <string name="open_line">Открыть LINE</string>
 <string name="openchat_create_profile_input_guide">Укажите свой псевдоним для клуба \"%1$s\".</string>

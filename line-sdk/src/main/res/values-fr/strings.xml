@@ -2,6 +2,7 @@
 <resources>
 <string name="btn_line_login">Connexion avec LINE</string>
 <string name="common_cancel">Annuler</string>
+<string name="common_done">Terminé</string>
 <string name="common_next">Suivant</string>
 <string name="open_line">Ouvrir LINE</string>
 <string name="openchat_create_profile_input_guide">Définissez le pseudonyme à utiliser dans « %1$s ».</string>

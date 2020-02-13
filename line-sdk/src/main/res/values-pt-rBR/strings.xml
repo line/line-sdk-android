@@ -2,6 +2,7 @@
 <resources>
 <string name="btn_line_login">Login com o LINE</string>
 <string name="common_cancel">Cancelar</string>
+<string name="common_done">Feito</string>
 <string name="common_next">Próximo</string>
 <string name="open_line">Abrir o LINE</string>
 <string name="openchat_create_profile_input_guide">Defina seu apelido que será usado em \"%1$s\".</string>

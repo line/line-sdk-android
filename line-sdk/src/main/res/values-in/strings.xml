@@ -2,6 +2,7 @@
 <resources>
 <string name="btn_line_login">Masuk dengan LINE</string>
 <string name="common_cancel">Batal</string>
+<string name="common_done">Selesai</string>
 <string name="common_next">Berikutnya</string>
 <string name="open_line">Buka LINE</string>
 <string name="openchat_create_profile_input_guide">Tetapkan nama panggilan yang akan digunakan di \"%1$s\".</string>

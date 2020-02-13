@@ -2,6 +2,7 @@
 <resources>
 <string name="btn_line_login">تسجيل دخول باستخدام LINE</string>
 <string name="common_cancel">إلغاء</string>
+<string name="common_done">تم</string>
 <string name="common_next">التالي</string>
 <string name="open_line">فتح LINE</string>
 <string name="openchat_create_profile_input_guide">تعيين اسمك المستعار لاستخدامه في \"%1$s\".</string>
