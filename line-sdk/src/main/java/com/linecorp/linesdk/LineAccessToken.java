@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import androidx.annotation.NonNull;
 
-import static com.linecorp.android.security.SecurityUtils.hideIfNotDebug;
+import static com.linecorp.linesdk.utils.DebugUtils.hideIfNotDebug;
 
 /**
  * Represents an access token that is used to call the Social API.

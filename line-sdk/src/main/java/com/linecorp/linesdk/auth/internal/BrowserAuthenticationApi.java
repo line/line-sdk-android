@@ -22,7 +22,8 @@ import com.linecorp.linesdk.LineApiError;
 import com.linecorp.linesdk.Scope;
 import com.linecorp.linesdk.auth.LineAuthenticationConfig;
 import com.linecorp.linesdk.auth.LineAuthenticationParams;
-import com.linecorp.linesdk.internal.OneTimePassword;
+import com.linecorp.linesdk.internal.pkce.CodeChallengeMethod;
+import com.linecorp.linesdk.internal.pkce.PKCECode;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,7 +33,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import static com.linecorp.android.security.SecurityUtils.createRandomString;
+import static com.linecorp.linesdk.utils.StringUtils.createRandomAlphaNumeric;
 import static com.linecorp.linesdk.utils.UriUtils.appendQueryParams;
 import static com.linecorp.linesdk.utils.UriUtils.buildParams;
 
@@ -40,6 +41,10 @@ import static com.linecorp.linesdk.utils.UriUtils.buildParams;
  * Class represents the LINE authentication API for browser log-in.
  */
 /* package */ class BrowserAuthenticationApi {
+    private static final int LENGTH_OAUTH_STATE = 16;
+
+    private static final int LENGTH_OPENID_NONCE = 16;
+
     static class Request {
         @NonNull
         private final Intent intent;
@@ -93,14 +98,14 @@ import static com.linecorp.linesdk.utils.UriUtils.buildParams;
     Request getRequest(
             @NonNull Context context,
             @NonNull LineAuthenticationConfig config,
-            @NonNull OneTimePassword oneTimePassword,
+            @NonNull PKCECode pkceCode,
             @NonNull LineAuthenticationParams params)
             throws ActivityNotFoundException {
 
         // "state" may be guessed easily but there is no problem as the follows.
-        // In case of LINE SDK, the correctness of "redirect_uri" will be checked with using "otpId"
+        // In case of LINE SDK, the correctness of "redirect_uri" will be checked with using PKCE
         // instead of "state".
-        final String oAuthState = createRandomString(8);
+        final String oAuthState = createRandomAlphaNumeric(LENGTH_OAUTH_STATE);
         authenticationStatus.setOAuthState(oAuthState);
 
         final String openIdNonce;
@@ -109,7 +114,7 @@ import static com.linecorp.linesdk.utils.UriUtils.buildParams;
                 openIdNonce = params.getNonce();
             } else {
                 // generate a random string for it, if no `nonce` param specified
-                openIdNonce = createRandomString(8);
+                openIdNonce = createRandomAlphaNumeric(LENGTH_OPENID_NONCE);
             }
         } else {
             openIdNonce = null;
@@ -118,7 +123,7 @@ import static com.linecorp.linesdk.utils.UriUtils.buildParams;
 
         final String redirectUri = createRedirectUri(context);
 
-        final Uri loginUri = createLoginUrl(config, oneTimePassword, params, oAuthState, openIdNonce, redirectUri);
+        final Uri loginUri = createLoginUrl(config, pkceCode, params, oAuthState, openIdNonce, redirectUri);
 
         AuthenticationIntentHolder intentHolder = getAuthenticationIntentHolder(
                 context, loginUri, config.isLineAppAuthenticationDisabled());
@@ -139,7 +144,7 @@ import static com.linecorp.linesdk.utils.UriUtils.buildParams;
     @NonNull
     Uri createLoginUrl(
             @NonNull LineAuthenticationConfig config,
-            @NonNull OneTimePassword oneTimePassword,
+            @NonNull PKCECode pkceCode,
             @NonNull LineAuthenticationParams params,
             @NonNull String oAuthState,
             @Nullable String openIdNonce,
@@ -149,7 +154,8 @@ import static com.linecorp.linesdk.utils.UriUtils.buildParams;
                 "response_type", "code",
                 "client_id", config.getChannelId(),
                 "state", oAuthState,
-                "otpId", oneTimePassword.getId(),
+                "code_challenge", pkceCode.getChallenge(),
+                "code_challenge_method", CodeChallengeMethod.S256.getValue(),
                 "redirect_uri", redirectUri,
                 "sdk_ver", BuildConfig.VERSION_NAME,
                 "scope", Scope.join(params.getScopes())

@@ -17,7 +17,7 @@ import com.linecorp.linesdk.Scope;
 import com.linecorp.linesdk.TestConfig;
 import com.linecorp.linesdk.auth.LineAuthenticationConfig;
 import com.linecorp.linesdk.auth.LineAuthenticationParams;
-import com.linecorp.linesdk.internal.OneTimePassword;
+import com.linecorp.linesdk.internal.pkce.PKCECode;
 
 import org.json.JSONObject;
 import org.junit.After;
@@ -69,13 +69,11 @@ public class BrowserAuthenticationApiTest {
     private static final LineAuthenticationParams LINE_AUTH_PARAMS = new LineAuthenticationParams.Builder()
             .scopes(SCOPE_LIST)
             .build();
-    private static final String OTP_ID = "otpId";
-    private static final String OTP_PASS = "otp";
     private static final String STATE = "testState";
     private static final String NONCE = "testNonce";
     private static final String REDIRECT_URI = "test://redirect.uri";
 
-    private static final OneTimePassword OTP = new OneTimePassword(OTP_ID, OTP_PASS);
+    private static final PKCECode PKCE_CODE = PKCECode.newCode();
 
     private LineAuthenticationStatus authenticationStatus;
     private BrowserAuthenticationApi target;
@@ -119,14 +117,14 @@ public class BrowserAuthenticationApiTest {
         doReturn(loginUri).when(target)
                 .createLoginUrl(
                         any(LineAuthenticationConfig.class),
-                        any(OneTimePassword.class),
+                        any(PKCECode.class),
                         any(LineAuthenticationParams.class) /* params */,
                         any(String.class) /* oAuthState */,
                         any(String.class) /* openIdNonce */,
                         any(String.class) /* redirectUri */);
 
         BrowserAuthenticationApi.Request request =
-                target.getRequest(context, config, OTP, LINE_AUTH_PARAMS);
+                target.getRequest(context, config, PKCE_CODE, LINE_AUTH_PARAMS);
 
         assertSame(intent, request.getIntent());
         assertSame(startActivityOption, request.getStartActivityOptions());
@@ -136,13 +134,13 @@ public class BrowserAuthenticationApiTest {
                 eq(context), any(Uri.class), eq(true) /* isLineAppAuthDisabled */);
 
         verify(target, times(1)).createLoginUrl(
-                eq(config), eq(OTP), eq(LINE_AUTH_PARAMS), anyString(), any(), eq(REDIRECT_URI)
+                eq(config), eq(PKCE_CODE), eq(LINE_AUTH_PARAMS), anyString(), any(), eq(REDIRECT_URI)
         );
     }
 
     @Test
     public void testCreateLoginUri() throws Exception {
-        Uri loginUri = target.createLoginUrl(config, OTP, LINE_AUTH_PARAMS, STATE, NONCE, REDIRECT_URI);
+        Uri loginUri = target.createLoginUrl(config, PKCE_CODE, LINE_AUTH_PARAMS, STATE, NONCE, REDIRECT_URI);
         assertEquals(WEB_LOGIN_PAGE_URL.getScheme(), loginUri.getScheme());
         assertEquals(WEB_LOGIN_PAGE_URL.getAuthority(), loginUri.getAuthority());
         assertEquals(WEB_LOGIN_PAGE_URL.getPath(), loginUri.getPath());
@@ -154,7 +152,8 @@ public class BrowserAuthenticationApiTest {
         assertEquals(CHANNEL_ID, returnUri.getQueryParameter("client_id"));
         assertEquals(STATE, returnUri.getQueryParameter("state"));
         assertEquals(NONCE, returnUri.getQueryParameter("nonce"));
-        assertEquals(OTP_ID, returnUri.getQueryParameter("otpId"));
+        assertEquals(PKCE_CODE.getChallenge(), returnUri.getQueryParameter("code_challenge"));
+        assertEquals("S256", returnUri.getQueryParameter("code_challenge_method"));
         assertEquals(REDIRECT_URI, returnUri.getQueryParameter("redirect_uri"));
         assertEquals(BuildConfig.VERSION_NAME, returnUri.getQueryParameter("sdk_ver"));
         assertEquals("friends groups", returnUri.getQueryParameter("scope"));

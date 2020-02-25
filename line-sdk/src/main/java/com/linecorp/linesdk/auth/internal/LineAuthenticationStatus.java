@@ -4,9 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.text.TextUtils;
 
-import com.linecorp.linesdk.internal.OneTimePassword;
+import com.linecorp.linesdk.internal.pkce.PKCECode;
 
 /**
  * Data class to hold mutable values which represents authentication status, during a LINE
@@ -21,7 +20,7 @@ import com.linecorp.linesdk.internal.OneTimePassword;
     }
 
     @Nullable
-    private OneTimePassword oneTimePassword;
+    private PKCECode pkceCode;
     @Nullable
     private String sentRedirectUri;
     /**
@@ -42,12 +41,12 @@ import com.linecorp.linesdk.internal.OneTimePassword;
     }
 
     @Nullable
-    OneTimePassword getOneTimePassword() {
-        return oneTimePassword;
+    PKCECode getPKCECode() {
+        return pkceCode;
     }
 
-    void setOneTimePassword(@Nullable final OneTimePassword oneTimePassword) {
-        this.oneTimePassword = oneTimePassword;
+    void setPKCECode(@Nullable final PKCECode pkceCode) {
+        this.pkceCode = pkceCode;
     }
 
     @Nullable
@@ -96,10 +95,7 @@ import com.linecorp.linesdk.internal.OneTimePassword;
 
     // Parcelable implementation
     private LineAuthenticationStatus(@NonNull final Parcel in) {
-        final String id = in.readString();
-        final String pass = in.readString();
-        oneTimePassword = TextUtils.isEmpty(id) || TextUtils.isEmpty(pass)
-                ? null : new OneTimePassword(id, pass);
+        pkceCode = in.readParcelable(PKCECode.class.getClassLoader());
         sentRedirectUri = in.readString();
         status = Status.values()[in.readByte()];
         oAuthState = in.readString();
@@ -108,8 +104,7 @@ import com.linecorp.linesdk.internal.OneTimePassword;
 
     @Override
     public void writeToParcel(final Parcel dest, final int flags) {
-        dest.writeString(oneTimePassword == null ? null : oneTimePassword.getId());
-        dest.writeString(oneTimePassword == null ? null : oneTimePassword.getPassword());
+        dest.writeParcelable(pkceCode, flags);
         dest.writeString(sentRedirectUri);
         dest.writeByte((byte) status.ordinal());
         dest.writeString(oAuthState);
