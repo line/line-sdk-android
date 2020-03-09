@@ -28,6 +28,15 @@ if:reference ?>
 <script src="<?cs var:toassets ?>navtree_data.js" type="text/javascript"></script><?cs 
 /if ?>
 <script src="<?cs var:toassets ?>customizations.js" type="text/javascript"></script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-99780509-4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-99780509-4');
+</script>
 <noscript>
   <style type="text/css">
     html,body{overflow:auto;}
