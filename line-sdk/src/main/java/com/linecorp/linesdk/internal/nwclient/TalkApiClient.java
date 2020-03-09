@@ -294,20 +294,6 @@ public class TalkApiClient {
     }
 
     @NonNull
-    public LineApiResponse<Boolean> updateOpenChatAgreementStatus(
-            @NonNull InternalAccessToken accessToken,
-            @NonNull Boolean agreed) {
-        final Uri uri = buildUri(apiBaseUrl, BASE_PATH_OPENCHAT_API, "terms/agreement");
-        final String postData = String.format("{ \"agreed\": %s }", (agreed) ? "true" : "false");
-
-        return httpClient.putWithJson(
-                uri,
-                buildRequestHeaders(accessToken),
-                postData,
-                null);
-    }
-
-    @NonNull
     public LineApiResponse<OpenChatRoomInfo> createOpenChatRoom(
             @NonNull InternalAccessToken accessToken,
             @NonNull OpenChatParameters openChatParameters) {

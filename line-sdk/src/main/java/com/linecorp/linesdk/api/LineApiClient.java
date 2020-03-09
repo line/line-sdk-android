@@ -241,13 +241,13 @@ public interface LineApiClient {
      * LINE internal use only. Sends messages to a user or group on behalf of the current user.
      * <p>
      * In the following cases, messages are not delivered even though the API call is successful.
-     * The response status is "discarded" for such API calls.
+     * The response status is `discarded` for such API calls.
      * <ul>
      * <li>The recipient has blocked the current user.</li>
      * <li>The recipient has turned off messages from the channel.</li>
      * <li>The recipient hasn't authorized the channel to use their profile information and has
      * turned off messages from unauthorized channels.</li>
-     * <li>The current user is not a friend of the recipient that is not a bot but a human.</li>
+     * <li>The current user is not a friend of the recipient, who is a human and not a bot.</li>
      * </ul>
      * <p>
      * To call this method, you need a channel with the <code>MESSAGE</code> permission and an
@@ -255,8 +255,8 @@ public interface LineApiClient {
      *
      * @param targetUserId Required. The ID of the user or group that receives messages from the
      *                     current user.
-     * @param messages     Required. The messages to send. Available message types are: text, audio,
-     *                     image, location, video, and template. You can send up to five messages.
+     * @param messages     Required. The messages to send. Available message types are: `text`, `audio`,
+     *                     `image`, `location`, `video`, and `template`. You can send up to five messages.
      * @return A {@link LineApiResponse} object. If the API call is successful, the
      * {@link LineApiResponse} object contains the delivery result. If the API call fails, the payload
      * of the {@link LineApiResponse} object is <code>null</code>. The delivery result is either of
@@ -281,13 +281,13 @@ public interface LineApiClient {
      * user. To know the message delivery result for each recipient, check the response data.
      * <p>
      * In the following cases, messages are not delivered even though the API call is successful.
-     * The response status is "discarded" for such API calls.
+     * The response status is `discarded` for such API calls.
      * <ul>
      * <li>The recipient has blocked the current user.</li>
      * <li>The recipient has turned off messages from the channel.</li>
      * <li>The recipient hasn't authorized the channel to use their profile information and has
      * turned off messages from unauthorized channels.</li>
-     * <li>The current user is not a friend of the recipient that is not a bot but a human.</li>
+     * <li>The current user is not a friend of the recipient, who is a human and not a bot.</li>
      * </ul>
      * <p>
      * To call this method, you need a channel with the <code>MESSAGE</code> permission and an
@@ -295,8 +295,8 @@ public interface LineApiClient {
      *
      * @param targetUserIds The IDs of the users that receive messages from the user. You can
      *                      specify up to 10 users.
-     * @param messages      The messages to send. Available message types are: text, audio, image,
-     *                      location, video, and template. You can send up to five messages.
+     * @param messages      The messages to send. Available message types are: `text`, `audio`, `image`,
+     *                      `location`, `video`, and `template`. You can send up to five messages.
      * @return A {@link LineApiResponse} object. If the API call is successful, the
      * {@link LineApiResponse} object contains the {@link SendMessageResponse} objects that contain
      * the delivery results. If the API call fails, the payload of the {@link LineApiResponse}
@@ -320,13 +320,13 @@ public interface LineApiClient {
      * To know the message delivery result for each recipient, check the response data.
      * <p>
      * In the following cases, messages are not delivered even though the API call is successful.
-     * The response status is "discarded" for such API calls.
+     * The response status is `discarded` for such API calls.
      * <ul>
      * <li>The recipient has blocked the current user.</li>
      * <li>The recipient has turned off messages from the channel.</li>
      * <li>The recipient hasn't authorized the channel to use their profile information and has
      * turned off messages from unauthorized channels.</li>
-     * <li>The current user is not a friend of the recipient that is not a bot but a human.</li>
+     * <li>The current user is not a friend of the recipient, who is a human and not a bot.</li>
      * </ul>
      * <p>
      * To call this method, you need a channel with the <code>MESSAGE</code> permission and an
@@ -334,9 +334,9 @@ public interface LineApiClient {
      *
      * @param targetUserIds The IDs of the users that receive messages from the user. You can
      *                      specify up to 10 users.
-     * @param messages      The messages to send. Available message types are: text, audio, image,
-     *                      location, video, and template. You can send up to five messages.
-     * @param isOttUsed     True if you want to send messages using OTT instead of using the user ids;
+     * @param messages      The messages to send. Available message types are: `text`, `audio`, `image`,
+     *                      `location`, `video`, and `template`. You can send up to five messages.
+     * @param isOttUsed     True if you want to send messages using OTT instead of using the user IDs;
      *                      false otherwise.
      * @return A {@link LineApiResponse} object. If the API call is successful, the
      * {@link LineApiResponse} object contains the {@link SendMessageResponse} objects that contain
@@ -357,18 +357,27 @@ public interface LineApiClient {
             boolean isOttUsed
     );
 
+    /**
+     * @hide
+     */
     @NonNull
     LineApiResponse<Boolean> getOpenChatAgreementStatus();
 
-    @NonNull
-    LineApiResponse<Boolean> updateOpenChatAgreementStatus(@NonNull Boolean agreed);
-
+    /**
+     * @hide
+     */
     @NonNull
     LineApiResponse<OpenChatRoomInfo> createOpenChatRoom(@NonNull OpenChatParameters openChatParameters);
 
+    /**
+     * @hide
+     */
     @NonNull
     LineApiResponse<OpenChatRoomStatus> getOpenChatRoomStatus(@NonNull String roomId);
 
+    /**
+     * @hide
+     */
     @NonNull
     LineApiResponse<MembershipStatus> getOpenChatMembershipStatus(@NonNull String roomId);
 }

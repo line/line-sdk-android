@@ -25,12 +25,12 @@ import com.linecorp.linesdk.auth.LineLoginResult;
 import com.linecorp.linesdk.internal.AccessTokenCache;
 import com.linecorp.linesdk.internal.InternalAccessToken;
 import com.linecorp.linesdk.internal.IssueAccessTokenResult;
-import com.linecorp.linesdk.internal.OneTimePassword;
 import com.linecorp.linesdk.internal.OpenIdDiscoveryDocument;
 import com.linecorp.linesdk.internal.nwclient.IdTokenValidator;
 import com.linecorp.linesdk.internal.nwclient.IdTokenValidator.Builder;
 import com.linecorp.linesdk.internal.nwclient.LineAuthenticationApiClient;
 import com.linecorp.linesdk.internal.nwclient.TalkApiClient;
+import com.linecorp.linesdk.internal.pkce.PKCECode;
 
 import java.util.List;
 
@@ -105,59 +105,44 @@ import java.util.List;
     @MainThread
     void startLineAuthentication() {
         authenticationStatus.authenticationStarted();
-        new RequestTokenRequestTask().execute();
+
+        final PKCECode pkceCode = createPKCECode();
+        authenticationStatus.setPKCECode(pkceCode);
+        try {
+            BrowserAuthenticationApi.Request request = browserAuthenticationApi
+                    .getRequest(activity, config, pkceCode, params);
+            if (request.isLineAppAuthentication()) {
+                // "launchMode" of the activity launched by the follows is "singleInstance".
+                // So, we must not use startActivityForResult.
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    activity.startActivity(
+                            request.getIntent(),
+                            request.getStartActivityOptions());
+                } else {
+                    activity.startActivity(request.getIntent());
+                }
+            } else {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    activity.startActivityForResult(
+                            request.getIntent(),
+                            REQUEST_CODE,
+                            request.getStartActivityOptions());
+                } else {
+                    activity.startActivityForResult(
+                            request.getIntent(),
+                            REQUEST_CODE);
+                }
+            }
+            authenticationStatus.setSentRedirectUri(request.getRedirectUri());
+        } catch (ActivityNotFoundException e) {
+            authenticationStatus.authenticationIntentHandled();
+            activity.onAuthenticationFinished(LineLoginResult.internalError(e));
+        }
     }
 
-    private class RequestTokenRequestTask
-            extends AsyncTask<Void, Void, LineApiResponse<OneTimePassword>> {
-
-        @Override
-        protected LineApiResponse<OneTimePassword> doInBackground(
-                @Nullable Void... params) {
-            return authApiClient.getOneTimeIdAndPassword(config.getChannelId());
-        }
-
-        @Override
-        protected void onPostExecute(
-                @NonNull LineApiResponse<OneTimePassword> response) {
-            if (!response.isSuccess()) {
-                authenticationStatus.authenticationIntentHandled();
-                activity.onAuthenticationFinished(LineLoginResult.error(response));
-                return;
-            }
-            OneTimePassword oneTimePassword = response.getResponseData();
-            authenticationStatus.setOneTimePassword(oneTimePassword);
-            try {
-                BrowserAuthenticationApi.Request request = browserAuthenticationApi
-                        .getRequest(activity, config, oneTimePassword, params);
-                if (request.isLineAppAuthentication()) {
-                    // "launchMode" of the activity launched by the follows is "singleInstance".
-                    // So, we must not use startActivityForResult.
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                        activity.startActivity(
-                                request.getIntent(),
-                                request.getStartActivityOptions());
-                    } else {
-                        activity.startActivity(request.getIntent());
-                    }
-                } else {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                        activity.startActivityForResult(
-                                request.getIntent(),
-                                REQUEST_CODE,
-                                request.getStartActivityOptions());
-                    } else {
-                        activity.startActivityForResult(
-                                request.getIntent(),
-                                REQUEST_CODE);
-                    }
-                }
-                authenticationStatus.setSentRedirectUri(request.getRedirectUri());
-            } catch (ActivityNotFoundException e) {
-                authenticationStatus.authenticationIntentHandled();
-                activity.onAuthenticationFinished(LineLoginResult.internalError(e));
-            }
-        }
+    @VisibleForTesting
+    PKCECode createPKCECode() {
+        return PKCECode.newCode();
     }
 
     @MainThread
@@ -229,10 +214,10 @@ import java.util.List;
         protected LineLoginResult doInBackground(@Nullable BrowserAuthenticationApi.Result... params) {
             BrowserAuthenticationApi.Result authResult = params[0];
             String requestToken = authResult.getRequestToken();
-            OneTimePassword oneTimePassword = authenticationStatus.getOneTimePassword();
+            PKCECode pkceCode = authenticationStatus.getPKCECode();
             String sentRedirectUri = authenticationStatus.getSentRedirectUri();
             if (TextUtils.isEmpty(requestToken)
-                    || oneTimePassword == null
+                    || pkceCode == null
                     || TextUtils.isEmpty(sentRedirectUri)) {
                 return LineLoginResult.internalError("Requested data is missing.");
             }
@@ -240,7 +225,7 @@ import java.util.List;
             // Acquire access token
             LineApiResponse<IssueAccessTokenResult> accessTokenResponse =
                     authApiClient.issueAccessToken(
-                            config.getChannelId(), requestToken, oneTimePassword, sentRedirectUri);
+                            config.getChannelId(), requestToken, pkceCode, sentRedirectUri);
             if (!accessTokenResponse.isSuccess()) {
                 return LineLoginResult.error(accessTokenResponse);
             }

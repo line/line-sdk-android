@@ -342,11 +342,6 @@ public class InternalApisFragment extends BaseApisFragment implements SendMessag
         startApiAsyncTask("getOpenChatAgreementStatus", () -> lineApiClient.getOpenChatAgreementStatus());
     }
 
-    @OnClick(R.id.openchat_agreement_update_btn)
-    void updateAgreementStatus() {
-        startApiAsyncTask("updateOpenChatAgreementStatus", () -> lineApiClient.updateOpenChatAgreementStatus(true));
-    }
-
     @OnClick(R.id.openchat_create_chat_btn)
     void createChatroom() {
         OpenChatParameters parameters = new OpenChatParameters(
@@ -577,11 +572,10 @@ public class InternalApisFragment extends BaseApisFragment implements SendMessag
     private TemplateMessage createButtonsTemplateMessage(List<ClickActionForTemplateMessage> actionList) {
         return new TemplateMessage("buttons altText",
                                    new ButtonsLayoutTemplate("ButtonsLayoutTemplate LayoutTemplate",
-                                                             actionList) {
+                                           actionList) {
                                        {
                                            setTitle("button title");
-                                           setThumbnailImageUrl(
-                                                   "https://line-objects-dev.com/flex/unsplash/01_1_cafe.png");
+                                           setThumbnailImageUrl("https://picsum.photos/600/390.jpg");
                                        }
                                    }
         );
@@ -591,10 +585,10 @@ public class InternalApisFragment extends BaseApisFragment implements SendMessag
     private ImageCarouselLayoutTemplate createImageCarouselLayoutTemplate() {
         List<ImageCarouselLayoutTemplate.ImageCarouselColumn> imageCarouselColumnList = asList(
                 new ImageCarouselLayoutTemplate.ImageCarouselColumn(
-                        "https://line-objects-dev.com/flex/images/breakfast.png",
+                        "https://picsum.photos/600/390.jpg",
                         new UriAction("LINE Dev", "https://developers.line.me/en/")),
                 new ImageCarouselLayoutTemplate.ImageCarouselColumn(
-                        "https://line-objects-dev.com/flex/images/breakfast.png",
+                        "https://picsum.photos/600/390.jpg",
                         new UriAction("LINE Blog", "https://official-blog.line.me/en/")));
         return new ImageCarouselLayoutTemplate(imageCarouselColumnList);
     }
@@ -605,12 +599,8 @@ public class InternalApisFragment extends BaseApisFragment implements SendMessag
         List<CarouselLayoutTemplate.CarouselColumn> carouselWithImageColumnList = asList(
                 new CarouselLayoutTemplate.CarouselColumn("carousel image 1", actionList),
                 new CarouselLayoutTemplate.CarouselColumn("carousel image 2", actionList));
-        carouselWithImageColumnList.get(0)
-                                   .setThumbnailImageUrl(
-                                           "https://line-objects-dev.com/flex/images/breakfast.png");
-        carouselWithImageColumnList.get(1)
-                                   .setThumbnailImageUrl(
-                                           "https://line-objects-dev.com/flex/images/breakfast.png");
+        carouselWithImageColumnList.get(0).setThumbnailImageUrl("https://picsum.photos/600/390.jpg");
+        carouselWithImageColumnList.get(1).setThumbnailImageUrl("https://picsum.photos/600/390.jpg");
         return new CarouselLayoutTemplate(carouselWithImageColumnList);
     }
 

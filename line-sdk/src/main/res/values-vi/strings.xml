@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 <string name="btn_line_login">Đăng nhập với LINE</string>
+<string name="common_cancel">Hủy</string>
+<string name="common_done">Xong</string>
 <string name="common_next">Tiếp theo</string>
+<string name="open_line">Mở LINE</string>
 <string name="openchat_create_profile_input_guide">Đặt biệt danh bạn sẽ sử dụng trong \"%1$s\".</string>
 <string name="openchat_create_profile_input_max_count">Đã đạt tới độ dài tối đa.</string>
 <string name="openchat_create_profile_input_placeholder">Nhập biệt danh</string>
@@ -14,6 +17,7 @@
 <string name="openchat_create_room_search">Cho phép tìm kiếm</string>
 <string name="openchat_create_room_search_guide">Những người khác sẽ có thể tìm kiếm OpenChat của bạn.</string>
 <string name="openchat_create_room_title">Tạo OpenChat</string>
+<string name="openchat_not_agree_with_terms">Bạn chưa chấp nhận Điều khoản và điều kiện sử dụng của OpenChat.\nVào OpenChat trong ứng dụng LINE và chấp nhận Điều khoản và điều kiện sử dụng để tiếp tục.</string>
 <string name="search_no_fiend">Không có bạn bè để lựa chọn.</string>
 <string name="search_no_group">Không có nhóm để lựa chọn.</string>
 <string name="search_no_results">Không có kết quả.</string>

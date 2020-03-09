@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 <string name="btn_line_login">Iniciar sessão com o LINE</string>
+<string name="common_cancel">Cancelar</string>
+<string name="common_done">Fim</string>
 <string name="common_next">Seguinte</string>
+<string name="open_line">Abrir o LINE</string>
 <string name="openchat_create_profile_input_guide">Defina a alcunha a utilizar em \"%1$s\".</string>
 <string name="openchat_create_profile_input_max_count">Limite máximo atingido.</string>
 <string name="openchat_create_profile_input_placeholder">Introduzir alcunha</string>
@@ -14,6 +17,7 @@
 <string name="openchat_create_room_search">Permitir procura</string>
 <string name="openchat_create_room_search_guide">As outras pessoas poderão procurar o seu OpenChat.</string>
 <string name="openchat_create_room_title">Criar OpenChat</string>
+<string name="openchat_not_agree_with_terms">Ainda não aceitou os Termos e Condições de Utilização do OpenChat.\nAceda ao OpenChat na aplicação LINE e aceite os Termos e Condições de Utilização, para continuar.</string>
 <string name="search_no_fiend">Não tens amigos para escolher.</string>
 <string name="search_no_group">Não tens grupos para escolher.</string>
 <string name="search_no_results">S/ resultados</string>

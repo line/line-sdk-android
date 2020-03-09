@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 <string name="btn_line_login">ล็อกอินด้วย LINE</string>
+<string name="common_cancel">ยกเลิก</string>
+<string name="common_done">เสร็จสิ้น</string>
 <string name="common_next">ต่อไป</string>
+<string name="open_line">เปิด LINE</string>
 <string name="openchat_create_profile_input_guide">ตั้งชื่อเล่นเพื่อใช้ใน \"%1$s\"</string>
 <string name="openchat_create_profile_input_max_count">ข้อความยาวเกินไป</string>
 <string name="openchat_create_profile_input_placeholder">ใส่ชื่อเล่น</string>
@@ -14,6 +17,7 @@
 <string name="openchat_create_room_search">อนุญาตให้ค้นหา</string>
 <string name="openchat_create_room_search_guide">คนอื่นๆ สามารถค้นหาโอเพนแชทของคุณได้</string>
 <string name="openchat_create_room_title">สร้างโอเพนแชท</string>
+<string name="openchat_not_agree_with_terms">คุณยังไม่ได้ยอมรับข้อกำหนดการใช้บริการของโอเพนแชท\nโปรดเปิดโอเพนแชทจากแอป LINE แล้วยอมรับข้อกำหนด</string>
 <string name="search_no_fiend">คุณยังไม่มีเพื่อน</string>
 <string name="search_no_group">คุณยังไม่มีกลุ่ม</string>
 <string name="search_no_results">ไม่พบผลการค้นหา</string>

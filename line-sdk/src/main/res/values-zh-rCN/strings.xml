@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 <string name="btn_line_login">用LINE帐号登录</string>
+<string name="common_cancel">取消</string>
+<string name="common_done">完成</string>
 <string name="common_next">下一步</string>
+<string name="open_line">打开LINE</string>
 <string name="openchat_create_profile_input_guide">设置要用于“%1$s”的昵称。</string>
 <string name="openchat_create_profile_input_max_count">已达到字数上限。</string>
 <string name="openchat_create_profile_input_placeholder">输入昵称</string>
@@ -14,6 +17,7 @@
 <string name="openchat_create_room_search">允许搜索</string>
 <string name="openchat_create_room_search_guide">其他人将可以搜索到您的OpenChat。</string>
 <string name="openchat_create_room_title">创建OpenChat</string>
+<string name="openchat_not_agree_with_terms">您尚未同意“OpenChat服务条款”。\n请在LINE应用中打开OpenChat，同意“OpenChat服务条款”以继续。</string>
 <string name="search_no_fiend">没有可选择的好友。</string>
 <string name="search_no_group">没有可选择的群。</string>
 <string name="search_no_results">无搜索结果。</string>

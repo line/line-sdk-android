@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 <string name="btn_line_login">Mit LINE anmelden</string>
+<string name="common_cancel">Abbrechen</string>
+<string name="common_done">Fertig</string>
 <string name="common_next">Weiter</string>
+<string name="open_line">LINE öffnen</string>
 <string name="openchat_create_profile_input_guide">Lege den Alias fest, der in „%1$s“ verwendet werden soll.</string>
 <string name="openchat_create_profile_input_max_count">Maximale Länge erreicht.</string>
 <string name="openchat_create_profile_input_placeholder">Alias eingeben</string>
@@ -14,6 +17,7 @@
 <string name="openchat_create_room_search">Suche zulassen</string>
 <string name="openchat_create_room_search_guide">Andere können nach deinem OpenChat suchen.</string>
 <string name="openchat_create_room_title">OpenChat erstellen</string>
+<string name="openchat_not_agree_with_terms">Du hast den OpenChat-Nutzungsbedingungen noch nicht zugestimmt.\nUm fortzufahren, navigiere zu OpenChat in der LINE-App und stimme den Nutzungsbedingungen zu.</string>
 <string name="search_no_fiend">Keine Freunde zum Auswählen.</string>
 <string name="search_no_group">Keine Gruppen zum Auswählen.</string>
 <string name="search_no_results">Keine Ergebnisse</string>

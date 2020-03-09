@@ -4,6 +4,8 @@ import android.content.Context;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
+import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 
 import com.linecorp.linesdk.BuildConfig;
 import com.linecorp.linesdk.LineApiResponse;
@@ -14,11 +16,11 @@ import com.linecorp.linesdk.internal.IdTokenKeyType;
 import com.linecorp.linesdk.internal.InternalAccessToken;
 import com.linecorp.linesdk.internal.IssueAccessTokenResult;
 import com.linecorp.linesdk.internal.JWKSet;
-import com.linecorp.linesdk.internal.OneTimePassword;
 import com.linecorp.linesdk.internal.OpenIdDiscoveryDocument;
 import com.linecorp.linesdk.internal.RefreshTokenResult;
 import com.linecorp.linesdk.internal.nwclient.core.ChannelServiceHttpClient;
 import com.linecorp.linesdk.internal.nwclient.core.ResponseDataParser;
+import com.linecorp.linesdk.internal.pkce.PKCECode;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,8 +51,6 @@ public class LineAuthenticationApiClient {
     @NonNull
     private final ChannelServiceHttpClient httpClient;
 
-    private static final ResponseDataParser<OneTimePassword> ONE_TIME_PASSWORD_PARSER =
-            new OneTimePasswordParser();
     private final ResponseDataParser<IssueAccessTokenResult> ISSUE_ACCESS_TOKEN_RESULT_PARSER =
             this.new IssueAccessTokenResultParser();
     private static final ResponseDataParser<AccessTokenVerificationResult> VERIFICATION_RESULT_PARSER =
@@ -87,32 +87,10 @@ public class LineAuthenticationApiClient {
     }
 
     @NonNull
-    public LineApiResponse<OneTimePassword> getOneTimeIdAndPassword(@NonNull String channelId) {
-        final Uri uri = buildUri(apiBaseUrl, BASE_PATH_OAUTH_V21_API, "otp");
-        final Map<String, String> postData = buildParams("client_id", channelId);
-        return httpClient.post(
-                uri,
-                emptyMap() /* requestHeaders */,
-                postData,
-                ONE_TIME_PASSWORD_PARSER);
-    }
-
-    private static class OneTimePasswordParser
-            extends JsonToObjectBaseResponseParser<OneTimePassword> {
-        @NonNull
-        @Override
-        protected OneTimePassword parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
-            return new OneTimePassword(
-                    jsonObject.getString("otpId"),
-                    jsonObject.getString("otp"));
-        }
-    }
-
-    @NonNull
     public LineApiResponse<IssueAccessTokenResult> issueAccessToken(
             @NonNull String channelId,
             @NonNull String requestToken,
-            @NonNull OneTimePassword oneTimeIdAndPassword,
+            @NonNull PKCECode pkceCode,
             @NonNull String redirectUri) {
         final Uri uri = buildUri(apiBaseUrl, BASE_PATH_OAUTH_V21_API, "token");
         final Map<String, String> postData = buildParams(
@@ -120,7 +98,7 @@ public class LineAuthenticationApiClient {
                 "code", requestToken,
                 "redirect_uri", redirectUri,
                 "client_id", channelId,
-                "otp", oneTimeIdAndPassword.getPassword(),
+                "code_verifier", pkceCode.getVerifier(),
                 "id_token_key_type", IdTokenKeyType.JWK.name(),
                 "client_version", "LINE SDK Android v" + BuildConfig.VERSION_NAME
         );

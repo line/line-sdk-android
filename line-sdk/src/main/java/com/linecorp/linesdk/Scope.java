@@ -92,10 +92,25 @@ public class Scope {
      */
     public static final Scope ONE_TIME_SHARE = new Scope("onetime.share");
 
+    /**
+     * @hide
+     */
     public static final Scope OPEN_CHAT_TERM_STATUS = new Scope("square.term.status");
+    /**
+     * @hide
+     */
     public static final Scope OPEN_CHAT_TERM_AGREE = new Scope("square.term.agree");
+    /**
+     * @hide
+     */
     public static final Scope OPEN_CHAT_ROOM_CREATE = new Scope("square.create");
+    /**
+     * @hide
+     */
     public static final Scope OPEN_CHAT_ROOM_STATUS = new Scope("square.info");
+    /**
+     * @hide
+     */
     public static final Scope OPEN_CHAT_ROOM_MEMBERSHIP = new Scope("square.membership");
 
     private static final String SCOPE_DELIMITER = " ";

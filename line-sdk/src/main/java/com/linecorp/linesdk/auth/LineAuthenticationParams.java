@@ -44,7 +44,7 @@ public class LineAuthenticationParams implements Parcelable {
     /**
      * OPTIONAL. <br></br>
      * A string used to prevent replay attacks. This value is returned in an ID token.
-     * If this parameter is not specified, LINE SDK will generate a value for it.
+     * If you don't specify a value for this parameter, LINE SDK will generate one.
      */
     @Nullable
     private final String nonce;
@@ -178,7 +178,7 @@ public class LineAuthenticationParams implements Parcelable {
         /**
          * Sets nonce to the builder.
          * @param val A string used to prevent replay attacks. This value is returned in an ID token.
-         * If this parameter is not specified, LINE SDK will generate a value for it.
+         * If you don't specify a value for this parameter, LINE SDK will generate one.
          * @return The builder itself.
          */
         public Builder nonce(final String val) {

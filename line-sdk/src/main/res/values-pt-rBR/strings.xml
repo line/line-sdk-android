@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 <string name="btn_line_login">Login com o LINE</string>
+<string name="common_cancel">Cancelar</string>
+<string name="common_done">Feito</string>
 <string name="common_next">Próximo</string>
+<string name="open_line">Abrir o LINE</string>
 <string name="openchat_create_profile_input_guide">Defina seu apelido que será usado em \"%1$s\".</string>
 <string name="openchat_create_profile_input_max_count">Foi atingido o comprimento máximo.</string>
 <string name="openchat_create_profile_input_placeholder">Inserir apelido</string>
@@ -14,6 +17,7 @@
 <string name="openchat_create_room_search">Permitir busca</string>
 <string name="openchat_create_room_search_guide">Outras pessoas poderão procurar por seu OpenChat.</string>
 <string name="openchat_create_room_title">Criar OpenChat</string>
+<string name="openchat_not_agree_with_terms">Você ainda não aceitou os Termos e Condições de Uso do OpenChat.\nAcesse o OpenChat no aplicativo do LINE e aceite os Termos e Condições de Uso para continuar.</string>
 <string name="search_no_fiend">Você não tem amigos para escolher.</string>
 <string name="search_no_group">Você não tem grupos para escolher.</string>
 <string name="search_no_results">Sem resultados</string>

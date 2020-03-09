@@ -14,14 +14,11 @@ import com.linecorp.linesdk.internal.EncryptorHolder;
  * Usage<br>
  * 1. Start login.
  * <pre>
- * {@code
  * Intent loginIntent = LineLoginApi.getLoginIntent(context, channelId);
  * startActivityForResult(loginIntent, REQUEST_CODE_LINE_LOGIN);
- * }
  * </pre>
  * 2. Handle the login result.
  * <pre>
- * {@code
  * public void onActivityResult(int requestCode, int resultCode, Intent data) {
  *     super.onActivityResult(requestCode, resultCode, data);
  *     if (requestCode != REQUEST_CODE_LINE_LOGIN) {
@@ -34,7 +31,6 @@ import com.linecorp.linesdk.internal.EncryptorHolder;
  *     } else {
  *         updateErrorUi();
  *     }
- * }
  * }
  * </pre>
  */

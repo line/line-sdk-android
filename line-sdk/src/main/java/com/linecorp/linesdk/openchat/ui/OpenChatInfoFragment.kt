@@ -65,7 +65,7 @@ class OpenChatInfoFragment : Fragment() {
         })
 
         viewModel.category.observe(this, Observer { category ->
-            category?.resourceId?.let {resourceId ->
+            category?.resourceId?.let { resourceId ->
                 categoryLabelTextView.text = resources.getString(resourceId)
             }
         })
