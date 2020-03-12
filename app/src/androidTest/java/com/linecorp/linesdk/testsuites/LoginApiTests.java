@@ -2,7 +2,6 @@ package com.linecorp.linesdk.testsuites;
 
 import androidx.test.filters.MediumTest;
 import androidx.test.rule.ActivityTestRule;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.linecorp.linesdk.pageobjects.ApisFragmentPage;
 import com.linecorp.linesdk.pageobjects.MenuFragmentPage;
@@ -13,7 +12,6 @@ import com.linecorp.linesdktest.R;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -22,10 +20,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.core.AllOf.allOf;
 import static org.hamcrest.core.StringContains.containsString;
 
-@RunWith(AndroidJUnit4.class)
 @MediumTest
 public class LoginApiTests {
-
     MenuFragmentPage menuFragmentPage;
     ApisFragmentPage apisFragmentPage;
 
@@ -36,8 +32,7 @@ public class LoginApiTests {
     public void setup() {
         menuFragmentPage = new MenuFragmentPage();
         apisFragmentPage = new ApisFragmentPage();
-        
-        menuFragmentPage.inputChannelId();
+
         menuFragmentPage.navigateToApisPage();
         apisFragmentPage.tapLogoutButton();
     }
