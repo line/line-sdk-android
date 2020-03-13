@@ -5,7 +5,7 @@ import androidx.test.rule.ActivityTestRule;
 
 import com.linecorp.linesdk.pageobjects.ApisFragmentPage;
 import com.linecorp.linesdk.pageobjects.MenuFragmentPage;
-import com.linecorp.linesdk.testconfig.AndroidTestConfig;
+import com.linecorp.linesdk.testconfig.AndroidTestsConfig;
 import com.linecorp.linesdktest.MainActivity;
 import com.linecorp.linesdktest.R;
 
@@ -33,55 +33,61 @@ public class LoginApiTests {
         menuFragmentPage = new MenuFragmentPage();
         apisFragmentPage = new ApisFragmentPage();
 
-        menuFragmentPage.navigateToApisPage();
+        menuFragmentPage.tapApisButton();
         apisFragmentPage.tapLogoutButton();
     }
 
     @Test
     public void testNotLoginLogout() {
-        //When
+        // When
         apisFragmentPage.tapLogoutButton();
-        //Then
-        onView(allOf(withId(R.id.log))).check(matches(withText(containsString(AndroidTestConfig.ERROR_LOGOUT))));
+        // Then
+        onView(allOf(withId(R.id.log)))
+                .check(matches(withText(containsString(AndroidTestsConfig.ERROR_LOGOUT))));
     }
 
     @Test
     public void testNotLoginRefreshToken() {
-        //When
+        // When
         apisFragmentPage.tapRefreshTokenButton();
-        //Then
-        onView(allOf(withId(R.id.log))).check(matches(withText(containsString(AndroidTestConfig.ERROR_REFRESH_TOKEN))));
+        // Then
+        onView(allOf(withId(R.id.log)))
+                .check(matches(withText(containsString(AndroidTestsConfig.ERROR_REFRESH_TOKEN))));
     }
 
     @Test
     public void testNotLoginVerifyToken() {
-        //When
+        // When
         apisFragmentPage.tapVerifyTokenButton();
-        //Then
-        onView(allOf(withId(R.id.log))).check(matches(withText(containsString(AndroidTestConfig.ERROR_VERIFY_TOKEN))));
+        // Then
+        onView(allOf(withId(R.id.log)))
+                .check(matches(withText(containsString(AndroidTestsConfig.ERROR_VERIFY_TOKEN))));
     }
 
     @Test
     public void testNotLoginGetCurrentToken() {
-        //When
+        // When
         apisFragmentPage.tapGetCurrentTokenButton();
-        //Then
-        onView(allOf(withId(R.id.log))).check(matches(withText(containsString(AndroidTestConfig.ERROR_GET_CURRENT_TOKEN))));
+        // Then
+        onView(allOf(withId(R.id.log)))
+                .check(matches(withText(containsString(AndroidTestsConfig.ERROR_GET_CURRENT_TOKEN))));
     }
 
     @Test
     public void testNotLoginGetProfile() {
-        //When
+        // When
         apisFragmentPage.tapGetProfileButton();
-        //Then
-        onView(allOf(withId(R.id.log))).check(matches(withText(containsString(AndroidTestConfig.ERROR_GET_PROFILE))));
+        // Then
+        onView(allOf(withId(R.id.log)))
+                .check(matches(withText(containsString(AndroidTestsConfig.ERROR_GET_PROFILE))));
     }
 
     @Test
     public void testNotLoginGetFriendshipStatus() {
-        //When
+        // When
         apisFragmentPage.tapGetFriendshipStatusButton();
-        //Then
-        onView(allOf(withId(R.id.log))).check(matches(withText(containsString(AndroidTestConfig.ERROR_GET_FRIENDSHIP_STATUS))));
+        // Then
+        onView(allOf(withId(R.id.log)))
+                .check(matches(withText(containsString(AndroidTestsConfig.ERROR_GET_FRIENDSHIP_STATUS))));
     }
 }
