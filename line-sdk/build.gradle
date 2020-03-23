@@ -4,7 +4,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
-version = "5.4.0"
+version = "5.4.1"
 
 publish {
     userOrg = 'line'
