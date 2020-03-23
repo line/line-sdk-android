@@ -24,7 +24,7 @@ Create your own LINE Channel and follow the instructions [here](https://develope
 Setup current line-sdk version
 
 ```
-linesdk_version = '5.3.1'
+linesdk_version = '5.4.0'
 ```
 
 Add Jcenter to your repositories if it's not added yet.

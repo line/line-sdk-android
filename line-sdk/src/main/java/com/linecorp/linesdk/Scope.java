@@ -1,7 +1,5 @@
 package com.linecorp.linesdk;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
@@ -9,6 +7,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import static java.util.Collections.emptyList;
 
@@ -118,10 +119,7 @@ public class Scope {
     @NonNull
     private final String code;
 
-    /**
-     * @hide
-     */
-    protected Scope(@NonNull final String code) {
+    public Scope(@NonNull final String code) {
         if (scopeInstanceMap.containsKey(code)) {
             throw new IllegalArgumentException("Scope code already exists: " + code);
         }
@@ -174,6 +172,9 @@ public class Scope {
             final Scope scope = findScope(scopeCode);
             if (scope != null) {
                 scopeList.add(scope);
+            } else {
+                // for newly added scopes
+                scopeList.add(new Scope(scopeCode));
             }
         }
 
