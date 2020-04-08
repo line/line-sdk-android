@@ -17,6 +17,6 @@ public class LineAppLoginPage {
         uiDevice.wait(Until.hasObject(By.pkg(AndroidTestsConfig.LINE_PACKAGE_NAME).depth(0)),
                 AndroidTestsConfig.TIMEOUT);
         assertTrue(checkElementExists(AndroidTestsConfig.ANDROID_WIDGET_BUTTON));
-        uiDevice.findObjects(By.clazz(AndroidTestsConfig.ANDROID_WIDGET_BUTTON)).get(1).click();
+        uiDevice.findObjects(By.clazz(AndroidTestsConfig.ANDROID_WIDGET_BUTTON)).get(0).click();
     }
 }
