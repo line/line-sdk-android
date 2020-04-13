@@ -12,7 +12,7 @@
             <li><a class="GlobalHeaderNavLink" href="/en/news/" data-navlink="news" data-translate="translate_header_menu_news">News</a></li>
             <li><a class="GlobalHeaderNavLink" href="/en/faq/" data-navlink="faq" data-translate="translate_header_menu_faq">FAQ</a></li>
             <li><a class="GlobalHeaderNavLink Link-blank" href="https://www.line-community.me/" target="_blank" data-translate="translate_header_menu_community">Community</a></li>
-            <li><a class="GlobalHeaderNavLink Link-blank" href="https://engineering.linecorp.com/en/blog" target="_blank" data-translate="translate_header_menu_blog">Blog</a></li>
+            <li><a class="GlobalHeaderNavLink Link-blank" href="https://engineering.linecorp.com/en/blog/" target="_blank" data-translate="translate_header_menu_blog">Blog</a></li>
           </ul>
         </nav>
       </div>
