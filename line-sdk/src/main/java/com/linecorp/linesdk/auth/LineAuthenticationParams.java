@@ -110,7 +110,7 @@ public class LineAuthenticationParams implements Parcelable {
     }
 
     /**
-     * A string used to prevent replay attacks. This value is returned in an ID token.
+     * Gets a nonce (a string used to prevent replay attacks). This value is returned in an ID token.
      * @return nonce string
      */
     @Nullable
