@@ -9,7 +9,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.core.AllOf.allOf;
 
 public class ApisFragmentPage {
-
     public void tapLogoutButton() {
         onView(allOf(withId(R.id.logout_btn))).perform(scrollTo()).perform(click());
     }
