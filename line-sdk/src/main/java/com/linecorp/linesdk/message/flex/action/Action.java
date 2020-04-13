@@ -21,7 +21,7 @@ import org.json.JSONObject;
  * <li> Camera roll action</li>
  * <li> Location action</li>
  *
- * @see <a href=https://developers.line.me/en/reference/messaging-api/#action-objects>Action objects</a>
+ * @see <a href=https://developers.line.biz/en/reference/messaging-api/#action-objects>Action objects</a>
  */
 public abstract class Action implements Jsonable {
 

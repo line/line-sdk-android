@@ -17,7 +17,7 @@ import org.json.JSONObject;
  * header, hero, body, and footer. These blocks, which could contain nested components,
  * will follow some given {@link FlexBubbleContainer#styles} to construct the flexible layout.
  *
- * @see <a href="https://developers.line.me/en/reference/messaging-api/#bubble">Bubble Container</a>
+ * @see <a href="https://developers.line.biz/en/reference/messaging-api/#bubble">Bubble Container</a>
  */
 public class FlexBubbleContainer extends FlexMessageContainer {
 

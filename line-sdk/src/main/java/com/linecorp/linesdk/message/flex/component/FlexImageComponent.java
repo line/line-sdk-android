@@ -12,7 +12,7 @@ import org.json.JSONObject;
 /**
  * Represents an image component in a flex message.
  *
- * @see <a href=https://developers.line.me/en/reference/messaging-api/#f-image>FlexImageComponent</a>
+ * @see <a href=https://developers.line.biz/en/reference/messaging-api/#f-image>FlexImageComponent</a>
  */
 
 public class FlexImageComponent extends FlexMessageComponent {
@@ -30,7 +30,7 @@ public class FlexImageComponent extends FlexMessageComponent {
     /**
      * Optional. The ratio of the width or height of this box within the parent box. The default
      * value for the horizontal parent box is 1, and the default value for the vertical parent box is 0.
-     * @see <a href="https://developers.line.me/en/docs/messaging-api/flex-message-layout/#component-width-and-height">component-width-and-height</a>
+     * @see <a href="https://developers.line.biz/en/docs/messaging-api/flex-message-layout/#component-width-and-height">component-width-and-height</a>
      */
     @Nullable
     private int flex;

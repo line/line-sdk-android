@@ -13,7 +13,7 @@ import org.json.JSONObject;
  * Represents a button component in a flex message.
  * A button component contains a interactive button. When the user taps the button, a bound action is performed.
  *
- * @see <a href="https://developers.line.me/en/reference/messaging-api/#button">Button component</a>
+ * @see <a href="https://developers.line.biz/en/reference/messaging-api/#button">Button component</a>
  */
 public class FlexButtonComponent extends FlexMessageComponent {
 

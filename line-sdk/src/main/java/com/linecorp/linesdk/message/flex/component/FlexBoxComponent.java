@@ -16,7 +16,7 @@ import java.util.List;
  * A box component behave as a container of other components. It defines the layout of its child components.
  * You can also include a nested box in a box.
  * <p>
- * For more information, please refer to <a href=https://developers.line.me/en/reference/messaging-api/#box>box</a>
+ * For more information, please refer to <a href=https://developers.line.biz/en/reference/messaging-api/#box>box</a>
  */
 public class FlexBoxComponent extends FlexMessageComponent {
 
@@ -53,7 +53,7 @@ public class FlexBoxComponent extends FlexMessageComponent {
     /**
      * The ratio of the width or height of this box within the parent box. The default value for the horizontal parent box is 1, and the default value for the vertical parent box is 0.
      * <p>
-     * <a href=https://developers.line.me/en/docs/messaging-api/flex-message-layout/#component-width-and-height>component-width-and-height</a>
+     * <a href=https://developers.line.biz/en/docs/messaging-api/flex-message-layout/#component-width-and-height>component-width-and-height</a>
      */
     @Nullable
     private int flex;

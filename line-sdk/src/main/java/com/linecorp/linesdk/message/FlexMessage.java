@@ -13,7 +13,7 @@ import org.json.JSONObject;
  * To create a {@link FlexMessage} object, firstly create a container, and then pass it with the
  * {@link FlexMessage#altText} parameter to the initializer.
  *
- * For more information, please refer to <a href="https://developers.line.me/en/docs/messaging-api/message-types/#flex-messages">Flex messages</a>.
+ * For more information, please refer to <a href="https://developers.line.biz/en/docs/messaging-api/message-types/#flex-messages">Flex messages</a>.
  */
 public class FlexMessage extends MessageData {
 

@@ -2,7 +2,7 @@
 <div id="header">
     <div id="headerLeft">
       <div class="d-flex align-items-center">
-        <a id="masthead-title" href="https://developers.line.me/en/reference/">
+        <a id="masthead-title" href="https://developers.line.biz/en/reference/">
           LINE SDK Docs
         </a>
         <nav class="GlobalHeaderNav">

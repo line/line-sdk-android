@@ -13,7 +13,7 @@ import org.json.JSONObject;
  * Represents a text component in a flex message.
  * A text component contains some formatted text. LINE clients will render the text in a flex message.
  * <p>
- * For more information, please refer to <a herf=https://developers.line.me/en/reference/messaging-api/#f-text>Text component</a>
+ * For more information, please refer to <a herf=https://developers.line.biz/en/reference/messaging-api/#f-text>Text component</a>
  */
 public class FlexTextComponent extends FlexMessageComponent {
     protected final static int MAXLINES_VALUE_NONE = -1;  // indicates maxLines value is not set
@@ -102,7 +102,7 @@ public class FlexTextComponent extends FlexMessageComponent {
 
     /**
      * Optional	Action performed when this text is tapped.
-     * Specify an <a href="https://developers.line.me/en/reference/messaging-api/#action-objects">action object</a>.
+     * Specify an <a href="https://developers.line.biz/en/reference/messaging-api/#action-objects">action object</a>.
      */
     @Nullable
     private Action action;
