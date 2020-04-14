@@ -41,7 +41,7 @@ import java.util.Arrays;
  * <p>
  * Finally, call the {@link LoginDelegate#onActivityResult(int, int, Intent)} method using the
  * intent that you created with the <code>Activity#onActivityResult(int, int, Intent)</code> method.
- * If you use this button in a {@link Fragment} or an {@link androidx.fragment.app.Fragment}
+ * If you use this button in a <code>Fragment</code> or an <code>androidx.fragment.app.Fragment</code>
  * instance, set the fragment to this button through the {@link #setFragment(Fragment)} method or
  * the {@link #setFragment(androidx.fragment.app.Fragment)} method. By doing so, you can call the
  * <code>onActivityResult</code> callback in your fragment after the login process is complete.
@@ -173,7 +173,8 @@ public class LoginButton extends AppCompatTextView {
 
     /**
      * Specifies the <i>fragment</i> that contains this button so that its
-     * {@link Fragment#onActivityResult(int, int, Intent)} method is properly called.
+     * <code>android.app.Fragment.onActivityResult(int, int, Intent)</code>
+     * method is properly called.
      *
      * @param fragment The {@link Fragment} that contains this button.
      */
@@ -183,9 +184,10 @@ public class LoginButton extends AppCompatTextView {
 
     /**
      * Specifies the <i>fragment</i> that contains this button so that its
-     * {@link androidx.fragment.app.Fragment#onActivityResult(int, int, Intent)} method is properly called.
+     * <code>androidx.fragment.app.Fragment#onActivityResult(int, int, Intent)</code>
+     * method is properly called.
      *
-     * @param fragment The {@link androidx.fragment.app.Fragment} that contains this button.
+     * @param fragment The <code>androidx.fragment.app.Fragment</code> that contains this button.
      */
     public void setFragment(@NonNull androidx.fragment.app.Fragment fragment) {
         fragmentWrapper = new FragmentWrapper(fragment);
