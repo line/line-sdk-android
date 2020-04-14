@@ -423,7 +423,7 @@ public class InternalApisFragment extends BaseApisFragment implements SendMessag
     @NonNull
     private List<ClickActionForTemplateMessage> createActionList() {
         return asList(
-                new UriAction("LINE Developers", "https://developers.line.me/en/"),
+                new UriAction("LINE Developers", "https://developers.line.biz/en/"),
                 new UriAction("LINE Blog", "https://official-blog.line.me/en/"));
     }
 
@@ -536,7 +536,7 @@ public class InternalApisFragment extends BaseApisFragment implements SendMessag
         return new TextMessage("Default Text Message",
                                new MessageSender("demoLabel",
                                                  "https://raw.githubusercontent.com/google/material-design-icons/master/social/2x_web/ic_cake_black_36dp.png",
-                                                 "https://developers.line.me/en/"));
+                                                 "https://developers.line.biz/en/"));
     }
 
     private List<MessageData> createTemplateMessageList() {
@@ -586,7 +586,7 @@ public class InternalApisFragment extends BaseApisFragment implements SendMessag
         List<ImageCarouselLayoutTemplate.ImageCarouselColumn> imageCarouselColumnList = asList(
                 new ImageCarouselLayoutTemplate.ImageCarouselColumn(
                         "https://picsum.photos/600/390.jpg",
-                        new UriAction("LINE Dev", "https://developers.line.me/en/")),
+                        new UriAction("LINE Dev", "https://developers.line.biz/en/")),
                 new ImageCarouselLayoutTemplate.ImageCarouselColumn(
                         "https://picsum.photos/600/390.jpg",
                         new UriAction("LINE Blog", "https://official-blog.line.me/en/")));

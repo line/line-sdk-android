@@ -20,7 +20,7 @@ import org.json.JSONObject;
  * <li> separator: Represents the type of separator component. A {@link FlexSeparatorComponent} value is associated.</li>
  * <li> spacer: Represents the type of spacer component. A {@link FlexSpacerComponent} value is associated.</li>
  * <p>
- * For more information, @see <a herf=https://developers.line.me/en/reference/messaging-api/#component>component</a>
+ * For more information, @see <a herf=https://developers.line.biz/en/reference/messaging-api/#component>component</a>
  */
 public abstract class FlexMessageComponent implements Jsonable {
     protected final static int FLEX_VALUE_NONE = -1;  // indicates flex value is not set

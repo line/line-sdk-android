@@ -71,7 +71,8 @@ public class LineApiClientBuilder {
     }
 
     /**
-     * Sets the API base URI.
+     * @hide
+     * Sets the OpenID Discovery Document URL.
      *
      * @param openidDiscoveryDocumentUrl The URI to set.
      * @return The current {@link LineApiClientBuilder} instance.
@@ -83,7 +84,11 @@ public class LineApiClientBuilder {
                         Uri.parse(Constants.OPENID_DISCOVERY_DOCUMENT_URL));
         return this;
     }
-
+    /**
+     * @hide
+     * Sets the API base URI.
+     *
+     */
     @NonNull
     public LineApiClientBuilder apiBaseUri(@Nullable final Uri apiBaseUri) {
         this.apiBaseUri = ObjectUtils.defaultIfNull(apiBaseUri, Uri.parse(Constants.API_SERVER_BASE_URI));
