@@ -60,31 +60,31 @@ dependencies {
     implementation project(':line-sdk')
 //    implementation 'com.linecorp.linesdk:linesdk:5.3.1'
 
-    implementation 'com.android.support:multidex:1.0.3'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${ver.kotlin}"
 
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'com.google.android.material:material:1.0.0'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation "androidx.appcompat:appcompat:${ver.androidx.appcompat}"
+    implementation "androidx.constraintlayout:constraintlayout:${ver.androidx.constraintlayout}"
+    implementation "androidx.legacy:legacy-support-v4:${ver.androidx.legacy}"
+    implementation "androidx.multidex:multidex:${ver.androidx.multidex}"
 
-    implementation 'com.jakewharton:butterknife:10.2.0'
-    kapt 'com.jakewharton:butterknife-compiler:10.2.0'
+    implementation "com.google.android.material:material:${ver.google.material}"
+    implementation "org.apache.commons:commons-lang3:${ver.apache.commons_lang3}"
 
-    implementation 'io.reactivex.rxjava2:rxjava:2.1.1'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    implementation "com.jakewharton:butterknife:${ver.butterknife}"
+    kapt "com.jakewharton:butterknife-compiler:${ver.butterknife}"
 
-    implementation 'org.apache.commons:commons-lang3:3.7'
+    implementation "io.reactivex.rxjava2:rxandroid:${ver.reactivex.rxandroid}"
+    implementation "io.reactivex.rxjava2:rxjava:${ver.reactivex.rxjava}"
 
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0', {
-        exclude group: 'com.android.support', module: 'support-annotations'
+
+    testImplementation "junit:junit:${ver.jUnit}"
+
+    androidTestImplementation "junit:junit:${ver.jUnit}"
+    androidTestImplementation("androidx.test.espresso:espresso-core:${ver.androidx.test_espresso}", {
+        exclude group: "com.android.support", module: "support-annotations"
     })
-    androidTestImplementation 'androidx.test:runner:1.1.0'
-    androidTestImplementation 'androidx.test:rules:1.1.0'
-    androidTestImplementation 'androidx.test:core:1.2.0'
-    androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
-
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-
-    implementation 'com.android.support:multidex:1.0.3'
+    androidTestImplementation "androidx.test:core:${ver.androidx.test}"
+    androidTestImplementation "androidx.test:rules:${ver.androidx.test}"
+    androidTestImplementation "androidx.test:runner:${ver.androidx.test}"
+    androidTestImplementation "androidx.test.uiautomator:uiautomator:${ver.androidx.test_uiautomator}"
 }
