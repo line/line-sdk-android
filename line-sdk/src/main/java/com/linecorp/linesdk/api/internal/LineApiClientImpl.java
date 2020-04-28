@@ -274,6 +274,11 @@ public class LineApiClientImpl implements LineApiClient {
     }
 
     @NonNull
+    public LineApiResponse<Boolean> joinOpenChatRoom(@NonNull String roomId, @NonNull String displayName) {
+        return callWithAccessToken(accessToken -> talkApiClient.joinOpenChatRoom(accessToken, roomId, displayName));
+    };
+
+    @NonNull
     public LineApiResponse<OpenChatRoomStatus> getOpenChatRoomStatus(@NonNull String roomId) {
         return callWithAccessToken(accessToken -> talkApiClient.getOpenChatRoomStatus(accessToken, roomId));
 

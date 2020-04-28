@@ -373,6 +373,12 @@ public interface LineApiClient {
      * @hide
      */
     @NonNull
+    LineApiResponse<Boolean> joinOpenChatRoom(@NonNull String roomId, @NonNull String displayName);
+
+    /**
+     * @hide
+     */
+    @NonNull
     LineApiResponse<OpenChatRoomStatus> getOpenChatRoomStatus(@NonNull String roomId);
 
     /**

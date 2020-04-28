@@ -307,6 +307,20 @@ public class TalkApiClient {
     }
 
     @NonNull
+    public LineApiResponse<Boolean> joinOpenChatRoom(
+            @NonNull InternalAccessToken accessToken,
+            @NonNull String roomId,
+            @NonNull String displayName) {
+        final Uri uri = buildUri(apiBaseUrl, BASE_PATH_OPENCHAT_API, "openchats", roomId, "join");
+
+        return httpClient.postWithJson(
+                uri,
+                buildRequestHeaders(accessToken),
+                "{\"displayName\": \"" + displayName + "\" }",
+                null);
+    }
+
+    @NonNull
     public LineApiResponse<OpenChatRoomStatus> getOpenChatRoomStatus(
             @NonNull InternalAccessToken accessToken,
             @NonNull String roomId) {

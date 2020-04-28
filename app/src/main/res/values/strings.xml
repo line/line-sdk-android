@@ -57,6 +57,7 @@
     <string name="apis_openchat_agreement_update">update openChat agreement status</string>
     <string name="apis_openchat_create_room">create chatroom</string>
     <string name="apis_openchat_membership_status">membership status</string>
+    <string name="apis_openchat_join_chatroom">join openchat room</string>
     <string name="apis_openchat_chatroom_status">chatroom status</string>
     <string name="apis_openchat_create_room_with_ui">create chatroom with UI</string>
     <string name="apis_openchat_agreement_get_status">get openchat agreement status</string>

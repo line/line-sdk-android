@@ -37,7 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            app:constraint_referenced_ids="openchat_agreement_get_status_btn,openchat_create_chat_btn,openchat_create_chat_ui_btn,openchat_chatroom_status_btn,openchat_membership_status_btn" />
+            app:constraint_referenced_ids="openchat_agreement_get_status_btn,openchat_create_chat_btn,openchat_create_chat_ui_btn,openchat_chatroom_status_btn,openchat_membership_status_btn, openchat_join_btn" />
 
         <Button
             android:id="@+id/openchat_agreement_get_status_btn"
@@ -89,10 +89,21 @@
             android:layout_height="wrap_content"
             android:text="@string/apis_openchat_membership_status"
             android:textAllCaps="false"
-            app:layout_constraintBottom_toTopOf="@+id/graph_message_api_text"
+            app:layout_constraintBottom_toTopOf="@+id/openchat_join_btn"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/openchat_chatroom_status_btn" />
+
+        <Button
+            android:id="@+id/openchat_join_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/apis_openchat_join_chatroom"
+            android:textAllCaps="false"
+            app:layout_constraintBottom_toTopOf="@+id/graph_message_api_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/openchat_membership_status_btn" />
 
         <TextView
             android:id="@+id/graph_message_api_text"

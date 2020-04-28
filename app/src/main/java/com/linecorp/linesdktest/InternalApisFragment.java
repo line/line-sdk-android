@@ -363,6 +363,21 @@ public class InternalApisFragment extends BaseApisFragment implements SendMessag
         startActivityForResult(intent, REQUEST_CODE_CREATE_OPEN_CHATROOM);
     }
 
+    @OnClick(R.id.openchat_join_btn)
+    void joinOpenChatroom() {
+        final EditText input = new EditText(getContext());
+        new AlertDialog.Builder(getContext())
+                .setTitle("Input Room Id")
+                .setView(input)
+                .setPositiveButton(string.ok, (dialog, whichButton) -> {
+                    String roomId = input.getText().toString();
+                    if (roomId.isEmpty()) return;
+
+                    startApiAsyncTask("joinOpenChatRoom", () -> lineApiClient.joinOpenChatRoom(roomId, "demo displayname"));
+                }).show();
+
+    }
+
     @OnClick(R.id.openchat_chatroom_status_btn)
     void getChatroomStatus() {
         final EditText input = new EditText(getContext());
