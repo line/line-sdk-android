@@ -127,10 +127,8 @@ public class SignInFragment extends Fragment {
                         Scope.MESSAGE,
                         Scope.ONE_TIME_SHARE,
                         Scope.OPEN_CHAT_TERM_STATUS,
-                        Scope.OPEN_CHAT_TERM_AGREE,
                         Scope.OPEN_CHAT_ROOM_CREATE,
-                        Scope.OPEN_CHAT_ROOM_STATUS,
-                        Scope.OPEN_CHAT_ROOM_MEMBERSHIP
+                        Scope.OPEN_CHAT_SUBSCRIPTION_INFO
                 ) :
                 Arrays.asList(
                         Scope.PROFILE,
