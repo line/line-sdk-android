@@ -4,12 +4,6 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
-buildscript {
-    ext {
-        jjwt_version = '0.11.1'
-    }
-}
-
 version = "5.4.1"
 
 publish {
@@ -57,6 +51,10 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
+
     lintOptions {
         lintConfig file("lint.xml")
         abortOnError false
@@ -70,40 +68,42 @@ configurations {
 }
 
 dependencies {
-    javadocs 'androidx.annotation:annotation:1.1.0'
+    javadocs "androidx.annotation:annotation:${ver.androidx.annotation}"
 
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.browser:browser:1.2.0'
-    implementation 'com.google.android.material:material:1.0.0'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.exifinterface:exifinterface:1.1.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    implementation 'androidx.annotation:annotation:1.1.0'
-    implementation('com.madgag.spongycastle:prov:1.58.0.0') {
-        exclude group: 'junit', module: 'junit'
-    }
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${ver.kotlin}"
 
-    testImplementation 'junit:junit:4.12'
-    testImplementation 'org.robolectric:robolectric:4.3'
-    testImplementation 'org.mockito:mockito-core:2.28.2'
+    implementation "androidx.annotation:annotation:${ver.androidx.annotation}"
+    implementation "androidx.appcompat:appcompat:${ver.androidx.appcompat}"
+    implementation "androidx.browser:browser:${ver.androidx.browser}"
+    implementation "androidx.constraintlayout:constraintlayout:${ver.androidx.constraintlayout}"
+    implementation "androidx.core:core-ktx:${ver.androidx.core}"
+    implementation "androidx.exifinterface:exifinterface:${ver.androidx.exifinterface}"
+    implementation "androidx.legacy:legacy-support-v4:${ver.androidx.legacy}"
+    implementation "androidx.lifecycle:lifecycle-extensions:${ver.androidx.lifecycle}"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:${ver.androidx.lifecycle}"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${ver.androidx.lifecycle}"
 
-    api "io.jsonwebtoken:jjwt-api:$jjwt_version"
-    implementation "io.jsonwebtoken:jjwt-impl:$jjwt_version"
-    implementation("io.jsonwebtoken:jjwt-orgjson:$jjwt_version") {
+    // JSON Web Token
+    api "io.jsonwebtoken:jjwt-api:${ver.jjwt}"
+    implementation "io.jsonwebtoken:jjwt-impl:${ver.jjwt}"
+    implementation("io.jsonwebtoken:jjwt-orgjson:${ver.jjwt}") {
         exclude group: 'org.json', module: 'json' //provided by Android natively
     }
 
-    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation "com.google.android.material:material:${ver.google.material}"
+    implementation("com.madgag.spongycastle:prov:${ver.spongycastle}") {
+        exclude group: 'junit', module: 'junit'
+    }
+    implementation "com.squareup.picasso:picasso:${ver.picasso}"
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+
+    // for tests
+    testImplementation "junit:junit:${ver.jUnit}"
+    testImplementation "org.mockito:mockito-core:${ver.mockito}"
+    testImplementation "org.robolectric:robolectric:${ver.robolectric}"
 
     // for @hide annotation on functions to hide it from javadoc
-    doclava 'com.google.doclava:doclava:1.0.6'
-
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation "androidx.core:core-ktx:1.1.0"
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.1.0'
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.1.0'
+    doclava "com.google.doclava:doclava:${ver.doclava}"
 }
 
 ext {
