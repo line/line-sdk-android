@@ -25,6 +25,7 @@ import com.linecorp.linesdk.message.OttRequest;
 import com.linecorp.linesdk.openchat.MembershipStatus;
 import com.linecorp.linesdk.openchat.OpenChatParameters;
 import com.linecorp.linesdk.openchat.OpenChatRoomInfo;
+import com.linecorp.linesdk.openchat.OpenChatRoomJoinType;
 import com.linecorp.linesdk.openchat.OpenChatRoomStatus;
 
 import org.json.JSONArray;
@@ -78,6 +79,7 @@ public class TalkApiClient {
     private static final ResponseDataParser<OpenChatRoomInfo> OPEN_CHAT_ROOM_INFO_PARSER = new OpenChatRoomInfoParser();
     private static final ResponseDataParser<OpenChatRoomStatus> OPEN_CHAT_ROOM_STATUS_PARSER = new OpenChatRoomStatusParser();
     private static final ResponseDataParser<MembershipStatus> OPEN_CHAT_MEMBERSHIP_PARSER = new MembershipStatusParser();
+    private static final ResponseDataParser<OpenChatRoomJoinType> OPEN_CHAT_ROOM_JOIN_TYPE_PARSER= new OpenChatRoomJoinTypeParser();
 
     public TalkApiClient(Context applicationContext, @NonNull Uri apiBaseUrl) {
         this(apiBaseUrl, new ChannelServiceHttpClient(applicationContext, BuildConfig.VERSION_NAME));
@@ -348,6 +350,19 @@ public class TalkApiClient {
                 OPEN_CHAT_MEMBERSHIP_PARSER);
     }
 
+    @NonNull
+    public LineApiResponse<OpenChatRoomJoinType> getOpenChatRoomJoinType(
+            @NonNull InternalAccessToken accessToken,
+            @NonNull String roomId) {
+        final Uri uri = buildUri(apiBaseUrl, BASE_PATH_OPENCHAT_API, "openchats", roomId, "type");
+
+        return httpClient.get(
+                uri,
+                buildRequestHeaders(accessToken),
+                Collections.emptyMap(),
+                OPEN_CHAT_ROOM_JOIN_TYPE_PARSER);
+    }
+
     private <T> LineApiResponse<T> createInternalErrorResponse(Exception exception) {
         return LineApiResponse.createAsError(LineApiResponseCode.INTERNAL_ERROR, new LineApiError(exception));
     }
@@ -389,6 +404,16 @@ public class TalkApiClient {
         protected MembershipStatus parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
             String state = jsonObject.getString("state").toUpperCase();
             return MembershipStatus.valueOf(state);
+        }
+    }
+
+    @VisibleForTesting
+    private static class OpenChatRoomJoinTypeParser extends JsonToObjectBaseResponseParser<OpenChatRoomJoinType> {
+        @NonNull
+        @Override
+        protected OpenChatRoomJoinType parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
+            String state = jsonObject.getString("type").toUpperCase();
+            return OpenChatRoomJoinType.valueOf(state);
         }
     }
 

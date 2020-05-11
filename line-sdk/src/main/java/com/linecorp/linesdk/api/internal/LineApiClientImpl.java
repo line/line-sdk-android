@@ -24,6 +24,7 @@ import com.linecorp.linesdk.message.MessageData;
 import com.linecorp.linesdk.openchat.MembershipStatus;
 import com.linecorp.linesdk.openchat.OpenChatParameters;
 import com.linecorp.linesdk.openchat.OpenChatRoomInfo;
+import com.linecorp.linesdk.openchat.OpenChatRoomJoinType;
 import com.linecorp.linesdk.openchat.OpenChatRoomStatus;
 
 import java.util.List;
@@ -287,6 +288,11 @@ public class LineApiClientImpl implements LineApiClient {
     @NonNull
     public LineApiResponse<MembershipStatus> getOpenChatMembershipStatus(@NonNull String roomId) {
         return callWithAccessToken(accessToken -> talkApiClient.getOpenChatMembershipStatus(accessToken, roomId));
+    }
+
+    @NonNull
+    public LineApiResponse<OpenChatRoomJoinType> getOpenChatRoomJoinType(@NonNull String roomId) {
+        return callWithAccessToken(accessToken -> talkApiClient.getOpenChatRoomJoinType(accessToken, roomId));
     }
 
     @FunctionalInterface
