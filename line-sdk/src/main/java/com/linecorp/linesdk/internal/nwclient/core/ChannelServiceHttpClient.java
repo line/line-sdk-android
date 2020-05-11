@@ -343,7 +343,8 @@ public class ChannelServiceHttpClient {
         InputStream inputStream = getInputStreamFrom(conn);
         int httpResponseCode = conn.getResponseCode();
         try {
-            if (httpResponseCode != HttpURLConnection.HTTP_OK) {
+            if (httpResponseCode != HttpURLConnection.HTTP_OK
+                    && httpResponseCode != HttpURLConnection.HTTP_NO_CONTENT) {
                 return LineApiResponse.createAsError(
                         LineApiResponseCode.SERVER_ERROR,
                         new LineApiError(

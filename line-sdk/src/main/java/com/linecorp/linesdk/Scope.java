@@ -95,24 +95,19 @@ public class Scope {
 
     /**
      * @hide
+     * Permission to create or join an openchat room.
      */
-    public static final Scope OPEN_CHAT_TERM_STATUS = new Scope("square.term.status");
+    public static final Scope OPEN_CHAT_TERM_STATUS = new Scope("openchat.term.agreement.status");
     /**
      * @hide
+     * Permission to create or join an openchat room.
      */
-    public static final Scope OPEN_CHAT_TERM_AGREE = new Scope("square.term.agree");
+    public static final Scope OPEN_CHAT_ROOM_CREATE = new Scope("openchat.create.join");
     /**
      * @hide
+     * Permission to check openchat room info
      */
-    public static final Scope OPEN_CHAT_ROOM_CREATE = new Scope("square.create");
-    /**
-     * @hide
-     */
-    public static final Scope OPEN_CHAT_ROOM_STATUS = new Scope("square.info");
-    /**
-     * @hide
-     */
-    public static final Scope OPEN_CHAT_ROOM_MEMBERSHIP = new Scope("square.membership");
+    public static final Scope OPEN_CHAT_SUBSCRIPTION_INFO = new Scope("openchat.info");
 
     private static final String SCOPE_DELIMITER = " ";
 

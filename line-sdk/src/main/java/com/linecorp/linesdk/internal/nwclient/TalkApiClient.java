@@ -53,7 +53,7 @@ public class TalkApiClient {
     private static final String TOKEN_TYPE_BEARER = "Bearer";
     private static final String BASE_PATH_COMMON_API = "v2";
     private static final String BASE_PATH_FRIENDSHIP_API = "friendship/v1";
-    private static final String BASE_PATH_OPENCHAT_API = "square/v1";
+    private static final String BASE_PATH_OPENCHAT_API = "openchat/v1";
     /* package */ static final String BASE_PATH_GRAPH_API = "graph/v2";
     /* package */ static final String BASE_PATH_MESSAGE_API = "message/v3";
     /* package */ static final String PATH_FRIENDS = "friends";
@@ -297,7 +297,7 @@ public class TalkApiClient {
     public LineApiResponse<OpenChatRoomInfo> createOpenChatRoom(
             @NonNull InternalAccessToken accessToken,
             @NonNull OpenChatParameters openChatParameters) {
-        final Uri uri = buildUri(apiBaseUrl, BASE_PATH_OPENCHAT_API, "square");
+        final Uri uri = buildUri(apiBaseUrl, BASE_PATH_OPENCHAT_API, "openchats");
 
         return httpClient.postWithJson(
                 uri,
@@ -307,12 +307,26 @@ public class TalkApiClient {
     }
 
     @NonNull
+    public LineApiResponse<Boolean> joinOpenChatRoom(
+            @NonNull InternalAccessToken accessToken,
+            @NonNull String roomId,
+            @NonNull String displayName) {
+        final Uri uri = buildUri(apiBaseUrl, BASE_PATH_OPENCHAT_API, "openchats", roomId, "join");
+
+        return httpClient.postWithJson(
+                uri,
+                buildRequestHeaders(accessToken),
+                "{\"displayName\": \"" + displayName + "\" }",
+                null);
+    }
+
+    @NonNull
     public LineApiResponse<OpenChatRoomStatus> getOpenChatRoomStatus(
             @NonNull InternalAccessToken accessToken,
             @NonNull String roomId) {
-        final Uri uri = buildUri(apiBaseUrl, BASE_PATH_OPENCHAT_API, "square", roomId, "status");
+        final Uri uri = buildUri(apiBaseUrl, BASE_PATH_OPENCHAT_API, "openchats", roomId, "status");
         final Map<String, String> queryParameters = new HashMap<>();
-        queryParameters.put("squareMid", roomId);
+        queryParameters.put("openChatId", roomId);
 
         return httpClient.get(
                 uri,
@@ -325,7 +339,7 @@ public class TalkApiClient {
     public LineApiResponse<MembershipStatus> getOpenChatMembershipStatus(
             @NonNull InternalAccessToken accessToken,
             @NonNull String roomId) {
-        final Uri uri = buildUri(apiBaseUrl, BASE_PATH_OPENCHAT_API, "square", roomId, "membership");
+        final Uri uri = buildUri(apiBaseUrl, BASE_PATH_OPENCHAT_API, "openchats", roomId, "members/me/membership");
 
         return httpClient.get(
                 uri,
@@ -353,7 +367,7 @@ public class TalkApiClient {
         @NonNull
         @Override
         protected OpenChatRoomInfo parseJsonToObject(@NonNull JSONObject jsonObject) throws JSONException {
-            return new OpenChatRoomInfo(jsonObject.getString("squareMid"),
+            return new OpenChatRoomInfo(jsonObject.getString("openchatId"),
                     jsonObject.getString("url"));
         }
     }
