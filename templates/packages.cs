@@ -8,7 +8,7 @@
 <div class="g-unit" id="doc-content">
 
 <div id="jd-header">
-<h1><?cs var:page.title ?></h1>
+<h1><?cs var:page.title ?> (Ver <?cs var:project.version ?>)</h1>
 </div>
 
 <div id="jd-content">
