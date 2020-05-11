@@ -109,7 +109,7 @@ dependencies {
 ext {
     javadocParams = [
             taskGroup    : "javadoc",
-            title        : "LINE SDK v${android.defaultConfig.versionName} for Android",
+            title        : "LINE SDK for Android",
             locale       : "en_US",
             encoding     : "UTF-8",
             source       : android.sourceSets.main.java.srcDirs,
@@ -173,6 +173,9 @@ task javadoc_public(type: Javadoc) {
                 javadocParams.externalLinks.each {
                     value.add(["name", it])
                 }
+            }
+            addMultilineMultiValueOption("hdf").with {
+                value.add(["project.version", android.defaultConfig.versionName])
             }
         }
     }
