@@ -100,9 +100,9 @@ public class Scope {
     public static final Scope OPEN_CHAT_TERM_STATUS = new Scope("openchat.term.agreement.status");
     /**
      * @hide
-     * Permission to create or join an openchat room.
+     * Permission to create and join an openchat room.
      */
-    public static final Scope OPEN_CHAT_ROOM_CREATE = new Scope("openchat.create.join");
+    public static final Scope OPEN_CHAT_ROOM_CREATE_JOIN = new Scope("openchat.create.join");
     /**
      * @hide
      * Permission to check openchat room info

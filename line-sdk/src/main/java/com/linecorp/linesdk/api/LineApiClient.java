@@ -13,6 +13,7 @@ import com.linecorp.linesdk.message.MessageData;
 import com.linecorp.linesdk.openchat.MembershipStatus;
 import com.linecorp.linesdk.openchat.OpenChatParameters;
 import com.linecorp.linesdk.openchat.OpenChatRoomInfo;
+import com.linecorp.linesdk.openchat.OpenChatRoomJoinType;
 import com.linecorp.linesdk.openchat.OpenChatRoomStatus;
 
 import java.util.List;
@@ -380,6 +381,12 @@ public interface LineApiClient {
      */
     @NonNull
     LineApiResponse<OpenChatRoomStatus> getOpenChatRoomStatus(@NonNull String roomId);
+
+    /**
+     * @hide
+     */
+    @NonNull
+    LineApiResponse<OpenChatRoomJoinType> getOpenChatRoomJoinType(@NonNull String roomId);
 
     /**
      * @hide
