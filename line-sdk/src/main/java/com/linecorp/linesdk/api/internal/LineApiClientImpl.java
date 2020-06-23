@@ -63,7 +63,18 @@ public class LineApiClientImpl implements LineApiClient {
 
     @NonNull
     private <T> LineApiResponse<T> callWithAccessToken(@NonNull final APIWithAccessToken<T> api) {
-        final InternalAccessToken accessToken = accessTokenCache.getAccessToken();
+        InternalAccessToken accessToken;
+
+        try {
+            accessToken = accessTokenCache.getAccessToken();
+        } catch (Exception exception) {
+            accessTokenCache.clear();
+            return LineApiResponse.createAsError(
+                    LineApiResponseCode.INTERNAL_ERROR,
+                    new LineApiError("get access token fail:" + exception.getMessage())
+            );
+        }
+
         if (accessToken == null) {
             return ERROR_RESPONSE_NO_TOKEN;
         } else {
@@ -79,17 +90,26 @@ public class LineApiClientImpl implements LineApiClient {
 
     @NonNull
     private LineApiResponse<?> logout(@NonNull final InternalAccessToken accessToken) {
+        accessTokenCache.clear();
         LineApiResponse<?> response = oauthApiClient.revokeRefreshToken(channelId, accessToken);
-        if (response.isSuccess()) {
-            accessTokenCache.clear();
-        }
+
         return response;
     }
 
     @Override
     @NonNull
     public LineApiResponse<LineAccessToken> refreshAccessToken() {
-        InternalAccessToken accessToken = accessTokenCache.getAccessToken();
+        InternalAccessToken accessToken;
+        try {
+            accessToken = accessTokenCache.getAccessToken();
+        } catch (Exception exception) {
+            accessTokenCache.clear();
+            return LineApiResponse.createAsError(
+                    LineApiResponseCode.INTERNAL_ERROR,
+                    new LineApiError("get access token fail:" + exception.getMessage())
+            );
+        }
+
         if (accessToken == null || TextUtils.isEmpty(accessToken.getRefreshToken())) {
             return LineApiResponse.createAsError(
                     LineApiResponseCode.INTERNAL_ERROR,
@@ -111,7 +131,16 @@ public class LineApiClientImpl implements LineApiClient {
                 refreshTokenResult.getExpiresInMillis(),
                 System.currentTimeMillis() /* issuedClientTimeMillis */,
                 refreshToken);
-        accessTokenCache.saveAccessToken(newToken);
+
+        try {
+            accessTokenCache.saveAccessToken(newToken);
+        } catch(Exception exception) {
+            return LineApiResponse.createAsError(
+                    LineApiResponseCode.INTERNAL_ERROR,
+                    new LineApiError("save access token fail:" + exception.getMessage())
+            );
+        }
+
         return LineApiResponse.createAsSuccess(new LineAccessToken(
                 newToken.getAccessToken(),
                 newToken.getExpiresInMillis(),
@@ -134,12 +163,21 @@ public class LineApiClientImpl implements LineApiClient {
         }
         AccessTokenVerificationResult verificationResult = response.getResponseData();
         long verifiedClientTimeMillis = System.currentTimeMillis();
-        accessTokenCache.saveAccessToken(
-                new InternalAccessToken(
-                        accessToken.getAccessToken(),
-                        verificationResult.getExpiresInMillis(),
-                        verifiedClientTimeMillis,
-                        accessToken.getRefreshToken()));
+
+        try {
+            accessTokenCache.saveAccessToken(
+                    new InternalAccessToken(
+                            accessToken.getAccessToken(),
+                            verificationResult.getExpiresInMillis(),
+                            verifiedClientTimeMillis,
+                            accessToken.getRefreshToken()));
+        } catch(Exception exception) {
+            return LineApiResponse.createAsError(
+                    LineApiResponseCode.INTERNAL_ERROR,
+                    new LineApiError("save access token fail:" + exception.getMessage())
+            );
+        }
+
         return LineApiResponse.createAsSuccess(
                 new LineCredential(
                         new LineAccessToken(
@@ -152,12 +190,23 @@ public class LineApiClientImpl implements LineApiClient {
     @Override
     @NonNull
     public LineApiResponse<LineAccessToken> getCurrentAccessToken() {
-        InternalAccessToken internalAccessToken = accessTokenCache.getAccessToken();
+        InternalAccessToken internalAccessToken;
+        try {
+            internalAccessToken = accessTokenCache.getAccessToken();
+        } catch (Exception exception) {
+            accessTokenCache.clear();
+            return LineApiResponse.createAsError(
+                    LineApiResponseCode.INTERNAL_ERROR,
+                    new LineApiError("get access token fail:" + exception.getMessage())
+            );
+        }
+
         if (internalAccessToken == null) {
             return LineApiResponse.createAsError(
                     LineApiResponseCode.INTERNAL_ERROR,
                     new LineApiError("The cached access token does not exist."));
         }
+
         return LineApiResponse.createAsSuccess(new LineAccessToken(
                 internalAccessToken.getAccessToken(),
                 internalAccessToken.getExpiresInMillis(),
