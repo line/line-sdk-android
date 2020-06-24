@@ -68,7 +68,6 @@ public class LineApiClientImpl implements LineApiClient {
         try {
             accessToken = accessTokenCache.getAccessToken();
         } catch (Exception exception) {
-            accessTokenCache.clear();
             return LineApiResponse.createAsError(
                     LineApiResponseCode.INTERNAL_ERROR,
                     new LineApiError("get access token fail:" + exception.getMessage())
@@ -103,7 +102,6 @@ public class LineApiClientImpl implements LineApiClient {
         try {
             accessToken = accessTokenCache.getAccessToken();
         } catch (Exception exception) {
-            accessTokenCache.clear();
             return LineApiResponse.createAsError(
                     LineApiResponseCode.INTERNAL_ERROR,
                     new LineApiError("get access token fail:" + exception.getMessage())
@@ -194,7 +192,6 @@ public class LineApiClientImpl implements LineApiClient {
         try {
             internalAccessToken = accessTokenCache.getAccessToken();
         } catch (Exception exception) {
-            accessTokenCache.clear();
             return LineApiResponse.createAsError(
                     LineApiResponseCode.INTERNAL_ERROR,
                     new LineApiError("get access token fail:" + exception.getMessage())

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
+import com.linecorp.android.security.encryption.EncryptionException;
 import com.linecorp.android.security.encryption.StringCipher;
 import com.linecorp.linesdk.utils.ObjectUtils;
 
@@ -70,10 +71,17 @@ public class AccessTokenCache {
     public InternalAccessToken getAccessToken() {
         SharedPreferences sharedPreferences =
                 context.getSharedPreferences(sharedPreferenceKey, Context.MODE_PRIVATE);
-
-        String accessToken = decryptToString(sharedPreferences.getString(DATA_KEY_ACCESS_TOKEN, null /* default */));
-        long expiresIn = decryptToLong(sharedPreferences.getString(DATA_KEY_EXPIRES_IN_MILLIS, null /* default */));
-        long issuedClientTime = decryptToLong(sharedPreferences.getString(DATA_KEY_ISSUED_CLIENT_TIME_MILLIS, null /* default */));
+        String accessToken;
+        long expiresIn;
+        long issuedClientTime;
+        try {
+            accessToken = decryptToString(sharedPreferences.getString(DATA_KEY_ACCESS_TOKEN, null /* default */));
+            expiresIn = decryptToLong(sharedPreferences.getString(DATA_KEY_EXPIRES_IN_MILLIS, null /* default */));
+            issuedClientTime = decryptToLong(sharedPreferences.getString(DATA_KEY_ISSUED_CLIENT_TIME_MILLIS, null /* default */));
+        } catch (EncryptionException exception) {
+            clear();
+            throw exception;
+        }
 
         if (TextUtils.isEmpty(accessToken)
                 || expiresIn == NO_DATA
