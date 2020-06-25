@@ -2,14 +2,15 @@ package com.linecorp.linesdk.internal;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.VisibleForTesting;
 import android.text.TextUtils;
 
 import com.linecorp.android.security.encryption.EncryptionException;
 import com.linecorp.android.security.encryption.StringCipher;
 import com.linecorp.linesdk.utils.ObjectUtils;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 
 /**
  * Class to cache {@link InternalAccessToken}.
@@ -74,23 +75,21 @@ public class AccessTokenCache {
         long expiresIn;
         long issuedClientTime;
         try {
-            accessToken = decryptToString(
-                    sharedPreferences.getString(DATA_KEY_ACCESS_TOKEN, null /* default */));
-            expiresIn = decryptToLong(
-                    sharedPreferences.getString(DATA_KEY_EXPIRES_IN_MILLIS, null /* default */));
-            issuedClientTime = decryptToLong(
-                    sharedPreferences.getString(DATA_KEY_ISSUED_CLIENT_TIME_MILLIS, null /* default */));
-        } catch (EncryptionException e) {
+            accessToken = decryptToString(sharedPreferences.getString(DATA_KEY_ACCESS_TOKEN, null /* default */));
+            expiresIn = decryptToLong(sharedPreferences.getString(DATA_KEY_EXPIRES_IN_MILLIS, null /* default */));
+            issuedClientTime = decryptToLong(sharedPreferences.getString(DATA_KEY_ISSUED_CLIENT_TIME_MILLIS, null /* default */));
+        } catch (EncryptionException exception) {
             clear();
-            return null;
+            throw exception;
         }
+
         if (TextUtils.isEmpty(accessToken)
                 || expiresIn == NO_DATA
                 || issuedClientTime == NO_DATA) {
             return null;
         }
-        String refreshToken = decryptToString(sharedPreferences
-                .getString(DATA_KEY_REFRESH_TOKEN, null /* default */));
+
+        String refreshToken = decryptToString(sharedPreferences.getString(DATA_KEY_REFRESH_TOKEN, null /* default */));
         refreshToken = ObjectUtils.defaultIfNull(refreshToken, "");
         return new InternalAccessToken(accessToken, expiresIn, issuedClientTime, refreshToken);
     }
