@@ -115,10 +115,6 @@ public class Scope {
     private final String code;
 
     public Scope(@NonNull final String code) {
-        if (scopeInstanceMap.containsKey(code)) {
-            throw new IllegalArgumentException("Scope code already exists: " + code);
-        }
-
         this.code = code;
         scopeInstanceMap.put(code, this);
     }
