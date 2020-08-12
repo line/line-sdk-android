@@ -105,7 +105,7 @@ public class Scope {
     public static final Scope OPEN_CHAT_ROOM_CREATE_JOIN = new Scope("openchat.create.join");
     /**
      * @hide
-     * Permission to check openchat room info
+     * Permission to check openchat room info.
      */
     public static final Scope OPEN_CHAT_SUBSCRIPTION_INFO = new Scope("openchat.info");
 

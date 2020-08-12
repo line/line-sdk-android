@@ -1,7 +1,7 @@
 package com.linecorp.linesdk.openchat;
 
 /**
- * The membership state of current user to the room.
+ * The membership status of the current user to the room.
  */
 public enum MembershipStatus {
     // The user has already joined the room.
