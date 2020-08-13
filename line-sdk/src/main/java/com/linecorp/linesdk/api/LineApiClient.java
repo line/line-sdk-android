@@ -22,7 +22,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 /**
- * An API client that provides you with access to the LINE Social API to perform operations such as
+ * An API client that provides you with access to the Social API to perform operations such as
  * getting the current access token, getting the user profile, logging out the user, refreshing
  * the access token, and verifying the access token.
  */
@@ -242,7 +242,7 @@ public interface LineApiClient {
      * LINE internal use only. Sends messages to a user or group on behalf of the current user.
      * <p>
      * In the following cases, messages are not delivered even though the API call is successful.
-     * The response status is `discarded` for such API calls.
+     * The response status is <code>discarded</code> for such API calls.
      * <ul>
      * <li>The recipient has blocked the current user.</li>
      * <li>The recipient has turned off messages from the channel.</li>
@@ -256,8 +256,8 @@ public interface LineApiClient {
      *
      * @param targetUserId Required. The ID of the user or group that receives messages from the
      *                     current user.
-     * @param messages     Required. The messages to send. Available message types are: `text`, `audio`,
-     *                     `image`, `location`, `video`, and `template`. You can send up to five messages.
+     * @param messages     Required. The messages to send. Available message types are: <code>text</code>, <code>audio</code>,
+     *                     <code>image</code>, <code>location</code>, <code>video</code>, and <code>template</code>. You can send up to five messages.
      * @return A {@link LineApiResponse} object. If the API call is successful, the
      * {@link LineApiResponse} object contains the delivery result. If the API call fails, the payload
      * of the {@link LineApiResponse} object is <code>null</code>. The delivery result is either of
@@ -282,7 +282,7 @@ public interface LineApiClient {
      * user. To know the message delivery result for each recipient, check the response data.
      * <p>
      * In the following cases, messages are not delivered even though the API call is successful.
-     * The response status is `discarded` for such API calls.
+     * The response status is <code>discarded</code> for such API calls.
      * <ul>
      * <li>The recipient has blocked the current user.</li>
      * <li>The recipient has turned off messages from the channel.</li>
@@ -296,8 +296,8 @@ public interface LineApiClient {
      *
      * @param targetUserIds The IDs of the users that receive messages from the user. You can
      *                      specify up to 10 users.
-     * @param messages      The messages to send. Available message types are: `text`, `audio`, `image`,
-     *                      `location`, `video`, and `template`. You can send up to five messages.
+     * @param messages      The messages to send. Available message types are: <code>text</code>, <code>audio</code>, <code>image</code>,
+     *                      <code>location</code>, <code>video</code>, and <code>template</code>. You can send up to five messages.
      * @return A {@link LineApiResponse} object. If the API call is successful, the
      * {@link LineApiResponse} object contains the {@link SendMessageResponse} objects that contain
      * the delivery results. If the API call fails, the payload of the {@link LineApiResponse}
@@ -321,7 +321,7 @@ public interface LineApiClient {
      * To know the message delivery result for each recipient, check the response data.
      * <p>
      * In the following cases, messages are not delivered even though the API call is successful.
-     * The response status is `discarded` for such API calls.
+     * The response status is <code>discarded</code> for such API calls.
      * <ul>
      * <li>The recipient has blocked the current user.</li>
      * <li>The recipient has turned off messages from the channel.</li>
@@ -335,8 +335,8 @@ public interface LineApiClient {
      *
      * @param targetUserIds The IDs of the users that receive messages from the user. You can
      *                      specify up to 10 users.
-     * @param messages      The messages to send. Available message types are: `text`, `audio`, `image`,
-     *                      `location`, `video`, and `template`. You can send up to five messages.
+     * @param messages      The messages to send. Available message types are: <code>text</code>, <code>audio</code>, <code>image</code>,
+     *                      <code>location</code>, <code>video</code>, and <code>template</code>. You can send up to five messages.
      * @param isOttUsed     True if you want to send messages using OTT instead of using the user IDs;
      *                      false otherwise.
      * @return A {@link LineApiResponse} object. If the API call is successful, the
