@@ -2,13 +2,14 @@ package com.linecorp.linesdktest.settings;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import androidx.annotation.NonNull;
 import android.text.TextUtils;
 
 import org.apache.commons.lang3.LocaleUtils;
 import org.apache.commons.lang3.ObjectUtils;
 
 import java.util.Locale;
+
+import androidx.annotation.NonNull;
 
 public final class TestSettingManager {
     private static final String DEFAULT_CHANNEL_ID = "1620019587";
