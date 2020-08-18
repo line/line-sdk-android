@@ -3,18 +3,13 @@ package com.linecorp.linesdk.auth.internal;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.TextUtils;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.VisibleForTesting;
-import androidx.browser.customtabs.CustomTabsIntent;
-import androidx.core.content.ContextCompat;
 
 import com.linecorp.linesdk.BuildConfig;
 import com.linecorp.linesdk.Constants;
@@ -32,6 +27,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
+import androidx.browser.customtabs.CustomTabsIntent;
+import androidx.core.content.ContextCompat;
 
 import static com.linecorp.linesdk.utils.StringUtils.createRandomAlphaNumeric;
 import static com.linecorp.linesdk.utils.UriUtils.appendQueryParams;
@@ -85,8 +86,6 @@ import static com.linecorp.linesdk.utils.UriUtils.buildParams;
         }
     }
 
-    private static final LineAppVersion AUTO_LOGIN_FOR_LINE_SDK_ENABLED_VERSION =
-            new LineAppVersion(6, 9, 0);
     @NonNull
     private final LineAuthenticationStatus authenticationStatus;
 
@@ -222,31 +221,25 @@ import static com.linecorp.linesdk.utils.UriUtils.buildParams;
         }
 
         LineAppVersion lineAppVersion = LineAppVersion.getLineAppVersion(context);
-        if (lineAppVersion == null) {
-            return new AuthenticationIntentHolder(
-                    intent, startActivityOptions, false /* isLineAppAuthentication */);
-        }
-
-        boolean shouldLaunchLineApp = !isLineAppAuthDisabled
-                && lineAppVersion.isEqualOrGreaterThan(AUTO_LOGIN_FOR_LINE_SDK_ENABLED_VERSION);
-        if (shouldLaunchLineApp) {
+        boolean shouldLaunchLineApp = !isLineAppAuthDisabled;
+        if (shouldLaunchLineApp && lineAppVersion != null) {
             Intent lineAppIntent = new Intent(Intent.ACTION_VIEW);
             lineAppIntent.setData(loginUri);
             lineAppIntent.setPackage(Constants.LINE_APP_PACKAGE_NAME);
-            return new AuthenticationIntentHolder(
-                    lineAppIntent, startActivityOptions, true /* isLineAppAuthentication */);
+
+            PackageManager packageManager = context.getPackageManager();
+            if (lineAppIntent.resolveActivity(packageManager) != null) {
+                return new AuthenticationIntentHolder(lineAppIntent, startActivityOptions, true /* isLineAppAuthentication */);
+            }
         }
 
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://"));
-        List<ResolveInfo> resolveInfoList =
-                context.getPackageManager().queryIntentActivities(browserIntent, 0 /* flags */);
-        List<Intent> targetIntents
-                = convertToIntents(loginUri, resolveInfoList, intent.getExtras());
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://"));
+        List<ResolveInfo> resolveInfoList = context.getPackageManager().queryIntentActivities(browserIntent, 0 /* flags */);
+        List<Intent> targetIntents = convertToIntents(loginUri, resolveInfoList, intent.getExtras());
 
         int targetIntentCount = targetIntents.size();
         if (targetIntentCount == 0) {
-            throw new ActivityNotFoundException(
-                    "Activity for LINE log-in is not found. uri=" + loginUri);
+            throw new ActivityNotFoundException("Activity for LINE log-in is not found. uri=" + loginUri);
         }
         if (targetIntentCount == 1) {
             return new AuthenticationIntentHolder(

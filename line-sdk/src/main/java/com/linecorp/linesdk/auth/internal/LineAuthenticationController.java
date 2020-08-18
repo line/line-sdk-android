@@ -3,15 +3,9 @@ package com.linecorp.linesdk.auth.internal;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
-
-import androidx.annotation.MainThread;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.VisibleForTesting;
 
 import com.linecorp.linesdk.LineAccessToken;
 import com.linecorp.linesdk.LineApiResponse;
@@ -33,6 +27,11 @@ import com.linecorp.linesdk.internal.nwclient.TalkApiClient;
 import com.linecorp.linesdk.internal.pkce.PKCECode;
 
 import java.util.List;
+
+import androidx.annotation.MainThread;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 
 /**
  * This class controls LINE authentication flow.
@@ -109,30 +108,13 @@ import java.util.List;
         final PKCECode pkceCode = createPKCECode();
         authenticationStatus.setPKCECode(pkceCode);
         try {
-            BrowserAuthenticationApi.Request request = browserAuthenticationApi
-                    .getRequest(activity, config, pkceCode, params);
+            BrowserAuthenticationApi.Request request = browserAuthenticationApi.getRequest(activity, config, pkceCode, params);
             if (request.isLineAppAuthentication()) {
-                // "launchMode" of the activity launched by the follows is "singleInstance".
-                // So, we must not use startActivityForResult.
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    activity.startActivity(
-                            request.getIntent(),
-                            request.getStartActivityOptions());
-                } else {
-                    activity.startActivity(request.getIntent());
-                }
+                activity.startActivity(request.getIntent(), request.getStartActivityOptions());
             } else {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    activity.startActivityForResult(
-                            request.getIntent(),
-                            REQUEST_CODE,
-                            request.getStartActivityOptions());
-                } else {
-                    activity.startActivityForResult(
-                            request.getIntent(),
-                            REQUEST_CODE);
-                }
+                activity.startActivityForResult(request.getIntent(), REQUEST_CODE, request.getStartActivityOptions());
             }
+
             authenticationStatus.setSentRedirectUri(request.getRedirectUri());
         } catch (ActivityNotFoundException e) {
             authenticationStatus.authenticationIntentHandled();
