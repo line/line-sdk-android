@@ -1,5 +1,6 @@
 package com.linecorp.linesdk.auth.internal;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -9,8 +10,6 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.linecorp.linesdk.BuildConfig;
 import com.linecorp.linesdk.Scope;
@@ -34,6 +33,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -177,6 +179,7 @@ public class BrowserAuthenticationApiTest {
         // Test for new LINE and single target
         setLineAppVersion("6.9.0");
         setResultOfQueryIntentActivities(PACKAGE_NAME_LINE);
+        doReturn(new ComponentName(PACKAGE_NAME_LINE, "name")).when(target).resolveActivity(any(Context.class), any(Intent.class));
         intentHolder = target.getAuthenticationIntentHolder(
                 context, loginUri, false /* isLineAppAuthDisabled */);
 
@@ -200,8 +203,8 @@ public class BrowserAuthenticationApiTest {
         assertNull(intentHolder.getStartActivityOptions());
 
         // Test for non new LINE and single target
-        setLineAppVersion("6.8.0");
         setResultOfQueryIntentActivities(PACKAGE_BROWSER1);
+        doReturn(null).when(target).resolveActivity(any(Context.class), any(Intent.class));
         intentHolder = target.getAuthenticationIntentHolder(
                 context, loginUri, false /* isLineAppAuthDisabled */);
 
@@ -211,7 +214,6 @@ public class BrowserAuthenticationApiTest {
         assertFalse(intentHolder.isLineAppAuthentication());
 
         // Test for non new LINE and multiple target
-        setLineAppVersion("6.8.0");
         setResultOfQueryIntentActivities(PACKAGE_BROWSER1, PACKAGE_BROWSER2);
         intentHolder = target.getAuthenticationIntentHolder(
                 context, loginUri, false /* isLineAppAuthDisabled */);

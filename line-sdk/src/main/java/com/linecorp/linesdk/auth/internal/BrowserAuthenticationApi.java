@@ -1,6 +1,7 @@
 package com.linecorp.linesdk.auth.internal;
 
 import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -227,8 +228,7 @@ import static com.linecorp.linesdk.utils.UriUtils.buildParams;
             lineAppIntent.setData(loginUri);
             lineAppIntent.setPackage(Constants.LINE_APP_PACKAGE_NAME);
 
-            PackageManager packageManager = context.getPackageManager();
-            if (lineAppIntent.resolveActivity(packageManager) != null) {
+            if (resolveActivity(context, lineAppIntent) != null) {
                 return new AuthenticationIntentHolder(lineAppIntent, startActivityOptions, true /* isLineAppAuthentication */);
             }
         }
@@ -252,6 +252,12 @@ import static com.linecorp.linesdk.utils.UriUtils.buildParams;
                 targetIntents.toArray(new Parcelable[targetIntents.size()]));
         return new AuthenticationIntentHolder(
                 chooserIntent, startActivityOptions, false /* isLineAppAuthentication */);
+    }
+
+    @VisibleForTesting
+    ComponentName resolveActivity(Context context, Intent intent) {
+        PackageManager packageManager = context.getPackageManager();
+        return intent.resolveActivity(packageManager);
     }
 
     @NonNull
