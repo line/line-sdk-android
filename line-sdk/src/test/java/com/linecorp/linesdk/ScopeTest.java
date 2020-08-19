@@ -10,7 +10,6 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
-import static org.junit.Assert.fail;
 
 /**
  * Test for {@link ScopeTest}.
@@ -49,20 +48,6 @@ public class ScopeTest {
         new Scope("my_new_scope_01");
         new Scope("my_new_scope_02");
         new Scope("my_new_scope_03");
-    }
-
-    @Test
-    public void testDuplicatedCodes() {
-        new Scope("scope_01");
-        new Scope("scope_02");
-        new Scope("scope_03");
-
-        try {
-            new Scope("scope_01");
-
-            fail("should fail here");
-        } catch (final Exception ignored) {
-        }
     }
 
     @Test

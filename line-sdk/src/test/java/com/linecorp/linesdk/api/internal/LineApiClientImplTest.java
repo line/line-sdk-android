@@ -2,7 +2,6 @@ package com.linecorp.linesdk.api.internal;
 
 import android.net.Uri;
 
-import com.linecorp.linesdk.BuildConfig;
 import com.linecorp.linesdk.LineAccessToken;
 import com.linecorp.linesdk.LineApiError;
 import com.linecorp.linesdk.LineApiResponse;
@@ -106,7 +105,7 @@ public class LineApiClientImplTest {
 
         assertSame(expectedResponse, actualResponse);
         verify(internalOauthApiClient, times(1)).revokeRefreshToken(CHANNEL_ID, ACCESS_TOKEN);
-        assertEquals(ACCESS_TOKEN, accessTokenCache.getAccessToken());
+        assertNull(accessTokenCache.getAccessToken());
     }
 
     @Test
