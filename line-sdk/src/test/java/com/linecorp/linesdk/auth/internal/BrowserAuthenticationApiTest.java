@@ -176,7 +176,7 @@ public class BrowserAuthenticationApiTest {
         Parcelable[] targetIntents;
         Intent intent;
 
-        // Test for new LINE and single target
+        // Test for LINE and single target
         setLineAppVersion("6.9.0");
         setResultOfQueryIntentActivities(PACKAGE_NAME_LINE);
         doReturn(new ComponentName(PACKAGE_NAME_LINE, "name")).when(target).resolveActivity(any(Context.class), any(Intent.class));
@@ -189,7 +189,7 @@ public class BrowserAuthenticationApiTest {
         assertEquals(loginUri, intent.getData());
         assertTrue(intentHolder.isLineAppAuthentication());
 
-        // Test for new LINE and multiple target
+        // Test for LINE and multiple target
         setLineAppVersion("6.9.0");
         setResultOfQueryIntentActivities(PACKAGE_NAME_LINE, PACKAGE_BROWSER1);
         intentHolder = target.getAuthenticationIntentHolder(
@@ -202,7 +202,8 @@ public class BrowserAuthenticationApiTest {
         assertTrue(intentHolder.isLineAppAuthentication());
         assertNull(intentHolder.getStartActivityOptions());
 
-        // Test for non new LINE and single target
+        // Test for no installed LINE and single target
+        setLineAppVersion("");
         setResultOfQueryIntentActivities(PACKAGE_BROWSER1);
         doReturn(null).when(target).resolveActivity(any(Context.class), any(Intent.class));
         intentHolder = target.getAuthenticationIntentHolder(
@@ -213,7 +214,8 @@ public class BrowserAuthenticationApiTest {
         assertEquals(loginUri, intent.getData());
         assertFalse(intentHolder.isLineAppAuthentication());
 
-        // Test for non new LINE and multiple target
+        // Test for no installed LINE and multiple target
+        setLineAppVersion("");
         setResultOfQueryIntentActivities(PACKAGE_BROWSER1, PACKAGE_BROWSER2);
         intentHolder = target.getAuthenticationIntentHolder(
                 context, loginUri, false /* isLineAppAuthDisabled */);

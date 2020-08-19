@@ -105,7 +105,7 @@ public class LineApiClientImplTest {
 
         assertSame(expectedResponse, actualResponse);
         verify(internalOauthApiClient, times(1)).revokeRefreshToken(CHANNEL_ID, ACCESS_TOKEN);
-        assertEquals(null, accessTokenCache.getAccessToken());
+        assertNull(accessTokenCache.getAccessToken());
     }
 
     @Test
