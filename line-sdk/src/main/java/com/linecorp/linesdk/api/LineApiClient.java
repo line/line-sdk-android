@@ -317,6 +317,7 @@ public interface LineApiClient {
     );
 
     /**
+     * @hide
      * Sends messages to multiple users on behalf of the current user.
      * To know the message delivery result for each recipient, check the response data.
      * <p>
