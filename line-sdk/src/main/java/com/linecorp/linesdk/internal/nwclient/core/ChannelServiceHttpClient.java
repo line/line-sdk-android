@@ -5,11 +5,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.VisibleForTesting;
-import androidx.annotation.WorkerThread;
-
 import com.linecorp.android.security.TLSSocketFactory;
 import com.linecorp.linesdk.BuildConfig;
 import com.linecorp.linesdk.LineApiError;
@@ -31,6 +26,11 @@ import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
 import javax.net.ssl.HttpsURLConnection;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
+import androidx.annotation.WorkerThread;
 
 import static com.linecorp.linesdk.utils.UriUtils.appendQueryParams;
 
@@ -347,7 +347,7 @@ public class ChannelServiceHttpClient {
                     && httpResponseCode != HttpURLConnection.HTTP_NO_CONTENT) {
                 return LineApiResponse.createAsError(
                         LineApiResponseCode.SERVER_ERROR,
-                        new LineApiError(
+                        LineApiError.createWithHttpResponseCode(
                                 httpResponseCode,
                                 errorResponseParser.getResponseData(inputStream)));
             }
@@ -361,7 +361,8 @@ public class ChannelServiceHttpClient {
             // Evaluates response data parsing error as INTERNAL_ERROR
             return LineApiResponse.createAsError(
                     LineApiResponseCode.INTERNAL_ERROR,
-                    new LineApiError(httpResponseCode, e));
+                    new LineApiError(e, LineApiError.ErrorCode.HTTP_RESPONSE_PARSE_ERROR)
+            );
         }
     }
 
