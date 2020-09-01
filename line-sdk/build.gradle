@@ -4,7 +4,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
-version = "5.5.1"
+version = "5.6.0"
 
 publish {
     userOrg = 'line'
@@ -23,9 +23,9 @@ android {
     publishNonDefault true
 
     defaultConfig {
-        minSdkVersion 17
+        minSdkVersion 19
         targetSdkVersion 29
-        versionCode 5_05_01
+        versionCode 5_06_00
         versionName version
 
         consumerProguardFiles 'consumer-proguard-rules.pro'
