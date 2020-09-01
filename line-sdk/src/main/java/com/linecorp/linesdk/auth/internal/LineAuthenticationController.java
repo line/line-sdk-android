@@ -8,6 +8,7 @@ import android.os.Looper;
 import android.text.TextUtils;
 
 import com.linecorp.linesdk.LineAccessToken;
+import com.linecorp.linesdk.LineApiError;
 import com.linecorp.linesdk.LineApiResponse;
 import com.linecorp.linesdk.LineCredential;
 import com.linecorp.linesdk.LineIdToken;
@@ -118,7 +119,7 @@ import androidx.annotation.VisibleForTesting;
             authenticationStatus.setSentRedirectUri(request.getRedirectUri());
         } catch (ActivityNotFoundException e) {
             authenticationStatus.authenticationIntentHandled();
-            activity.onAuthenticationFinished(LineLoginResult.internalError(e));
+            activity.onAuthenticationFinished(LineLoginResult.internalError(new LineApiError(e, LineApiError.ErrorCode.LOGIN_ACTIVITY_NOT_FOUND)));
         }
     }
 

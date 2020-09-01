@@ -1,8 +1,5 @@
 package com.linecorp.linesdk.api.internal;
 
-import androidx.annotation.NonNull;
-
-import com.linecorp.linesdk.BuildConfig;
 import com.linecorp.linesdk.LineApiError;
 import com.linecorp.linesdk.LineApiResponse;
 import com.linecorp.linesdk.LineApiResponseCode;
@@ -21,6 +18,8 @@ import org.robolectric.annotation.Config;
 
 import java.net.HttpURLConnection;
 
+import androidx.annotation.NonNull;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.never;
@@ -37,7 +36,7 @@ public class AutoRefreshLineApiClientProxyTest {
     private static class Results {
         private static final LineApiResponse<?> UNAUTHORIZED = LineApiResponse.createAsError(
                 LineApiResponseCode.SERVER_ERROR,
-                new LineApiError(HttpURLConnection.HTTP_UNAUTHORIZED, "errorMessage"));
+                LineApiError.createWithHttpResponseCode(HttpURLConnection.HTTP_UNAUTHORIZED, "errorMessage"));
         private static final LineApiResponse<?> NETWORK_ERROR = LineApiResponse.createAsError(
                 LineApiResponseCode.NETWORK_ERROR,
                 LineApiError.DEFAULT);

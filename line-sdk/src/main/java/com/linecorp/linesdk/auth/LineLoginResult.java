@@ -2,8 +2,6 @@ package com.linecorp.linesdk.auth;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.linecorp.linesdk.LineApiError;
 import com.linecorp.linesdk.LineApiResponse;
@@ -11,6 +9,11 @@ import com.linecorp.linesdk.LineApiResponseCode;
 import com.linecorp.linesdk.LineCredential;
 import com.linecorp.linesdk.LineIdToken;
 import com.linecorp.linesdk.LineProfile;
+
+import java.util.Objects;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import static com.linecorp.linesdk.utils.ParcelUtils.readEnum;
 import static com.linecorp.linesdk.utils.ParcelUtils.writeEnum;
@@ -210,27 +213,17 @@ public class LineLoginResult implements Parcelable {
      * @hide
      */
     @Override
-    public boolean equals(final Object o) {
-        if (this == o) { return true; }
-        if (o == null || getClass() != o.getClass()) { return false; }
-
-        final LineLoginResult that = (LineLoginResult) o;
-
-        if (responseCode != that.responseCode) { return false; }
-        if (nonce != null ? !nonce.equals(that.nonce) : that.nonce != null) { return false; }
-        if (lineProfile != null ? !lineProfile.equals(that.lineProfile) : that.lineProfile != null) {
-            return false;
-        }
-        if (lineIdToken != null ? !lineIdToken.equals(that.lineIdToken) : that.lineIdToken != null) {
-            return false;
-        }
-        if (friendshipStatusChanged != null ? !friendshipStatusChanged.equals(that.friendshipStatusChanged) :
-            that.friendshipStatusChanged != null) { return false; }
-        if (lineCredential != null ? !lineCredential.equals(that.lineCredential) :
-            that.lineCredential != null) {
-            return false;
-        }
-        return errorData.equals(that.errorData);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof LineLoginResult)) return false;
+        LineLoginResult that = (LineLoginResult) o;
+        return getResponseCode() == that.getResponseCode() &&
+                Objects.equals(getNonce(), that.getNonce()) &&
+                Objects.equals(getLineProfile(), that.getLineProfile()) &&
+                Objects.equals(getLineIdToken(), that.getLineIdToken()) &&
+                Objects.equals(getFriendshipStatusChanged(), that.getFriendshipStatusChanged()) &&
+                Objects.equals(getLineCredential(), that.getLineCredential()) &&
+                getErrorData().equals(that.getErrorData());
     }
 
     /**
@@ -238,14 +231,14 @@ public class LineLoginResult implements Parcelable {
      */
     @Override
     public int hashCode() {
-        int result = responseCode.hashCode();
-        result = 31 * result + (nonce != null ? nonce.hashCode() : 0);
-        result = 31 * result + (lineProfile != null ? lineProfile.hashCode() : 0);
-        result = 31 * result + (lineIdToken != null ? lineIdToken.hashCode() : 0);
-        result = 31 * result + (friendshipStatusChanged != null ? friendshipStatusChanged.hashCode() : 0);
-        result = 31 * result + (lineCredential != null ? lineCredential.hashCode() : 0);
-        result = 31 * result + errorData.hashCode();
-        return result;
+        return Objects.hash(
+                getResponseCode(),
+                getNonce(),
+                getLineProfile(),
+                getLineIdToken(),
+                getFriendshipStatusChanged(),
+                getLineCredential(),
+                getErrorData());
     }
 
     /**

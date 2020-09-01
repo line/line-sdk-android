@@ -18,7 +18,7 @@ import static org.junit.Assert.assertTrue;
 public class LineApiErrorTest {
     @Test
     public void testParcelable() {
-        LineApiError expected = new LineApiError(5, "testMessage");
+        LineApiError expected = LineApiError.createWithHttpResponseCode(5, "testMessage");
 
         Parcel parcel = Parcel.obtain();
         expected.writeToParcel(parcel, 0);
@@ -31,10 +31,10 @@ public class LineApiErrorTest {
 
     @Test
     public void testEquals() {
-        LineApiError expected = new LineApiError(5, "testMessage");
+        LineApiError expected = LineApiError.createWithHttpResponseCode(5, "testMessage");
 
-        assertTrue(expected.equals(new LineApiError(5, "testMessage")));
-        assertFalse(expected.equals(new LineApiError(4, "testMessage")));
-        assertFalse(expected.equals(new LineApiError(5, "testMessage2")));
+        assertTrue(expected.equals(LineApiError.createWithHttpResponseCode(5, "testMessage")));
+        assertFalse(expected.equals(LineApiError.createWithHttpResponseCode(4, "testMessage")));
+        assertFalse(expected.equals(LineApiError.createWithHttpResponseCode(5, "testMessage2")));
     }
 }
