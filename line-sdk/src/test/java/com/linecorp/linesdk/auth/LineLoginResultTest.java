@@ -3,8 +3,6 @@ package com.linecorp.linesdk.auth;
 import android.net.Uri;
 import android.os.Parcel;
 
-import androidx.annotation.NonNull;
-
 import com.linecorp.linesdk.LineAccessToken;
 import com.linecorp.linesdk.LineApiError;
 import com.linecorp.linesdk.LineApiResponseCode;
@@ -22,6 +20,8 @@ import org.robolectric.annotation.Config;
 
 import java.util.Arrays;
 import java.util.Date;
+
+import androidx.annotation.NonNull;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;

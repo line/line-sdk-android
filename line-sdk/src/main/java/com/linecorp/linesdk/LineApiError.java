@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Objects;
 
 import androidx.annotation.Nullable;
 
@@ -24,9 +25,21 @@ public class LineApiError implements Parcelable {
         }
     };
 
+    /**
+     * Represents detail error reasons.
+     */
     public enum ErrorCode {
+        /**
+         * Login intent can't be handled by system.
+         */
         LOGIN_ACTIVITY_NOT_FOUND,
+        /**
+         * Http response result can't be successfully parsed.
+         */
         HTTP_RESPONSE_PARSE_ERROR,
+        /**
+         * The default value when the detail error reason is not defined yet.
+         */
         NOT_DEFINED,
     }
 
@@ -126,6 +139,27 @@ public class LineApiError implements Parcelable {
         this.message = in.readString();
         int tmpErrorCode = in.readInt();
         this.errorCode = tmpErrorCode == -1 ? null : ErrorCode.values()[tmpErrorCode];
+    }
+
+    /**
+     * @hide
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof LineApiError)) return false;
+        LineApiError that = (LineApiError) o;
+        return getHttpResponseCode() == that.getHttpResponseCode() &&
+                Objects.equals(getMessage(), that.getMessage()) &&
+                errorCode == that.errorCode;
+    }
+
+    /**
+     * @hide
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(getHttpResponseCode(), getMessage(), errorCode);
     }
 
     /**
