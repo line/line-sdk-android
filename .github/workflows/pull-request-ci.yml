@@ -56,4 +56,4 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: line-sdk
-          path: line-sdk/build/outputs/aar/line-sdk-5.5.1-debug.aar
+          path: line-sdk/build/outputs/aar/line-sdk-*-debug.aar
