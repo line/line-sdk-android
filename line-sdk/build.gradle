@@ -3,6 +3,8 @@ apply plugin: 'com.novoda.bintray-release'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
 
 version = "5.6.0"
 
@@ -138,6 +140,69 @@ ext {
                     "https://developer.android.com/reference/"
             ]
     ]
+
+    bintrayRepo = 'line-sdk'
+    bintrayName = 'com.linecorp.linesdk'
+
+    // Library Details
+    publishedGroupId = 'com.linecorp.linesdk'
+    libraryName = 'com.linecorp.linesdk'
+    artifact = 'linesdk'
+    libraryDescription = 'The LINE SDK for Android provides a modern way of implementing LINE APIs.'
+    libraryVersion = version
+
+    // Git Details
+    siteUrl = 'https://github.com/line/line-sdk-android'
+    gitUrl = 'https://github.com/line/line-sdk-android'
+    githubRepository= 'line/line-sdk-android'
+
+    // Developer Details
+    developerId = 'line'
+    developerName = 'line'
+    developerEmail = 'dl_oss_dev@linecorp.com'
+
+    // License Details
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
+
+group = publishedGroupId
+
+install {
+    repositories.mavenInstaller {
+        // This generates POM.xml with proper parameters
+        pom {
+            project {
+                packaging 'aar'
+
+                groupId publishedGroupId
+                artifactId = artifact
+                name libraryName
+                description = libraryDescription
+                url siteUrl
+
+                licenses {
+                    license {
+                        name licenseName
+                        url licenseUrl
+                    }
+                }
+                developers {
+                    developer {
+                        id developerId
+                        name developerName
+                        email developerEmail
+                    }
+                }
+                scm {
+                    connection gitUrl
+                    developerConnection gitUrl
+                    url siteUrl
+                }
+            }
+        }
+    }
 }
 
 task javadoc_public(type: Javadoc) {
@@ -199,5 +264,21 @@ task javadoc_internal(type: Javadoc) {
         encoding javadocParams.encoding
 
         links = javadocParams.externalLinks
+    }
+}
+
+// https://github.com/bintray/gradle-bintray-plugin
+bintray {
+    user = project.hasProperty('bintrayUser') ? project.bintrayUser : System.getenv('bintrayUser')
+    key = project.hasProperty('bintrayApiKey') ? project.bintrayApiKey : System.getenv('bintrayApiKey')
+
+    configurations = ['archives']
+    pkg {
+        repo = bintrayRepo
+        name = bintrayName
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        licenses = allLicenses
+        publish = true
     }
 }

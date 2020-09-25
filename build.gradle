@@ -12,6 +12,10 @@ buildscript {
         classpath "com.novoda:bintray-release:${ver.buildTools.bintray_release}"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${ver.kotlin}"
         classpath "org.jetbrains.kotlin:kotlin-android-extensions:${ver.kotlin}"
+
+        // Required plugins added to classpath to facilitate pushing to Jcenter/Bintray
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
     }
 }
 
