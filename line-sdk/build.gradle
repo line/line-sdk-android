@@ -1,23 +1,11 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.novoda.bintray-release'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'com.github.dcendents.android-maven'
-apply plugin: 'com.jfrog.bintray'
 
 version = "5.6.0"
-
-publish {
-    userOrg = 'line'
-    groupId = 'com.linecorp.linesdk'
-    artifactId = 'linesdk'
-    publishVersion = version
-    repoName = 'line-sdk'
-    uploadName = 'com.linecorp.linesdk'
-    desc = 'The LINE SDK for Android provides a modern way of implementing LINE APIs.'
-    website = 'https://github.com/line/line-sdk-android'
-}
 
 android {
     compileSdkVersion 30
@@ -267,6 +255,17 @@ task javadoc_internal(type: Javadoc) {
     }
 }
 
+// Avoid Kotlin docs error
+tasks.withType(Javadoc) {
+    enabled = false
+}
+
+// Remove javadoc related tasks
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
 // https://github.com/bintray/gradle-bintray-plugin
 bintray {
     user = project.hasProperty('bintrayUser') ? project.bintrayUser : System.getenv('bintrayUser')
@@ -274,6 +273,7 @@ bintray {
 
     configurations = ['archives']
     pkg {
+        userOrg = 'line'
         repo = bintrayRepo
         name = bintrayName
         websiteUrl = siteUrl
