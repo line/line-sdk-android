@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Objects;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 /**
@@ -129,6 +130,16 @@ public class LineApiError implements Parcelable {
     @Nullable
     public String getMessage() {
         return message;
+    }
+
+    /**
+     * Gets the error code associated with the API error.
+     *
+     * @return The error code associated with the API error.
+     */
+    @NonNull
+    public ErrorCode getErrorCode() {
+        return errorCode;
     }
 
     /**
