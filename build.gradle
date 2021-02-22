@@ -7,16 +7,16 @@ buildscript {
         google()
         jcenter()
     }
+
     dependencies {
         classpath "com.android.tools.build:gradle:${ver.buildTools.android_gradle}"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${ver.kotlin}"
         classpath "org.jetbrains.kotlin:kotlin-android-extensions:${ver.kotlin}"
-
-        // Required plugins added to classpath to facilitate pushing to Jcenter/Bintray
-        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:${ver.buildTools.bintray_gradle}"
-        classpath "com.github.dcendents:android-maven-gradle-plugin:${ver.buildTools.maven_gradle}"
+        classpath "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.22.0"
     }
 }
+
+apply plugin: 'io.codearte.nexus-staging'
 
 allprojects {
     repositories {
