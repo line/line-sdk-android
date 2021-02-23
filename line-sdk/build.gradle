@@ -1,10 +1,12 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.jfrog.bintray'
-apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+
+group = "com.linecorp.linesdk"
 version = "5.6.0"
 
 android {
@@ -155,41 +157,6 @@ ext {
 
 group = publishedGroupId
 
-install {
-    repositories.mavenInstaller {
-        // This generates POM.xml with proper parameters
-        pom {
-            project {
-                packaging 'aar'
-
-                groupId publishedGroupId
-                artifactId = artifact
-                name libraryName
-                description = libraryDescription
-                url siteUrl
-
-                licenses {
-                    license {
-                        name licenseName
-                        url licenseUrl
-                    }
-                }
-                developers {
-                    developer {
-                        id developerId
-                        name developerName
-                        email developerEmail
-                    }
-                }
-                scm {
-                    connection gitUrl
-                    developerConnection gitUrl
-                    url siteUrl
-                }
-            }
-        }
-    }
-}
 
 task javadoc_public(type: Javadoc) {
     group javadocParams.taskGroup
@@ -253,23 +220,6 @@ task javadoc(type: Javadoc) {
     }
 }
 
-// https://github.com/bintray/gradle-bintray-plugin
-bintray {
-    user = project.hasProperty('bintrayUser') ? project.bintrayUser : System.getenv('bintrayUser')
-    key = project.hasProperty('bintrayApiKey') ? project.bintrayApiKey : System.getenv('bintrayApiKey')
-    
-    configurations = ['archives']
-    pkg {
-        userOrg = 'line'
-        repo = bintrayRepo
-        name = bintrayName
-        websiteUrl = siteUrl
-        vcsUrl = gitUrl
-        licenses = allLicenses
-        publish = true
-    }
-}
-
 task sourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
     classifier = 'sources'
@@ -284,3 +234,89 @@ artifacts {
     archives javadocJar
     archives sourcesJar
 }
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                groupId group
+                artifactId 'linesdk'
+                version version
+
+                artifact("$buildDir/outputs/aar/${project.getName()}-${version}.aar")
+                artifact sourcesJar
+                artifact javadocJar
+
+                pom {
+                    name = 'linesdk'
+                    description = 'The LINE SDK for Android provides a modern way of implementing LINE APIs.'
+                    url = 'https://github.com/line/line-sdk-android'
+                    licenses {
+                        license {
+                            name = 'The Apache License, Version 2.0'
+                            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        }
+                    }
+                    developers {
+                        developer {
+                            name = 'LINE Corporation'
+                            email = 'dl_oss_dev@linecorp.com'
+                            url = 'https://engineering.linecorp.com/en/'
+                        }
+                    }
+                    scm {
+                        connection = 'scm:git@github.com:line/line-sdk-android.git'
+                        developerConnection = 'scm:git:ssh://github.com:line/line-sdk-android.git'
+                        url = 'https://github.com/line/line-sdk-android'
+                    }
+                    // A slightly hacky fix so that your POM will include any transitive dependencies
+                    // that your library builds upon
+                    withXml {
+                        def dependenciesNode = asNode().appendNode('dependencies')
+
+                        project.configurations.implementation.allDependencies.each {
+                            def dependencyNode = dependenciesNode.appendNode('dependency')
+                            dependencyNode.appendNode('groupId', it.group)
+                            dependencyNode.appendNode('artifactId', it.name)
+                            dependencyNode.appendNode('version', it.version)
+                        }
+                    }
+                }
+            }
+        }
+        repositories {
+            maven {
+                name = "sonatype"
+
+                def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+                def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
+                url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+
+                def name = project.hasProperty('repositoryUsername') ? project.repositoryUsername : System.getenv('repositoryUsername')
+                def pw = project.hasProperty('repositoryPassword') ? project.repositoryPassword : System.getenv('repositoryPassword')
+                credentials {
+                    username name
+                    password pw
+                }
+            }
+        }
+    }
+
+    signing {
+        def key = project.hasProperty('signingKey') ? signingKey : System.getenv('signingKey')
+        def pw = project.hasProperty('signingPassword') ? signingPassword : System.getenv('signingPassword')
+        useInMemoryPgpKeys(key, pw)
+        sign publishing.publications
+    }
+}
+
+nexusStaging {
+    packageGroup = 'com.linecorp'
+    def name = project.hasProperty('nexusUsername') ? project.nexusUsername : System.getenv('nexusUsername')
+    def pw = project.hasProperty('nexusPassword') ? project.nexusPassword : System.getenv('nexusPassword')
+    username = name
+    password = pw
+}
+
+
+
