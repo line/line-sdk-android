@@ -7,7 +7,7 @@ apply plugin: 'maven-publish'
 apply plugin: 'signing'
 
 group = "com.linecorp.linesdk"
-version = "5.6.0"
+version = "5.6.1"
 
 android {
     compileSdkVersion 30
@@ -16,7 +16,7 @@ android {
     defaultConfig {
         minSdkVersion 19
         targetSdkVersion 30
-        versionCode 5_06_00
+        versionCode 5_06_01
         versionName version
 
         consumerProguardFiles 'consumer-proguard-rules.pro'
@@ -269,18 +269,6 @@ afterEvaluate {
                         developerConnection = 'scm:git:ssh://github.com:line/line-sdk-android.git'
                         url = 'https://github.com/line/line-sdk-android'
                     }
-                    // A slightly hacky fix so that your POM will include any transitive dependencies
-                    // that your library builds upon
-                    withXml {
-                        def dependenciesNode = asNode().appendNode('dependencies')
-
-                        project.configurations.implementation.allDependencies.each {
-                            def dependencyNode = dependenciesNode.appendNode('dependency')
-                            dependencyNode.appendNode('groupId', it.group)
-                            dependencyNode.appendNode('artifactId', it.name)
-                            dependencyNode.appendNode('version', it.version)
-                        }
-                    }
                 }
             }
         }
@@ -292,8 +280,8 @@ afterEvaluate {
                 def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
                 url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
 
-                def name = project.hasProperty('repositoryUsername') ? project.repositoryUsername : System.getenv('repositoryUsername')
-                def pw = project.hasProperty('repositoryPassword') ? project.repositoryPassword : System.getenv('repositoryPassword')
+                def name = findProperty('repositoryUsername') ?: ''
+                def pw = findProperty('repositoryPassword') ?: ''
                 credentials {
                     username name
                     password pw
@@ -303,8 +291,9 @@ afterEvaluate {
     }
 
     signing {
-        def key = project.hasProperty('signingKey') ? signingKey : System.getenv('signingKey')
-        def pw = project.hasProperty('signingPassword') ? signingPassword : System.getenv('signingPassword')
+        def key = findProperty('signingKey')
+        def pw = findProperty('signingPassword')
+        required { signingKey != null && signingPassword != null }
         useInMemoryPgpKeys(key, pw)
         sign publishing.publications
     }
@@ -312,8 +301,8 @@ afterEvaluate {
 
 nexusStaging {
     packageGroup = 'com.linecorp'
-    def name = project.hasProperty('nexusUsername') ? project.nexusUsername : System.getenv('nexusUsername')
-    def pw = project.hasProperty('nexusPassword') ? project.nexusPassword : System.getenv('nexusPassword')
+    def name = findProperty('nexusUsername') ?: ''
+    def pw = findProperty('nexusPassword') ?: ''
     username = name
     password = pw
 }
