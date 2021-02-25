@@ -243,7 +243,7 @@ afterEvaluate {
                 artifactId 'linesdk'
                 version version
 
-                artifact("$buildDir/outputs/aar/${project.getName()}-${version}.aar")
+                from(components["release"])
                 artifact sourcesJar
                 artifact javadocJar
 
