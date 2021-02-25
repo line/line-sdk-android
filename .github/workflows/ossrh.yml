@@ -24,11 +24,11 @@ jobs:
           ORG_GRADLE_PROJECT_repositoryPassword: ${{ secrets.OSSRH_PASSWORD }}
           ORG_GRADLE_PROJECT_signingKey: ${{ secrets.SIGNING_KEY }}
           ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.SIGNING_PASSWORD }}
-        run: ./gradlew publish
+        run: ./gradlew publish --stacktrace
       - name: Release to Maven Central
         if: ${{ github.event.inputs.cond_release == 'release' }}
         env:
           ORG_GRADLE_PROJECT_nexusUsername: ${{ secrets.OSSRH_USERNAME }}
           ORG_GRADLE_PROJECT_nexusPassword: ${{ secrets.OSSRH_PASSWORD }}
-        run: ./gradlew closeAndReleaseRepository
+        run: ./gradlew closeAndReleaseRepository --stacktrace
 
