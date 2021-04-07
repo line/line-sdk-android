@@ -6,6 +6,8 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        // org.jetbrains.trove4j:trove4j:20160824.
+        gradlePluginPortal()
     }
 
     dependencies {
@@ -13,12 +15,6 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${ver.kotlin}"
         classpath "org.jetbrains.kotlin:kotlin-android-extensions:${ver.kotlin}"
         classpath "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.22.0"
-
-        modules {
-            module("org.jetbrains.trove4j:trove4j") {
-                replacedBy("org.jetbrains.intellij.deps:trove4j")
-            }
-        }
     }
 }
 
@@ -28,6 +24,8 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+        // org.jetbrains.trove4j:trove4j:20160824.
+        gradlePluginPortal()
     }
 
     tasks.withType(Javadoc) {
