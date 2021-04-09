@@ -5,7 +5,9 @@ buildscript {
 
     repositories {
         google()
-        jcenter()
+        mavenCentral()
+        // org.jetbrains.trove4j:trove4j:20160824.
+        gradlePluginPortal()
     }
 
     dependencies {
@@ -21,7 +23,9 @@ apply plugin: 'io.codearte.nexus-staging'
 allprojects {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
+        // org.jetbrains.trove4j:trove4j:20160824.
+        gradlePluginPortal()
     }
 
     tasks.withType(Javadoc) {
