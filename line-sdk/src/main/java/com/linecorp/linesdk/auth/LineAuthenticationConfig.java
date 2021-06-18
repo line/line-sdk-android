@@ -1,5 +1,6 @@
 package com.linecorp.linesdk.auth;
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -9,6 +10,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.linecorp.linesdk.Constants;
+import com.linecorp.linesdk.ManifestParser;
+import com.linecorp.linesdk.api.LineDefaultEnvConfig;
+import com.linecorp.linesdk.api.LineEnvConfig;
 import com.linecorp.linesdk.utils.ObjectUtils;
 
 /**
@@ -158,15 +162,31 @@ public class LineAuthenticationConfig implements Parcelable {
         private boolean isEncryptorPreparationDisabled;
 
         public Builder(@NonNull String channelId) {
+            this(channelId, null);
+        }
+
+        public Builder(@NonNull String channelId, @Nullable Context context) {
             if (TextUtils.isEmpty(channelId)) {
                 throw new IllegalArgumentException("channelId is empty.");
             }
             this.channelId = channelId;
-            openidDiscoveryDocumentUrl = Uri.parse(Constants.OPENID_DISCOVERY_DOCUMENT_URL);
-            apiBaseUrl = Uri.parse(Constants.API_SERVER_BASE_URI);
-            webLoginPageUrl = Uri.parse(Constants.WEB_LOGIN_PAGE_URL);
+
+            ManifestParser parser = new ManifestParser();
+            LineEnvConfig config = null;
+            if (context != null) {
+                config = parser.parse(context);
+            }
+
+            if (config == null) {
+                config = new LineDefaultEnvConfig();
+            }
+
+            openidDiscoveryDocumentUrl = Uri.parse(config.getOpenIdDiscoveryDocumentUrl());
+            apiBaseUrl = Uri.parse(config.getApiServerBaseUri());
+            webLoginPageUrl = Uri.parse(config.getWebLoginPageUrl());
         }
 
+        @Deprecated
         @NonNull
         Builder openidDiscoveryDocumentUrl(@Nullable final Uri openidDiscoveryDocumentUrl) {
             this.openidDiscoveryDocumentUrl =
@@ -175,6 +195,7 @@ public class LineAuthenticationConfig implements Parcelable {
             return this;
         }
 
+        @Deprecated
         @NonNull
         Builder apiBaseUrl(@Nullable final Uri apiBaseUrl) {
             this.apiBaseUrl = ObjectUtils.defaultIfNull(apiBaseUrl,
@@ -182,6 +203,7 @@ public class LineAuthenticationConfig implements Parcelable {
             return this;
         }
 
+        @Deprecated
         @NonNull
         Builder webLoginPageUrl(@Nullable final Uri webLoginPageUrl) {
             this.webLoginPageUrl = ObjectUtils.defaultIfNull(webLoginPageUrl,
