@@ -89,7 +89,7 @@ dependencies {
 
     // for tests
     testImplementation "junit:junit:${ver.jUnit}"
-    testImplementation "org.mockito:mockito-core:${ver.mockito}"
+    testImplementation "org.mockito:mockito-inline:${ver.mockito}"
     testImplementation "org.robolectric:robolectric:${ver.robolectric}"
 
     // for @hide annotation on functions to hide it from javadoc
