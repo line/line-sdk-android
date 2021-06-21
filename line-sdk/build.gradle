@@ -7,7 +7,7 @@ apply plugin: 'maven-publish'
 apply plugin: 'signing'
 
 group = "com.linecorp.linesdk"
-version = "5.6.1"
+version = "5.6.2"
 
 android {
     compileSdkVersion 30
@@ -16,7 +16,7 @@ android {
     defaultConfig {
         minSdkVersion 19
         targetSdkVersion 30
-        versionCode 5_06_01
+        versionCode 5_06_02
         versionName version
 
         consumerProguardFiles 'consumer-proguard-rules.pro'
