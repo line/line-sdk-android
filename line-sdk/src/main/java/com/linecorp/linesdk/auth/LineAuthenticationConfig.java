@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 
-import com.linecorp.linesdk.Constants;
 import com.linecorp.linesdk.ManifestParser;
 import com.linecorp.linesdk.api.LineDefaultEnvConfig;
 import com.linecorp.linesdk.api.LineEnvConfig;
@@ -196,7 +195,7 @@ public class LineAuthenticationConfig implements Parcelable {
         Builder openidDiscoveryDocumentUrl(@Nullable final Uri openidDiscoveryDocumentUrl) {
             this.openidDiscoveryDocumentUrl =
                     ObjectUtils.defaultIfNull(openidDiscoveryDocumentUrl,
-                                              Uri.parse(Constants.OPENID_DISCOVERY_DOCUMENT_URL));
+                            Uri.parse(new LineDefaultEnvConfig().getOpenIdDiscoveryDocumentUrl()));
             return this;
         }
 
@@ -204,7 +203,7 @@ public class LineAuthenticationConfig implements Parcelable {
         @NonNull
         Builder apiBaseUrl(@Nullable final Uri apiBaseUrl) {
             this.apiBaseUrl = ObjectUtils.defaultIfNull(apiBaseUrl,
-                                                        Uri.parse(Constants.API_SERVER_BASE_URI));
+                    Uri.parse(new LineDefaultEnvConfig().getApiServerBaseUri()));
             return this;
         }
 
@@ -212,7 +211,7 @@ public class LineAuthenticationConfig implements Parcelable {
         @NonNull
         Builder webLoginPageUrl(@Nullable final Uri webLoginPageUrl) {
             this.webLoginPageUrl = ObjectUtils.defaultIfNull(webLoginPageUrl,
-                                                             Uri.parse(Constants.WEB_LOGIN_PAGE_URL));
+                    Uri.parse(new LineDefaultEnvConfig().getWebLoginPageUrl()));
             return this;
         }
 

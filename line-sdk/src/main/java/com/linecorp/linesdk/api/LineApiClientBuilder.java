@@ -7,7 +7,6 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.linecorp.linesdk.Constants;
 import com.linecorp.linesdk.ManifestParser;
 import com.linecorp.linesdk.api.internal.AutoRefreshLineApiClientProxy;
 import com.linecorp.linesdk.api.internal.LineApiClientImpl;
@@ -90,7 +89,7 @@ public class LineApiClientBuilder {
     public LineApiClientBuilder openidDiscoveryDocumentUrl(@Nullable final Uri openidDiscoveryDocumentUrl) {
         this.openidDiscoveryDocumentUrl =
                 ObjectUtils.defaultIfNull(openidDiscoveryDocumentUrl,
-                        Uri.parse(Constants.OPENID_DISCOVERY_DOCUMENT_URL));
+                        Uri.parse(new LineDefaultEnvConfig().getOpenIdDiscoveryDocumentUrl()));
         return this;
     }
     /**
@@ -100,7 +99,9 @@ public class LineApiClientBuilder {
     @Deprecated
     @NonNull
     public LineApiClientBuilder apiBaseUri(@Nullable final Uri apiBaseUri) {
-        this.apiBaseUri = ObjectUtils.defaultIfNull(apiBaseUri, Uri.parse(Constants.API_SERVER_BASE_URI));
+        this.apiBaseUri =
+                ObjectUtils.defaultIfNull(apiBaseUri,
+                        Uri.parse(new LineDefaultEnvConfig().getApiServerBaseUri()));
         return this;
     }
 
