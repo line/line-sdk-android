@@ -19,6 +19,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.constraintlayout.widget.Group;
+
 import com.linecorp.linesdk.ActionResult;
 import com.linecorp.linesdk.FriendSortField;
 import com.linecorp.linesdk.GetFriendsResponse;
@@ -56,10 +61,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.constraintlayout.widget.Group;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -357,8 +358,7 @@ public class InternalApisFragment extends BaseApisFragment implements SendMessag
     void createChatroomWithUi() {
         Intent intent = CreateOpenChatActivity.createIntent(
             getActivity(),
-            channelId,
-            BuildConfig.API_SERVER_BASE_URI);
+            channelId);
 
         startActivityForResult(intent, REQUEST_CODE_CREATE_OPEN_CHATROOM);
     }

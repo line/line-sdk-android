@@ -3,7 +3,6 @@ package com.linecorp.linesdk.openchat.ui
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.View.GONE
 import android.view.View.VISIBLE
@@ -20,7 +19,6 @@ import com.linecorp.linesdk.LineApiError
 import com.linecorp.linesdk.R
 import com.linecorp.linesdk.api.LineApiClient
 import com.linecorp.linesdk.api.LineApiClientBuilder
-import com.linecorp.linesdk.api.LineDefaultEnvConfig
 import com.linecorp.linesdk.auth.internal.LineAppVersion
 import com.linecorp.linesdk.openchat.OpenChatRoomInfo
 import kotlinx.android.synthetic.main.activity_create_open_chat.progressBar
@@ -29,10 +27,8 @@ class CreateOpenChatActivity : AppCompatActivity() {
     private enum class CreateOpenChatStep { ChatroomInfo, UserProfile }
 
     private val lineApiClient: LineApiClient by lazy {
-        val apiBaseUrl = intent.getStringExtra(ARG_API_BASE_URL).orEmpty()
         val channelId = intent.getStringExtra(ARG_CHANNEL_ID).orEmpty()
         LineApiClientBuilder(this, channelId)
-            .apiBaseUri(Uri.parse(apiBaseUrl))
             .build()
     }
 
@@ -132,18 +128,13 @@ class CreateOpenChatActivity : AppCompatActivity() {
     companion object {
         const val ARG_OPEN_CHATROOM_INFO: String = "arg_open_chatroom_info"
         const val ARG_ERROR_RESULT: String = "arg_error_result"
-        private const val ARG_API_BASE_URL: String = "arg_api_base_url"
         private const val ARG_CHANNEL_ID: String = "arg_channel_id"
-        @Deprecated("The 3rd argument apiBaseUrl will not be supported in the future version.")
         @JvmStatic
-        @JvmOverloads
         fun createIntent(
             context: Context,
-            channelId: String,
-            apiBaseUrl: String = LineDefaultEnvConfig().apiServerBaseUri
+            channelId: String
         ): Intent =
             Intent(context, CreateOpenChatActivity::class.java)
-                .putExtra(ARG_API_BASE_URL, apiBaseUrl)
                 .putExtra(ARG_CHANNEL_ID, channelId)
 
         @JvmStatic
