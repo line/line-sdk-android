@@ -14,7 +14,6 @@ import com.linecorp.linesdk.internal.AccessTokenCache;
 import com.linecorp.linesdk.internal.EncryptorHolder;
 import com.linecorp.linesdk.internal.nwclient.LineAuthenticationApiClient;
 import com.linecorp.linesdk.internal.nwclient.TalkApiClient;
-import com.linecorp.linesdk.utils.ObjectUtils;
 
 /**
  * Represents a builder for creating {@link LineApiClient} objects with the desired settings.
@@ -87,9 +86,9 @@ public class LineApiClientBuilder {
     @Deprecated
     @NonNull
     public LineApiClientBuilder openidDiscoveryDocumentUrl(@Nullable final Uri openidDiscoveryDocumentUrl) {
-        this.openidDiscoveryDocumentUrl =
-                ObjectUtils.defaultIfNull(openidDiscoveryDocumentUrl,
-                        Uri.parse(new LineDefaultEnvConfig().getOpenIdDiscoveryDocumentUrl()));
+        if (openidDiscoveryDocumentUrl != null) {
+            this.openidDiscoveryDocumentUrl = openidDiscoveryDocumentUrl;
+        }
         return this;
     }
     /**
@@ -99,9 +98,9 @@ public class LineApiClientBuilder {
     @Deprecated
     @NonNull
     public LineApiClientBuilder apiBaseUri(@Nullable final Uri apiBaseUri) {
-        this.apiBaseUri =
-                ObjectUtils.defaultIfNull(apiBaseUri,
-                        Uri.parse(new LineDefaultEnvConfig().getApiServerBaseUri()));
+        if (apiBaseUri != null) {
+            this.apiBaseUri = apiBaseUri;
+        }
         return this;
     }
 

@@ -13,7 +13,6 @@ import androidx.annotation.VisibleForTesting;
 import com.linecorp.linesdk.ManifestParser;
 import com.linecorp.linesdk.api.LineDefaultEnvConfig;
 import com.linecorp.linesdk.api.LineEnvConfig;
-import com.linecorp.linesdk.utils.ObjectUtils;
 
 /**
  * @hide
@@ -193,25 +192,27 @@ public class LineAuthenticationConfig implements Parcelable {
         @Deprecated
         @NonNull
         Builder openidDiscoveryDocumentUrl(@Nullable final Uri openidDiscoveryDocumentUrl) {
-            this.openidDiscoveryDocumentUrl =
-                    ObjectUtils.defaultIfNull(openidDiscoveryDocumentUrl,
-                            Uri.parse(new LineDefaultEnvConfig().getOpenIdDiscoveryDocumentUrl()));
+            if (openidDiscoveryDocumentUrl != null) {
+                this.openidDiscoveryDocumentUrl = openidDiscoveryDocumentUrl;
+            }
             return this;
         }
 
         @Deprecated
         @NonNull
         Builder apiBaseUrl(@Nullable final Uri apiBaseUrl) {
-            this.apiBaseUrl = ObjectUtils.defaultIfNull(apiBaseUrl,
-                    Uri.parse(new LineDefaultEnvConfig().getApiServerBaseUri()));
+            if (apiBaseUrl != null) {
+                this.apiBaseUrl = apiBaseUrl;
+            }
             return this;
         }
 
         @Deprecated
         @NonNull
         Builder webLoginPageUrl(@Nullable final Uri webLoginPageUrl) {
-            this.webLoginPageUrl = ObjectUtils.defaultIfNull(webLoginPageUrl,
-                    Uri.parse(new LineDefaultEnvConfig().getWebLoginPageUrl()));
+            if (webLoginPageUrl != null) {
+                this.webLoginPageUrl = webLoginPageUrl;
+            }
             return this;
         }
 
