@@ -30,3 +30,10 @@
 # start for jjwt library
 -keep class io.jsonwebtoken.** { *; }
 
+-keep class com.linecorp.linesdk.api.LineEnvConfig {
+    *;
+}
+
+-keep class com.linecorp.linesdk.ManifestParser {
+    public protected *;
+}

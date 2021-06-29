@@ -4,17 +4,16 @@ import android.content.Context;
 import android.net.Uri;
 import android.text.TextUtils;
 
-import com.linecorp.linesdk.Constants;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import com.linecorp.linesdk.ManifestParser;
 import com.linecorp.linesdk.api.internal.AutoRefreshLineApiClientProxy;
 import com.linecorp.linesdk.api.internal.LineApiClientImpl;
 import com.linecorp.linesdk.internal.AccessTokenCache;
 import com.linecorp.linesdk.internal.EncryptorHolder;
 import com.linecorp.linesdk.internal.nwclient.LineAuthenticationApiClient;
 import com.linecorp.linesdk.internal.nwclient.TalkApiClient;
-import com.linecorp.linesdk.utils.ObjectUtils;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 /**
  * Represents a builder for creating {@link LineApiClient} objects with the desired settings.
@@ -44,8 +43,15 @@ public class LineApiClientBuilder {
         }
         this.context = context.getApplicationContext();
         this.channelId = channelId;
-        openidDiscoveryDocumentUrl = Uri.parse(Constants.OPENID_DISCOVERY_DOCUMENT_URL);
-        apiBaseUri = Uri.parse(Constants.API_SERVER_BASE_URI);
+
+        ManifestParser parser = new ManifestParser();
+        LineEnvConfig config = parser.parse(context);
+        if (config == null) {
+            config = new LineDefaultEnvConfig();
+        }
+
+        openidDiscoveryDocumentUrl = Uri.parse(config.getOpenIdDiscoveryDocumentUrl());
+        apiBaseUri = Uri.parse(config.getApiServerBaseUri());
     }
 
     /**
@@ -77,21 +83,24 @@ public class LineApiClientBuilder {
      * @param openidDiscoveryDocumentUrl The URI to set.
      * @return The current {@link LineApiClientBuilder} instance.
      */
+    @Deprecated
     @NonNull
     public LineApiClientBuilder openidDiscoveryDocumentUrl(@Nullable final Uri openidDiscoveryDocumentUrl) {
-        this.openidDiscoveryDocumentUrl =
-                ObjectUtils.defaultIfNull(openidDiscoveryDocumentUrl,
-                        Uri.parse(Constants.OPENID_DISCOVERY_DOCUMENT_URL));
+        if (openidDiscoveryDocumentUrl != null) {
+            this.openidDiscoveryDocumentUrl = openidDiscoveryDocumentUrl;
+        }
         return this;
     }
     /**
      * @hide
      * Sets the API base URI.
-     *
      */
+    @Deprecated
     @NonNull
     public LineApiClientBuilder apiBaseUri(@Nullable final Uri apiBaseUri) {
-        this.apiBaseUri = ObjectUtils.defaultIfNull(apiBaseUri, Uri.parse(Constants.API_SERVER_BASE_URI));
+        if (apiBaseUri != null) {
+            this.apiBaseUri = apiBaseUri;
+        }
         return this;
     }
 
