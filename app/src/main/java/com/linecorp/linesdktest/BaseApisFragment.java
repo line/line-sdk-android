@@ -3,14 +3,15 @@ package com.linecorp.linesdktest;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 
-import com.linecorp.linesdk.LineApiResponse;
-import com.linecorp.linesdk.api.LineApiClient;
-import com.linecorp.linesdk.api.LineApiTestClientFactory;
-import com.linecorp.linesdktest.settings.TestSetting;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import com.linecorp.linesdk.LineApiResponse;
+import com.linecorp.linesdk.api.LineApiClient;
+import com.linecorp.linesdk.api.LineApiClientBuilder;
+import com.linecorp.linesdktest.settings.TestSetting;
+
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -41,7 +42,7 @@ public abstract class BaseApisFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Bundle arguments = getArguments();
         channelId = arguments.getString(ARG_KEY_CHANNEL_ID);
-        lineApiClient = LineApiTestClientFactory.createLineApiClient(getContext(), channelId);
+        lineApiClient = new LineApiClientBuilder(requireContext(), channelId).build();
         progressDialog = new ProgressDialog(requireActivity());
     }
 

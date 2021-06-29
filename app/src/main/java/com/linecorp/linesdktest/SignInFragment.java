@@ -12,11 +12,15 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+
 import com.linecorp.linesdk.Scope;
 import com.linecorp.linesdk.auth.LineAuthenticationConfig;
 import com.linecorp.linesdk.auth.LineAuthenticationParams;
 import com.linecorp.linesdk.auth.LineAuthenticationParams.BotPrompt;
-import com.linecorp.linesdk.auth.LineAuthenticationTestConfigFactory;
 import com.linecorp.linesdk.auth.LineLoginApi;
 import com.linecorp.linesdk.auth.LineLoginResult;
 import com.linecorp.linesdktest.settings.TestSetting;
@@ -29,10 +33,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -165,9 +165,13 @@ public class SignInFragment extends Fragment {
     }
 
     @NonNull
-    private LineAuthenticationConfig createLineAuthenticationConfigForTest() {
-        return LineAuthenticationTestConfigFactory.createTestConfig(channelId,
-                !useLineAppAuthCheckbox.isChecked());
+    private LineAuthenticationConfig createLineAuthenticationConfigForTest(boolean useLineAppAuth) {
+        LineAuthenticationConfig.Builder builder = new LineAuthenticationConfig.Builder(channelId);
+
+        if (!useLineAppAuth) {
+            builder.disableLineAppAuthentication();
+        }
+        return builder.build();
     }
 
     @NonNull
@@ -234,7 +238,7 @@ public class SignInFragment extends Fragment {
         try {
             Intent intent = LineLoginApi.getLoginIntent(
                     getContext(),
-                    createLineAuthenticationConfigForTest(),
+                    createLineAuthenticationConfigForTest(useLineAppAuthCheckbox.isChecked()),
                     createAuthenticationParamsForTest());
             startActivityForResult(intent, REQUEST_CODE);
             addLog("Sign-in is started. [" + LOG_SEPARATOR
