@@ -55,7 +55,7 @@ public class LineLoginApi {
             @NonNull LineAuthenticationParams params) {
         return getLoginIntent(
                 context,
-                new LineAuthenticationConfig.Builder(channelId).build(),
+                new LineAuthenticationConfig.Builder(channelId, context).build(),
                 params);
     }
 
@@ -73,7 +73,7 @@ public class LineLoginApi {
             @NonNull LineAuthenticationParams params) {
         return getLoginIntent(
                 context,
-                new LineAuthenticationConfig.Builder(channelId)
+                new LineAuthenticationConfig.Builder(channelId, context)
                         .disableLineAppAuthentication()
                         .build(),
                 params);
