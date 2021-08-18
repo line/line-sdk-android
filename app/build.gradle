@@ -80,7 +80,6 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxandroid:${ver.reactivex.rxandroid}"
     implementation "io.reactivex.rxjava2:rxjava:${ver.reactivex.rxjava}"
 
-
     testImplementation "junit:junit:${ver.jUnit}"
 
     androidTestImplementation "junit:junit:${ver.jUnit}"

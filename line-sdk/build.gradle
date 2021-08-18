@@ -20,6 +20,7 @@ android {
         versionName version
 
         consumerProguardFiles 'consumer-proguard-rules.pro'
+        buildConfigField 'String', 'VERSION_NAME', "\"${defaultConfig.versionName}\""
     }
 
     dataBinding {
