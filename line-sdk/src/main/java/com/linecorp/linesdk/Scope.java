@@ -109,6 +109,16 @@ public class Scope {
      */
     public static final Scope OPEN_CHAT_SUBSCRIPTION_INFO = new Scope("openchat.info");
 
+    public static final Scope OPEN_CHAT_PLUG_MANAGEMENT = new Scope("openchatplug.managament");
+
+    public static final Scope OPEN_CHAT_PLUG_INFO = new Scope("openchatplug.info");
+
+    public static final Scope OPEN_CHAT_PLUG_PROFILE = new Scope("openchatplug.profile");
+
+    public static final Scope OPEN_CHAT_PLUG_SEND_MESSAGE = new Scope("openchatplug.send.message");
+
+    public static final Scope OPEN_CHAT_PLUG_RECEIVCE_MESSAGE_AND_EVENT = new Scope("openchatplug.receive.message.event");
+
     private static final String SCOPE_DELIMITER = " ";
 
     @NonNull

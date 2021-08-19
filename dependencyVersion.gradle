@@ -5,7 +5,7 @@ ext {
 
             // build tools
             buildTools  : [
-                    android_gradle : "3.6.3",
+                    android_gradle : "4.2.1",
                     bintray_gradle: "1.8.5",
                     maven_gradle: "2.1"
             ],
