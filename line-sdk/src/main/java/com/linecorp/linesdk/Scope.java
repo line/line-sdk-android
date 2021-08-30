@@ -117,7 +117,7 @@ public class Scope {
 
     public static final Scope OPEN_CHAT_PLUG_SEND_MESSAGE = new Scope("openchatplug.send.message");
 
-    public static final Scope OPEN_CHAT_PLUG_RECEIVCE_MESSAGE_AND_EVENT = new Scope("openchatplug.receive.message.event");
+    public static final Scope OPEN_CHAT_PLUG_RECEIVCE_MESSAGE_AND_EVENT = new Scope("openchatplug.receive.message.and.event");
 
     private static final String SCOPE_DELIMITER = " ";
 
