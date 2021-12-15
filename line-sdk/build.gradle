@@ -165,6 +165,7 @@ task javadoc_public(type: Javadoc) {
 
     // doclava doesn't support `title`
     title = null
+    options.noTimestamp(false)
 
     source = javadocParams.source
     classpath += javadocParams.classpath
