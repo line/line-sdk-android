@@ -38,7 +38,7 @@ ext {
 
             butterknife : "10.2.1",
 
-            picasso     : "2.71828",
+            picasso     : "2.8",
 
             reactivex   : [
                     rxjava   : "2.2.19",
