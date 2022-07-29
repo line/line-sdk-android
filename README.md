@@ -3,7 +3,7 @@
 [ ![Download](https://api.bintray.com/packages/line/line-sdk/com.linecorp.linesdk/images/download.svg) ](https://bintray.com/line/line-sdk/com.linecorp.linesdk/_latestVersion)
 
 # Overview #
-The LINE SDK for Android provides a modern way of implementing LINE APIs. The features included in this SDK will help you develop an Android app with engaging and personalized user experience.
+The LINE SDK for Android provides a modern way of implementing LINE APIs. The features included in this SDK will help you develop an Android app with an engaging and personalized user experience.
 
 # Features #
 The LINE SDK for Android provides the following features.
@@ -51,7 +51,7 @@ dependencies {
 
 A pre-defined LINE login button is provided. You can add it to the user interface of your app to provide your users with a quick way to log in as below
 
-### Add login buton to layout xml
+### Add login button to layout xml
 
 
 ```xml
@@ -71,7 +71,7 @@ loginButton.setFragment(this);
 // replace the string to your own channel id.
 loginButton.setChannelId("the channel id you created");
 
-// configure whether login process should be done by LINE App, or by WebView.
+// configure whether login process should be done by LINE app or by WebView.
 loginButton.enableLineAppAuthentication(true);
 
 // set up required scopes. 
