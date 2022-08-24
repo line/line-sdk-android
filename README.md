@@ -21,11 +21,6 @@ The LINE SDK supports the OpenID Connect 1.0 specification. You can get ID token
 Create your own LINE Channel and follow the instructions [here](https://developers.line.biz/en/docs/android-sdk/integrate-line-login/) to link your app to your channel.
 
 ### Gradle
-Setup current line-sdk version
-
-```
-linesdk_version = '5.6.2'
-```
 
 Add mavenCentral to your repositories if it's not added yet.
 
