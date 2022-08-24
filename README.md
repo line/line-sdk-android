@@ -1,6 +1,6 @@
 <img src="sdklogo.png" width="355" height="97">
 
-[ ![Download](https://api.bintray.com/packages/line/line-sdk/com.linecorp.linesdk/images/download.svg) ](https://bintray.com/line/line-sdk/com.linecorp.linesdk/_latestVersion)
+[![Maven Central](https://img.shields.io/maven-central/v/com.linecorp.linesdk/linesdk.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.linecorp.linesdk%22%20AND%20a:%22linesdk%22)
 
 # Overview #
 The LINE SDK for Android provides a modern way of implementing LINE APIs. The features included in this SDK will help you develop an Android app with engaging and personalized user experience.
@@ -21,11 +21,6 @@ The LINE SDK supports the OpenID Connect 1.0 specification. You can get ID token
 Create your own LINE Channel and follow the instructions [here](https://developers.line.biz/en/docs/android-sdk/integrate-line-login/) to link your app to your channel.
 
 ### Gradle
-Setup current line-sdk version
-
-```
-linesdk_version = '5.6.2'
-```
 
 Add mavenCentral to your repositories if it's not added yet.
 
