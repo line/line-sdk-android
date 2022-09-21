@@ -18,6 +18,7 @@ jobs:
       - name: set up JDK 11
         uses: actions/setup-java@v3
         with:
+          distribution: 'temurin'
           java-version: 11
       - name: Unit tests
         run: bash ./gradlew :line-sdk:testDebugUnitTest --stacktrace
@@ -31,6 +32,7 @@ jobs:
       - name: set up JDK 11
         uses: actions/setup-java@v3
         with:
+          distribution: 'temurin'
           java-version: 11
       - name: Build debug APK
         run: bash ./gradlew :line-sdk:assembleDebug --stacktrace
