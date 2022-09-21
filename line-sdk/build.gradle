@@ -10,13 +10,12 @@ group = "com.linecorp.linesdk"
 version = "5.8.0"
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion '30.0.2'
+    compileSdkVersion 33
 
     defaultConfig {
         minSdkVersion 19
-        targetSdkVersion 30
-        versionCode 5_08_00
+        targetSdkVersion 33
+        versionCode 5_80_00
         versionName version
 
         consumerProguardFiles 'consumer-proguard-rules.pro'
@@ -169,7 +168,7 @@ task javadoc_public(type: Javadoc) {
 
     source = javadocParams.source
     classpath += javadocParams.classpath
-    classpath += configurations.compile
+    classpath += configurations.implementation
     classpath += configurations.javadocs
     include javadocParams.includes.public
 
