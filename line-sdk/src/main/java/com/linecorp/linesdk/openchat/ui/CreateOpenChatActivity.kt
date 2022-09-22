@@ -55,7 +55,7 @@ class CreateOpenChatActivity : AppCompatActivity() {
         viewModel = ViewModelProviders.of(
             this,
             object : ViewModelProvider.Factory {
-                override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
                     if (modelClass.isAssignableFrom(OpenChatInfoViewModel::class.java)) {
                         return OpenChatInfoViewModel(sharedPreferences, lineApiClient) as T
                     }
