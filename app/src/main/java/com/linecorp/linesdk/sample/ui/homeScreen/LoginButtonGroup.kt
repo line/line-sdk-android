@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.linecorp.linesdk.LoginDelegate
 import com.linecorp.linesdk.Scope
 import com.linecorp.linesdk.sample.ApiListActivity
 import com.linecorp.linesdk.sample.ui.composable.ApiDemoButton
@@ -27,6 +28,7 @@ fun LoginButtonGroup(
     loginViewModel: LoginViewModel,
     channelId: String,
     scopeList: List<Scope>,
+    loginDelegate: LoginDelegate,
     onLoginButtonPressed: (Intent) -> Unit
 ) {
     LazyColumn(
@@ -47,7 +49,8 @@ fun LoginButtonGroup(
             LineLoginButton(
                 channelId,
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
+                loginDelegate = loginDelegate
             ) {
                 loginViewModel.processLoginResult(it)
             }
