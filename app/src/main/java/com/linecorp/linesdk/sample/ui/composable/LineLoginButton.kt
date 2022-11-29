@@ -14,6 +14,7 @@ import com.linecorp.linesdk.widget.LoginButton
 fun LineLoginButton(
     channelId: String,
     modifier: Modifier = Modifier,
+    loginDelegate: LoginDelegate = LoginDelegate.Factory.create(),
     handleLoginResult: (result: LineLoginResult) -> Unit
 ) {
     val loginListener = object : LoginListener {
@@ -25,9 +26,6 @@ fun LineLoginButton(
     }
 
     AndroidView({ LoginButton(it) }, modifier = modifier) { loginButton ->
-        // A delegate for delegating the login result to the internal login handler.
-        val loginDelegate = LoginDelegate.Factory.create()
-
         loginButton.apply {
             setChannelId(channelId)
             setLoginDelegate(loginDelegate)
