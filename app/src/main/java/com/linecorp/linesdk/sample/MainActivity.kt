@@ -22,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.linecorp.linesdk.LoginDelegate
 import com.linecorp.linesdk.Scope
 import com.linecorp.linesdk.sample.ui.composable.AppBar
 import com.linecorp.linesdk.sample.ui.composable.OperationFailedPopup
@@ -45,6 +46,8 @@ class MainActivity : ComponentActivity() {
                 activityResult.data
             )
         }
+
+    private val loginDelegate = LoginDelegate.Factory.create()
 
     private fun handleLoginResult(resultCode: Int, intent: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
@@ -102,7 +105,7 @@ class MainActivity : ComponentActivity() {
                             if (operationFailedPopupMsg != null) {
                                 OperationFailedPopup(
                                     "${failedToLoginOrLogoutMsgTitle}\n\n" +
-                                        "$operationFailedPopupMsg"
+                                            "$operationFailedPopupMsg"
                                 ) {
                                     loginViewModel.dismissFailedPopup()
                                 }
@@ -112,6 +115,7 @@ class MainActivity : ComponentActivity() {
                                 loginViewModel,
                                 channelId,
                                 scopeList,
+                                loginDelegate,
                                 onLoginButtonPressed = loginResultLauncher::launch
                             )
                         }
@@ -132,7 +136,7 @@ class MainActivity : ComponentActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         // In order to receive and process the Activity Result to the `LineLoginButton`.
-        handleLoginResult(resultCode, data)
+        loginDelegate.onActivityResult(requestCode, resultCode, data)
     }
 
     companion object {
