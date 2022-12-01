@@ -231,10 +231,6 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     from javadoc.destinationDir
 }
 
-task printVersionName {
-    println version
-}
-
 artifacts {
     archives javadocJar
     archives sourcesJar
