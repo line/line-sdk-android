@@ -13,8 +13,8 @@ import com.linecorp.linesdk.widget.LoginButton
 @Composable
 fun LineLoginButton(
     channelId: String,
+    loginDelegate: LoginDelegate,
     modifier: Modifier = Modifier,
-    loginDelegate: LoginDelegate = LoginDelegate.Factory.create(),
     handleLoginResult: (result: LineLoginResult) -> Unit
 ) {
     val loginListener = object : LoginListener {
@@ -37,7 +37,11 @@ fun LineLoginButton(
 @Preview("LineLoginButtonPreview")
 @Composable
 private fun LineLoginButtonPreview() {
+    val dummyLoginDelegate = LoginDelegate.Factory.create()
     LineSdkAndroidTheme {
-        LineLoginButton(channelId = "1234567") { /** ignored */ }
+        LineLoginButton(
+            channelId = "1234567",
+            loginDelegate = dummyLoginDelegate
+        ) { /** ignored */ }
     }
 }
