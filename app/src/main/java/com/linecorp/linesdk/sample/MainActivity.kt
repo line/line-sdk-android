@@ -47,6 +47,7 @@ class MainActivity : ComponentActivity() {
             )
         }
 
+    // A delegate for delegating the login result to the internal login handler of the LineLoginButton.
     private val loginDelegate = LoginDelegate.Factory.create()
 
     private fun handleLoginResult(resultCode: Int, intent: Intent?) {
