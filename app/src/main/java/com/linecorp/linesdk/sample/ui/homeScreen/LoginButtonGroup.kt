@@ -13,6 +13,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.linecorp.linesdk.LoginDelegate
 import com.linecorp.linesdk.Scope
+import com.linecorp.linesdk.auth.LineLoginResult
 import com.linecorp.linesdk.sample.ApiListActivity
 import com.linecorp.linesdk.sample.ui.composable.ApiDemoButton
 import com.linecorp.linesdk.sample.ui.composable.LineLoginButton
@@ -24,8 +25,10 @@ fun LoginButtonGroup(
     loginViewModel: LoginViewModel,
     channelId: String,
     scopeList: List<Scope>,
-    loginDelegate: LoginDelegate,
-    onLoginButtonPressed: (Intent) -> Unit
+    onSimpleLoginButtonPressed: (Intent) -> Unit,
+    loginDelegateForLineLoginBtn: LoginDelegate,
+    onLoginSuccessByLineLoginBtn: (result: LineLoginResult) -> Unit,
+    onLoginFailureByLineLoginBtn: (result: LineLoginResult) -> Unit,
 ) {
     LazyColumn(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -46,10 +49,10 @@ fun LoginButtonGroup(
                 channelId,
                 modifier = Modifier
                     .fillMaxWidth(),
-                loginDelegate = loginDelegate
-            ) {
-                loginViewModel.processLoginResult(it)
-            }
+                loginDelegate = loginDelegateForLineLoginBtn,
+                onLoginSuccess = onLoginSuccessByLineLoginBtn,
+                onLoginFailure = onLoginFailureByLineLoginBtn
+            )
 
             ApiDemoButton(
                 "login",
@@ -62,7 +65,7 @@ fun LoginButtonGroup(
                     channelId,
                     scopeList
                 )
-                onLoginButtonPressed(intent)
+                onSimpleLoginButtonPressed(intent)
             }
 
             ApiDemoButton(
@@ -77,7 +80,7 @@ fun LoginButtonGroup(
                     scopeList,
                     onlyWebLogin = true
                 )
-                onLoginButtonPressed(intent)
+                onSimpleLoginButtonPressed(intent)
             }
 
             ApiDemoButton(
