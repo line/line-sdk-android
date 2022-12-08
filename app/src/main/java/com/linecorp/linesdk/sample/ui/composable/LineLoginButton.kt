@@ -13,16 +13,17 @@ import com.linecorp.linesdk.widget.LoginButton
 @Composable
 fun LineLoginButton(
     channelId: String,
-    loginDelegate: LoginDelegate,
     modifier: Modifier = Modifier,
-    handleLoginResult: (result: LineLoginResult) -> Unit
+    onLoginSuccess: (result: LineLoginResult) -> Unit = {},
+    onLoginFailure: (result: LineLoginResult) -> Unit = {},
+    loginDelegate: LoginDelegate,
 ) {
     val loginListener = object : LoginListener {
         override fun onLoginSuccess(result: LineLoginResult) =
-            handleLoginResult(result)
+            onLoginSuccess(result)
 
         override fun onLoginFailure(result: LineLoginResult?) =
-            handleLoginResult(result ?: LineLoginResult.internalError("Unknown error"))
+            onLoginFailure(result ?: LineLoginResult.internalError("LineLoginResult is null"))
     }
 
     AndroidView({ LoginButton(it) }, modifier = modifier) { loginButton ->
@@ -42,6 +43,6 @@ private fun LineLoginButtonPreview() {
         LineLoginButton(
             channelId = "1234567",
             loginDelegate = dummyLoginDelegate
-        ) { /** ignored */ }
+        )
     }
 }
