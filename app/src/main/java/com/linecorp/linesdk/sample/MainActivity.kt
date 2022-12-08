@@ -1,9 +1,7 @@
 package com.linecorp.linesdk.sample
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
@@ -41,7 +39,7 @@ class MainActivity : ComponentActivity() {
 
     private val loginResultLauncher =
         registerForActivityResult(StartActivityForResult()) { activityResult ->
-            handleLoginResult(
+            loginViewModel.processLoginIntent(
                 activityResult.resultCode,
                 activityResult.data
             )
@@ -49,17 +47,6 @@ class MainActivity : ComponentActivity() {
 
     // A delegate for delegating the login result to the internal login handler of the LineLoginButton.
     private val loginDelegate = LoginDelegate.Factory.create()
-
-    private fun handleLoginResult(resultCode: Int, intent: Intent?) {
-        if (resultCode == Activity.RESULT_OK) {
-            intent?.let { loginViewModel.processLoginResultFromIntent(it) }
-        } else {
-            val errorResponseString = intent?.dataString.toString()
-
-            Log.e(TAG, errorResponseString)
-            loginViewModel.showFailedPopupWith(ACTIVITY_RESULT_NOT_OK)
-        }
-    }
 
     @ExperimentalMaterial3Api
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -113,11 +100,13 @@ class MainActivity : ComponentActivity() {
                             }
 
                             LoginButtonGroup(
-                                loginViewModel,
-                                channelId,
-                                scopeList,
-                                loginDelegate,
-                                onLoginButtonPressed = loginResultLauncher::launch
+                                loginViewModel = loginViewModel,
+                                channelId = channelId,
+                                scopeList = scopeList,
+                                loginDelegateForLineLoginBtn = loginDelegate,
+                                onSimpleLoginButtonPressed = loginResultLauncher::launch,
+                                onLoginSuccessByLineLoginBtn = loginViewModel::processLoginResult,
+                                onLoginFailureByLineLoginBtn = loginViewModel::processLoginResult,
                             )
                         }
                     }
@@ -138,10 +127,5 @@ class MainActivity : ComponentActivity() {
 
         // In order to receive and process the Activity Result to the `LineLoginButton`.
         loginDelegate.onActivityResult(requestCode, resultCode, data)
-    }
-
-    companion object {
-        private const val TAG = "MainActivity"
-        private const val ACTIVITY_RESULT_NOT_OK = "Activity ResultCode is not OK"
     }
 }

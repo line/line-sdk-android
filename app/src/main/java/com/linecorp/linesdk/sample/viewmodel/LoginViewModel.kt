@@ -1,5 +1,6 @@
 package com.linecorp.linesdk.sample.viewmodel
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.util.Log
@@ -65,19 +66,24 @@ class LoginViewModel(context: Context, channelId: String) :
     }
 
     fun processLoginResult(result: LineLoginResult) {
-        if (result.isSuccess) {
-            updateLoginStatusTo(true)
-            _userProfileFlow.update { result.lineProfile }
-        } else {
-            Log.e(TAG, result.toString())
-            val failReason = result.responseCode.name
-            showFailedPopupWith(failReason)
+        if (!result.isSuccess) {
+            processFailureMsg(result.responseCode.name)
+            return
         }
+
+        processLoginSuccess(result.lineProfile)
     }
 
-    fun processLoginResultFromIntent(intent: Intent) {
-        val loginResult = LineLoginApi.getLoginResultFromIntent(intent)
-        processLoginResult(loginResult)
+    fun processLoginIntent(resultCode: Int, nullableIntent: Intent?) {
+        if (!resultCodeIsOk(resultCode)) {
+            nullableIntent?.dataString?.let { processFailureMsg(it) }
+            return
+        }
+
+        nullableIntent?.let { intent ->
+            val loginResult = LineLoginApi.getLoginResultFromIntent(intent)
+            processLoginResult(loginResult)
+        }
     }
 
     fun logout() {
@@ -93,10 +99,6 @@ class LoginViewModel(context: Context, channelId: String) :
                 showFailedPopupWith(LOGOUT_NOT_FINISHED_MSG)
             }
         }
-    }
-
-    fun showFailedPopupWith(msg: String) {
-        _operationFailedPopupMsgFlow.value = msg
     }
 
     fun dismissFailedPopup() {
@@ -139,6 +141,23 @@ class LoginViewModel(context: Context, channelId: String) :
                 fetchAndUpdateUserProfile()
             }
         }
+    }
+
+    private fun showFailedPopupWith(msg: String) {
+        _operationFailedPopupMsgFlow.value = msg
+    }
+
+    private fun resultCodeIsOk(resultCode: Int): Boolean = resultCode == Activity.RESULT_OK
+
+    private fun processFailureMsg(msg: String, vararg additionalMsgs: String) {
+        Log.e(TAG, msg)
+        additionalMsgs.forEach { Log.d(TAG, it) }
+        showFailedPopupWith(msg)
+    }
+
+    private fun processLoginSuccess(profile: LineProfile?) {
+        updateLoginStatusTo(true)
+        _userProfileFlow.update { profile }
     }
 
     companion object {
