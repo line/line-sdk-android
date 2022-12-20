@@ -80,20 +80,21 @@ class LoginViewModel(context: Context, channelId: String) :
         _userProfileFlow.update { lineProfile }
     }
 
-    fun processLoginIntent(resultCode: Int, nullableIntent: Intent?) =
-        nullableIntent?.let { intent ->
-            if (!isResultCodeOk(resultCode)) {
-                processFailureMsg("resultCode is not OK.", "resultCode = $resultCode")
-                intent.dataString?.let { processFailureMsg(it) }
-                return
-            }
-
-            val loginResult = LineLoginApi.getLoginResultFromIntent(intent)
-            processLoginResult(loginResult)
-
-        } ?: run {
-            processFailureMsg("Login intent is null")
+    fun processLoginIntent(resultCode: Int, intent: Intent?) {
+        if (!isResultCodeOk(resultCode)) {
+            val errorMessage = intent?.dataString ?: "login error but no error message"
+            processFailureMsg(errorMessage)
+            return
         }
+
+        if (intent == null) {
+            processFailureMsg("success but no intent")
+            return
+        }
+
+        val loginResult = LineLoginApi.getLoginResultFromIntent(intent)
+        processLoginResult(loginResult)
+    }
 
     fun logout() {
         viewModelScope.launch {
