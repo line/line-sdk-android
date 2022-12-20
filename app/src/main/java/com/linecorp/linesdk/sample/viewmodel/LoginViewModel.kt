@@ -65,26 +65,35 @@ class LoginViewModel(context: Context, channelId: String) :
         }
     }
 
-    fun processLoginResult(result: LineLoginResult) {
-        if (!result.isSuccess) {
-            processFailureMsg(result.responseCode.name)
+    fun processLoginResult(result: LineLoginResult) = with(result) {
+        if (!isSuccess) {
+            processFailureMsg(responseCode.name, errorData.message)
             return
         }
 
-        processLoginSuccess(result.lineProfile)
+        if (lineProfile == null) {
+            processFailureMsg("lineProfile of LineLoginResult is null.", errorData.message)
+            return
+        }
+
+        _isLoginFlow.update { true }
+        _userProfileFlow.update { lineProfile }
     }
 
-    fun processLoginIntent(resultCode: Int, nullableIntent: Intent?) {
-        if (!resultCodeIsOk(resultCode)) {
-            nullableIntent?.dataString?.let { processFailureMsg(it) }
-            return
-        }
-
+    fun processLoginIntent(resultCode: Int, nullableIntent: Intent?) =
         nullableIntent?.let { intent ->
+            if (!isResultCodeOk(resultCode)) {
+                processFailureMsg("resultCode is not OK.", "resultCode = $resultCode")
+                intent.dataString?.let { processFailureMsg(it) }
+                return
+            }
+
             val loginResult = LineLoginApi.getLoginResultFromIntent(intent)
             processLoginResult(loginResult)
+
+        } ?: run {
+            processFailureMsg("Login intent is null")
         }
-    }
 
     fun logout() {
         viewModelScope.launch {
@@ -93,10 +102,10 @@ class LoginViewModel(context: Context, channelId: String) :
             }
 
             if (isLogoutSuccess) {
-                updateLoginStatusTo(false)
+                _isLoginFlow.update { false }
                 _userProfileFlow.update { null }
             } else {
-                showFailedPopupWith(LOGOUT_NOT_FINISHED_MSG)
+                showFailedPopup(LOGOUT_NOT_FINISHED_MSG)
             }
         }
     }
@@ -117,10 +126,6 @@ class LoginViewModel(context: Context, channelId: String) :
         .botPrompt(botPrompt)
         .build()
 
-    private fun updateLoginStatusTo(isLogin: Boolean) {
-        _isLoginFlow.update { isLogin }
-    }
-
     private fun fetchAndUpdateUserProfile() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
@@ -135,7 +140,7 @@ class LoginViewModel(context: Context, channelId: String) :
                 lineApiClient.currentAccessToken.isSuccess
             }
 
-            updateLoginStatusTo(isLogin)
+            _isLoginFlow.update { isLogin }
 
             if (isLogin) {
                 fetchAndUpdateUserProfile()
@@ -143,21 +148,20 @@ class LoginViewModel(context: Context, channelId: String) :
         }
     }
 
-    private fun showFailedPopupWith(msg: String) {
-        _operationFailedPopupMsgFlow.value = msg
+    private fun showFailedPopup(errorMessage: String) {
+        _operationFailedPopupMsgFlow.value = errorMessage
     }
 
-    private fun resultCodeIsOk(resultCode: Int): Boolean = resultCode == Activity.RESULT_OK
+    private fun isResultCodeOk(resultCode: Int): Boolean = resultCode == Activity.RESULT_OK
 
-    private fun processFailureMsg(msg: String, vararg additionalMsgs: String) {
+    private fun processFailureMsg(msg: String, vararg additionalMsgs: String?) {
         Log.e(TAG, msg)
-        additionalMsgs.forEach { Log.d(TAG, it) }
-        showFailedPopupWith(msg)
-    }
-
-    private fun processLoginSuccess(profile: LineProfile?) {
-        updateLoginStatusTo(true)
-        _userProfileFlow.update { profile }
+        additionalMsgs.forEach {
+            if (it != null) {
+                Log.d(TAG, it)
+            }
+        }
+        showFailedPopup(msg)
     }
 
     companion object {
@@ -171,6 +175,7 @@ class LoginViewModel(context: Context, channelId: String) :
                     when {
                         modelClass.isAssignableFrom(LoginViewModel::class.java) ->
                             LoginViewModel(context, channelId) as T
+
                         else -> throw IllegalArgumentException("Not supported.")
                     }
             }
