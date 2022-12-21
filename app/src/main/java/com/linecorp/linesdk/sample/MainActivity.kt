@@ -93,7 +93,7 @@ class MainActivity : ComponentActivity() {
                             if (operationFailedPopupMsg != null) {
                                 OperationFailedPopup(
                                     "${failedToLoginOrLogoutMsgTitle}\n\n" +
-                                            "$operationFailedPopupMsg"
+                                        "$operationFailedPopupMsg"
                                 ) {
                                     loginViewModel.dismissFailedPopup()
                                 }
@@ -106,7 +106,7 @@ class MainActivity : ComponentActivity() {
                                 loginDelegateForLineLoginBtn = loginDelegate,
                                 onSimpleLoginButtonPressed = loginResultLauncher::launch,
                                 onLoginSuccessByLineLoginBtn = loginViewModel::processLoginResult,
-                                onLoginFailureByLineLoginBtn = loginViewModel::processLoginResult,
+                                onLoginFailureByLineLoginBtn = loginViewModel::processLoginResult
                             )
                         }
                     }

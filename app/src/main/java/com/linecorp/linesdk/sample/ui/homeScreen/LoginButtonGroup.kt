@@ -28,7 +28,7 @@ fun LoginButtonGroup(
     onSimpleLoginButtonPressed: (Intent) -> Unit,
     loginDelegateForLineLoginBtn: LoginDelegate,
     onLoginSuccessByLineLoginBtn: (result: LineLoginResult) -> Unit,
-    onLoginFailureByLineLoginBtn: (result: LineLoginResult) -> Unit,
+    onLoginFailureByLineLoginBtn: (result: LineLoginResult) -> Unit
 ) {
     LazyColumn(
         horizontalAlignment = Alignment.CenterHorizontally,

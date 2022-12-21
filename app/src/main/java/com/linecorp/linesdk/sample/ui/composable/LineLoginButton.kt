@@ -16,7 +16,7 @@ fun LineLoginButton(
     modifier: Modifier = Modifier,
     onLoginSuccess: (result: LineLoginResult) -> Unit = {},
     onLoginFailure: (result: LineLoginResult) -> Unit = {},
-    loginDelegate: LoginDelegate,
+    loginDelegate: LoginDelegate
 ) {
     val loginListener = object : LoginListener {
         override fun onLoginSuccess(result: LineLoginResult) =

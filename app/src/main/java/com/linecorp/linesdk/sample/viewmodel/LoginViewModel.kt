@@ -12,13 +12,13 @@ import com.linecorp.linesdk.Scope
 import com.linecorp.linesdk.auth.LineAuthenticationParams
 import com.linecorp.linesdk.auth.LineLoginApi
 import com.linecorp.linesdk.auth.LineLoginResult
+import java.util.Locale
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.Locale
 
 class LoginViewModel(context: Context, channelId: String) :
     LineApiViewModelBase(context, channelId) {
