@@ -1,7 +1,11 @@
 package com.linecorp.linesdk.sample.ui.homeScreen
 
 import android.content.Intent
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
@@ -13,7 +17,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.linecorp.linesdk.LoginDelegate
 import com.linecorp.linesdk.Scope
-import com.linecorp.linesdk.auth.LineLoginResult
 import com.linecorp.linesdk.sample.ApiListActivity
 import com.linecorp.linesdk.sample.ui.composable.ApiDemoButton
 import com.linecorp.linesdk.sample.ui.composable.LineLoginButton
@@ -25,10 +28,8 @@ fun LoginButtonGroup(
     loginViewModel: LoginViewModel,
     channelId: String,
     scopeList: List<Scope>,
-    onSimpleLoginButtonPressed: (Intent) -> Unit,
     loginDelegateForLineLoginBtn: LoginDelegate,
-    onLoginSuccessByLineLoginBtn: (result: LineLoginResult) -> Unit,
-    onLoginFailureByLineLoginBtn: (result: LineLoginResult) -> Unit
+    onSimpleLoginButtonPressed: (Intent) -> Unit
 ) {
     LazyColumn(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -50,8 +51,7 @@ fun LoginButtonGroup(
                 modifier = Modifier
                     .fillMaxWidth(),
                 loginDelegate = loginDelegateForLineLoginBtn,
-                onLoginSuccess = onLoginSuccessByLineLoginBtn,
-                onLoginFailure = onLoginFailureByLineLoginBtn
+                handleLoginResult = loginViewModel::processLoginResult
             )
 
             ApiDemoButton(

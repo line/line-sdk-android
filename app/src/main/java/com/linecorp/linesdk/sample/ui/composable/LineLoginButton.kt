@@ -14,16 +14,15 @@ import com.linecorp.linesdk.widget.LoginButton
 fun LineLoginButton(
     channelId: String,
     modifier: Modifier = Modifier,
-    onLoginSuccess: (result: LineLoginResult) -> Unit = {},
-    onLoginFailure: (result: LineLoginResult) -> Unit = {},
-    loginDelegate: LoginDelegate
+    loginDelegate: LoginDelegate,
+    handleLoginResult: (LineLoginResult) -> Unit
 ) {
     val loginListener = object : LoginListener {
         override fun onLoginSuccess(result: LineLoginResult) =
-            onLoginSuccess(result)
+            handleLoginResult(result)
 
         override fun onLoginFailure(result: LineLoginResult?) =
-            onLoginFailure(result ?: LineLoginResult.internalError("LineLoginResult is null"))
+            handleLoginResult(result ?: LineLoginResult.internalError("LineLoginResult is null"))
     }
 
     AndroidView({ LoginButton(it) }, modifier = modifier) { loginButton ->
@@ -43,6 +42,6 @@ private fun LineLoginButtonPreview() {
         LineLoginButton(
             channelId = "1234567",
             loginDelegate = dummyLoginDelegate
-        )
+        ) { /** ignored */ }
     }
 }

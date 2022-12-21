@@ -104,9 +104,7 @@ class MainActivity : ComponentActivity() {
                                 channelId = channelId,
                                 scopeList = scopeList,
                                 loginDelegateForLineLoginBtn = loginDelegate,
-                                onSimpleLoginButtonPressed = loginResultLauncher::launch,
-                                onLoginSuccessByLineLoginBtn = loginViewModel::processLoginResult,
-                                onLoginFailureByLineLoginBtn = loginViewModel::processLoginResult
+                                onSimpleLoginButtonPressed = loginResultLauncher::launch
                             )
                         }
                     }
