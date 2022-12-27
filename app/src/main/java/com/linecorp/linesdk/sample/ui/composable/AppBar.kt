@@ -10,9 +10,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -32,17 +32,14 @@ fun AppBar(title: String, modifier: Modifier = Modifier, navController: NavContr
 
     systemUiController.setStatusBarColor(appBarBackgroundColor)
 
-    SmallTopAppBar(
+    TopAppBar(
         title = {
             Text(
                 text = title,
                 fontWeight = FontWeight.Black
             )
         },
-        colors = TopAppBarDefaults.smallTopAppBarColors(
-            containerColor = appBarBackgroundColor,
-            titleContentColor = appBarContentColor
-        ),
+        modifier = modifier,
         navigationIcon = {
             navController?.let { controller ->
                 controller.previousBackStackEntry?.let {
@@ -55,7 +52,10 @@ fun AppBar(title: String, modifier: Modifier = Modifier, navController: NavContr
                 }
             }
         },
-        modifier = modifier
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = appBarBackgroundColor,
+            titleContentColor = appBarContentColor
+        )
     )
 }
 

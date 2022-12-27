@@ -117,7 +117,9 @@ private fun ProfileContentLoggedInPreview() {
             LineProfile(
                 "123456789",
                 "This is a Preview",
-                Uri.parse("https://source.android.com/static/docs/setup/images/Android_symbol_green_RGB.png"),
+                Uri.parse(
+                    "https://source.android.com/static/docs/setup/images/Android_symbol_green_RGB.png"
+                ),
                 "Hello World!"
             )
         }

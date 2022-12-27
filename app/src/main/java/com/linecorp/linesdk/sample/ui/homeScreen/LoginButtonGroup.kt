@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.linecorp.linesdk.LoginDelegate
 import com.linecorp.linesdk.Scope
 import com.linecorp.linesdk.sample.ApiListActivity
 import com.linecorp.linesdk.sample.ui.composable.ApiDemoButton
@@ -27,7 +28,8 @@ fun LoginButtonGroup(
     loginViewModel: LoginViewModel,
     channelId: String,
     scopeList: List<Scope>,
-    onLoginButtonPressed: (Intent) -> Unit
+    loginDelegateForLineLoginBtn: LoginDelegate,
+    onSimpleLoginButtonPressed: (Intent) -> Unit
 ) {
     LazyColumn(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -47,10 +49,10 @@ fun LoginButtonGroup(
             LineLoginButton(
                 channelId,
                 modifier = Modifier
-                    .fillMaxWidth()
-            ) {
-                loginViewModel.processLoginResult(it)
-            }
+                    .fillMaxWidth(),
+                loginDelegate = loginDelegateForLineLoginBtn,
+                handleLoginResult = loginViewModel::processLoginResult
+            )
 
             ApiDemoButton(
                 "login",
@@ -63,7 +65,7 @@ fun LoginButtonGroup(
                     channelId,
                     scopeList
                 )
-                onLoginButtonPressed(intent)
+                onSimpleLoginButtonPressed(intent)
             }
 
             ApiDemoButton(
@@ -78,7 +80,7 @@ fun LoginButtonGroup(
                     scopeList,
                     onlyWebLogin = true
                 )
-                onLoginButtonPressed(intent)
+                onSimpleLoginButtonPressed(intent)
             }
 
             ApiDemoButton(

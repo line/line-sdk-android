@@ -1,11 +1,11 @@
 ext {
     // version for dependencies
     ver = [
-            kotlin      : "1.7.10",
+            kotlin      : "1.7.20",
 
             // build tools
             buildTools  : [
-                    android_gradle : "7.3.0",
+                    android_gradle : "7.3.1",
                     bintray_gradle: "1.8.5",
                     maven_gradle: "2.1"
             ],

@@ -1,5 +1,6 @@
 package com.linecorp.linesdk.sample.viewmodel
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.util.Log
@@ -11,13 +12,13 @@ import com.linecorp.linesdk.Scope
 import com.linecorp.linesdk.auth.LineAuthenticationParams
 import com.linecorp.linesdk.auth.LineLoginApi
 import com.linecorp.linesdk.auth.LineLoginResult
+import java.util.Locale
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.Locale
 
 class LoginViewModel(context: Context, channelId: String) :
     LineApiViewModelBase(context, channelId) {
@@ -64,18 +65,33 @@ class LoginViewModel(context: Context, channelId: String) :
         }
     }
 
-    fun processLoginResult(result: LineLoginResult) {
-        if (result.isSuccess) {
-            updateLoginStatusTo(true)
-            _userProfileFlow.update { result.lineProfile }
-        } else {
-            Log.e(TAG, result.toString())
-            val failReason = result.responseCode.name
-            showFailedPopupWith(failReason)
+    fun processLoginResult(result: LineLoginResult) = with(result) {
+        if (!isSuccess) {
+            processFailureMsg(responseCode.name, errorData.message)
+            return
         }
+
+        if (lineProfile == null) {
+            processFailureMsg("lineProfile of LineLoginResult is null.", errorData.message)
+            return
+        }
+
+        _isLoginFlow.update { true }
+        _userProfileFlow.update { lineProfile }
     }
 
-    fun processLoginResultFromIntent(intent: Intent) {
+    fun processLoginIntent(resultCode: Int, intent: Intent?) {
+        if (!isResultCodeOk(resultCode)) {
+            val errorMessage = intent?.dataString ?: "login error but no error message"
+            processFailureMsg(errorMessage)
+            return
+        }
+
+        if (intent == null) {
+            processFailureMsg("success but no intent")
+            return
+        }
+
         val loginResult = LineLoginApi.getLoginResultFromIntent(intent)
         processLoginResult(loginResult)
     }
@@ -87,16 +103,12 @@ class LoginViewModel(context: Context, channelId: String) :
             }
 
             if (isLogoutSuccess) {
-                updateLoginStatusTo(false)
+                _isLoginFlow.update { false }
                 _userProfileFlow.update { null }
             } else {
-                showFailedPopupWith(LOGOUT_NOT_FINISHED_MSG)
+                showFailedPopup(LOGOUT_NOT_FINISHED_MSG)
             }
         }
-    }
-
-    fun showFailedPopupWith(msg: String) {
-        _operationFailedPopupMsgFlow.value = msg
     }
 
     fun dismissFailedPopup() {
@@ -115,10 +127,6 @@ class LoginViewModel(context: Context, channelId: String) :
         .botPrompt(botPrompt)
         .build()
 
-    private fun updateLoginStatusTo(isLogin: Boolean) {
-        _isLoginFlow.update { isLogin }
-    }
-
     private fun fetchAndUpdateUserProfile() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
@@ -133,12 +141,28 @@ class LoginViewModel(context: Context, channelId: String) :
                 lineApiClient.currentAccessToken.isSuccess
             }
 
-            updateLoginStatusTo(isLogin)
+            _isLoginFlow.update { isLogin }
 
             if (isLogin) {
                 fetchAndUpdateUserProfile()
             }
         }
+    }
+
+    private fun showFailedPopup(errorMessage: String) {
+        _operationFailedPopupMsgFlow.value = errorMessage
+    }
+
+    private fun isResultCodeOk(resultCode: Int): Boolean = resultCode == Activity.RESULT_OK
+
+    private fun processFailureMsg(msg: String, vararg additionalMsgs: String?) {
+        Log.e(TAG, msg)
+        additionalMsgs.forEach {
+            if (it != null) {
+                Log.d(TAG, it)
+            }
+        }
+        showFailedPopup(msg)
     }
 
     companion object {
@@ -152,6 +176,7 @@ class LoginViewModel(context: Context, channelId: String) :
                     when {
                         modelClass.isAssignableFrom(LoginViewModel::class.java) ->
                             LoginViewModel(context, channelId) as T
+
                         else -> throw IllegalArgumentException("Not supported.")
                     }
             }

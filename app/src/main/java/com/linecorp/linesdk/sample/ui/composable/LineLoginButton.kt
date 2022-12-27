@@ -14,20 +14,18 @@ import com.linecorp.linesdk.widget.LoginButton
 fun LineLoginButton(
     channelId: String,
     modifier: Modifier = Modifier,
-    handleLoginResult: (result: LineLoginResult) -> Unit
+    loginDelegate: LoginDelegate,
+    handleLoginResult: (LineLoginResult) -> Unit
 ) {
     val loginListener = object : LoginListener {
         override fun onLoginSuccess(result: LineLoginResult) =
             handleLoginResult(result)
 
         override fun onLoginFailure(result: LineLoginResult?) =
-            handleLoginResult(result ?: LineLoginResult.internalError("Unknown error"))
+            handleLoginResult(result ?: LineLoginResult.internalError("LineLoginResult is null"))
     }
 
     AndroidView({ LoginButton(it) }, modifier = modifier) { loginButton ->
-        // A delegate for delegating the login result to the internal login handler.
-        val loginDelegate = LoginDelegate.Factory.create()
-
         loginButton.apply {
             setChannelId(channelId)
             setLoginDelegate(loginDelegate)
@@ -39,7 +37,11 @@ fun LineLoginButton(
 @Preview("LineLoginButtonPreview")
 @Composable
 private fun LineLoginButtonPreview() {
+    val dummyLoginDelegate = LoginDelegate.Factory.create()
     LineSdkAndroidTheme {
-        LineLoginButton(channelId = "1234567") { /** ignored */ }
+        LineLoginButton(
+            channelId = "1234567",
+            loginDelegate = dummyLoginDelegate
+        ) { /** ignored */ }
     }
 }
