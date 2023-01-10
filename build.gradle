@@ -4,6 +4,7 @@ buildscript {
     apply from: 'dependencyVersion.gradle'
 
     repositories {
+        maven { url "https://plugins.gradle.org/m2/" }
         google()
         mavenCentral()
     }
@@ -12,11 +13,11 @@ buildscript {
         classpath "com.android.tools.build:gradle:${ver.buildTools.android_gradle}"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${ver.kotlin}"
         classpath "org.jetbrains.kotlin:kotlin-android-extensions:${ver.kotlin}"
-        classpath "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.22.0"
+        classpath "io.github.gradle-nexus:publish-plugin:1.1.0"
     }
 }
 
-apply plugin: 'io.codearte.nexus-staging'
+apply plugin: 'io.github.gradle-nexus.publish-plugin'
 
 allprojects {
     repositories {

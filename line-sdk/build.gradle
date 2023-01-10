@@ -277,22 +277,6 @@ afterEvaluate {
                 }
             }
         }
-        repositories {
-            maven {
-                name = "sonatype"
-
-                def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
-                def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
-                url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
-
-                def name = findProperty('repositoryUsername') ?: ''
-                def pw = findProperty('repositoryPassword') ?: ''
-                credentials {
-                    username name
-                    password pw
-                }
-            }
-        }
     }
 
     signing {
@@ -304,13 +288,12 @@ afterEvaluate {
     }
 }
 
-nexusStaging {
+nexusPublishing {
     packageGroup = 'com.linecorp'
-    def name = findProperty('nexusUsername') ?: ''
-    def pw = findProperty('nexusPassword') ?: ''
-    username = name
-    password = pw
+    repositories {
+        sonatype {
+            username = findProperty('nexusUsername') ?: ''
+            password = findProperty('nexusPassword') ?: ''
+        }
+    }
 }
-
-
-
