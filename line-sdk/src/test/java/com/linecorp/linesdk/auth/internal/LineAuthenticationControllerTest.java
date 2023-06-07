@@ -233,7 +233,7 @@ public class LineAuthenticationControllerTest {
     @Test
     public void testAccessDeniedErrorOfGettingAccessToken() throws Exception {
         Intent newIntentData = new Intent();
-        doReturn(BrowserAuthenticationApi.Result.createAsAuthenticationAgentError(
+        doReturn(BrowserAuthenticationApi.Result.createAsAuthenticationError(
                 LineApiResponseCode.ACCESS_DENIED.toString(),
                 ""))
                 .when(browserAuthenticationApi)
