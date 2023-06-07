@@ -140,14 +140,23 @@ import androidx.annotation.VisibleForTesting;
                 browserAuthenticationApi.getAuthenticationResultFrom(intent);
         if (!authResult.isSuccess()) {
             authenticationStatus.authenticationIntentHandled();
-            final LineLoginResult errorResult =
-                    authResult.isAuthenticationAgentError()
-                    ? LineLoginResult.authenticationAgentError(authResult.getLineApiError())
-                    : LineLoginResult.internalError(authResult.getLineApiError());
+            final LineLoginResult errorResult = getLoginErrorResult(authResult);
             activity.onAuthenticationFinished(errorResult);
             return;
         }
         new AccessTokenRequestTask().execute(authResult);
+    }
+
+    private static LineLoginResult getLoginErrorResult(BrowserAuthenticationApi.Result authResult) {
+        LineLoginResult errorResult;
+        if (authResult.isAccessDeniedError()) {
+            errorResult = LineLoginResult.canceledError();
+        } else if (authResult.isAuthenticationAgentError()) {
+            errorResult = LineLoginResult.authenticationAgentError(authResult.getLineApiError());
+        } else {
+            errorResult = LineLoginResult.internalError(authResult.getLineApiError());
+        }
+        return errorResult;
     }
 
     @MainThread

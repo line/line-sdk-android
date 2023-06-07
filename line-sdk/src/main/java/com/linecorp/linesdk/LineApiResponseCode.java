@@ -21,6 +21,10 @@ public enum LineApiResponseCode {
      */
     SERVER_ERROR,
     /**
+     * User denied to grant permissions.
+     */
+    ACCESS_DENIED,
+    /**
      * An authentication agent error occurred.
      */
     AUTHENTICATION_AGENT_ERROR,

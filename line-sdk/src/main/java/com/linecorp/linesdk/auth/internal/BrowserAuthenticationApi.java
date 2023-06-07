@@ -12,9 +12,16 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
+import androidx.browser.customtabs.CustomTabsIntent;
+import androidx.core.content.ContextCompat;
+
 import com.linecorp.linesdk.BuildConfig;
 import com.linecorp.linesdk.Constants;
 import com.linecorp.linesdk.LineApiError;
+import com.linecorp.linesdk.LineApiResponseCode;
 import com.linecorp.linesdk.Scope;
 import com.linecorp.linesdk.auth.LineAuthenticationConfig;
 import com.linecorp.linesdk.auth.LineAuthenticationParams;
@@ -28,12 +35,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.VisibleForTesting;
-import androidx.browser.customtabs.CustomTabsIntent;
-import androidx.core.content.ContextCompat;
 
 import static com.linecorp.linesdk.utils.StringUtils.createRandomAlphaNumeric;
 import static com.linecorp.linesdk.utils.UriUtils.appendQueryParams;
@@ -367,6 +368,10 @@ import static com.linecorp.linesdk.utils.UriUtils.buildParams;
 
         boolean isSuccess() {
             return !TextUtils.isEmpty(requestToken);
+        }
+
+        boolean isAccessDeniedError() {
+            return LineApiResponseCode.ACCESS_DENIED.toString().equalsIgnoreCase(serverErrorCode);
         }
 
         boolean isAuthenticationAgentError() {
