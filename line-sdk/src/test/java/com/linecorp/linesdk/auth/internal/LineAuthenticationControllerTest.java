@@ -234,7 +234,7 @@ public class LineAuthenticationControllerTest {
     public void testAccessDeniedErrorOfGettingAccessToken() throws Exception {
         Intent newIntentData = new Intent();
         doReturn(BrowserAuthenticationApi.Result.createAsAuthenticationError(
-                LineApiResponseCode.ACCESS_DENIED.toString(),
+                BrowserAuthenticationApi.Result.USER_DENIED_PERMISSION_ERROR_CODE,
                 ""))
                 .when(browserAuthenticationApi)
                 .getAuthenticationResultFrom(newIntentData);

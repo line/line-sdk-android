@@ -21,7 +21,6 @@ import androidx.core.content.ContextCompat;
 import com.linecorp.linesdk.BuildConfig;
 import com.linecorp.linesdk.Constants;
 import com.linecorp.linesdk.LineApiError;
-import com.linecorp.linesdk.LineApiResponseCode;
 import com.linecorp.linesdk.Scope;
 import com.linecorp.linesdk.auth.LineAuthenticationConfig;
 import com.linecorp.linesdk.auth.LineAuthenticationParams;
@@ -307,6 +306,8 @@ import static com.linecorp.linesdk.utils.UriUtils.buildParams;
     }
 
     /* package */ static class Result {
+        /* package */ static final String USER_DENIED_PERMISSION_ERROR_CODE = "ACCESS_DENIED";
+
         @Nullable
         private final String requestToken;
         @Nullable
@@ -371,7 +372,7 @@ import static com.linecorp.linesdk.utils.UriUtils.buildParams;
         }
 
         boolean isUserDeniedPermission() {
-            return LineApiResponseCode.ACCESS_DENIED.toString().equalsIgnoreCase(serverErrorCode);
+            return USER_DENIED_PERMISSION_ERROR_CODE.equalsIgnoreCase(serverErrorCode);
         }
 
         boolean isAuthenticationAgentError() {
