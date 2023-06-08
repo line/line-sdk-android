@@ -370,7 +370,7 @@ import static com.linecorp.linesdk.utils.UriUtils.buildParams;
             return !TextUtils.isEmpty(requestToken);
         }
 
-        boolean isAccessDeniedError() {
+        boolean isUserDeniedPermission() {
             return LineApiResponseCode.ACCESS_DENIED.toString().equalsIgnoreCase(serverErrorCode);
         }
 

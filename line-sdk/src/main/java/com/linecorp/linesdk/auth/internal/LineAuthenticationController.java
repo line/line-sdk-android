@@ -149,7 +149,7 @@ import androidx.annotation.VisibleForTesting;
 
     private static LineLoginResult getLoginErrorResult(BrowserAuthenticationApi.Result authResult) {
         LineLoginResult errorResult;
-        if (authResult.isAccessDeniedError()) {
+        if (authResult.isUserDeniedPermission()) {
             errorResult = LineLoginResult.canceledError();
         } else if (authResult.isAuthenticationAgentError()) {
             errorResult = LineLoginResult.authenticationAgentError(authResult.getLineApiError());
