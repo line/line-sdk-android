@@ -66,7 +66,6 @@ public class LineAuthenticationParams implements Parcelable {
 
     /**
      * OPTIONAL. <br></br>
-     * Not yet public available.
      */
     @Nullable
     private final String promptBotID;
