@@ -166,6 +166,9 @@ import static com.linecorp.linesdk.utils.UriUtils.buildParams;
         if (params.getBotPrompt() != null) {
             returnQueryParams.put("bot_prompt", params.getBotPrompt().name().toLowerCase());
         }
+        if (params.getPromptBotID() != null) {
+            returnQueryParams.put("prompt_bot_id", params.getPromptBotID());
+        }
 
         final String returnUri = appendQueryParams(baseReturnUri, returnQueryParams)
                 .toString();
