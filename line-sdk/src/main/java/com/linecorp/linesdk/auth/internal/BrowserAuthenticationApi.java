@@ -12,6 +12,12 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
+import androidx.browser.customtabs.CustomTabsIntent;
+import androidx.core.content.ContextCompat;
+
 import com.linecorp.linesdk.BuildConfig;
 import com.linecorp.linesdk.Constants;
 import com.linecorp.linesdk.LineApiError;
@@ -28,12 +34,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.VisibleForTesting;
-import androidx.browser.customtabs.CustomTabsIntent;
-import androidx.core.content.ContextCompat;
 
 import static com.linecorp.linesdk.utils.StringUtils.createRandomAlphaNumeric;
 import static com.linecorp.linesdk.utils.UriUtils.appendQueryParams;
@@ -300,12 +300,14 @@ import static com.linecorp.linesdk.utils.UriUtils.buildParams;
 
         return !TextUtils.isEmpty(requestToken)
                ? Result.createAsSuccess(requestToken, friendshipStatusChanged)
-               : Result.createAsAuthenticationAgentError(
+               : Result.createAsAuthenticationError(
                 resultDataUri.getQueryParameter("error"),
                 resultDataUri.getQueryParameter("error_description"));
     }
 
     /* package */ static class Result {
+        /* package */ static final String USER_DENIED_PERMISSION_ERROR_CODE = "ACCESS_DENIED";
+
         @Nullable
         private final String requestToken;
         @Nullable
@@ -343,7 +345,7 @@ import static com.linecorp.linesdk.utils.UriUtils.buildParams;
 
         @VisibleForTesting
         @NonNull
-        static Result createAsAuthenticationAgentError(
+        static Result createAsAuthenticationError(
                 @NonNull String error, @NonNull String errorDescription) {
             return new Result(
                     null /* requestToken */,
@@ -367,6 +369,10 @@ import static com.linecorp.linesdk.utils.UriUtils.buildParams;
 
         boolean isSuccess() {
             return !TextUtils.isEmpty(requestToken);
+        }
+
+        boolean isUserDeniedPermission() {
+            return USER_DENIED_PERMISSION_ERROR_CODE.equalsIgnoreCase(serverErrorCode);
         }
 
         boolean isAuthenticationAgentError() {

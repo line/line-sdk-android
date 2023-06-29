@@ -85,7 +85,7 @@ public class LineAuthenticationControllerTest {
             .nonce(NONCE)
             .build();
 
-    private static final Scope[] SCOPE_ARRAY = { Scope.PROFILE, Scope.FRIEND, Scope.GROUP };
+    private static final Scope[] SCOPE_ARRAY = {Scope.PROFILE, Scope.FRIEND, Scope.GROUP};
     private static final List<Scope> SCOPE_LIST = Arrays.asList(SCOPE_ARRAY);
 
     private static final LineAuthenticationParams LINE_AUTH_PARAMS =
@@ -141,7 +141,7 @@ public class LineAuthenticationControllerTest {
                 accessTokenCache,
                 authenticationStatus,
                 LINE_AUTH_PARAMS);
-        target =  Mockito.spy(controller);
+        target = Mockito.spy(controller);
         doReturn(PKCE_CODE).when(target).createPKCECode();
 
         doReturn(RuntimeEnvironment.application).when(activity).getApplicationContext();
@@ -228,6 +228,28 @@ public class LineAuthenticationControllerTest {
 
         verify(activity, times(1)).onAuthenticationFinished(
                 LineLoginResult.error(LineApiResponseCode.INTERNAL_ERROR, LineApiError.DEFAULT));
+    }
+
+    @Test
+    public void testAccessDeniedErrorOfGettingAccessToken() throws Exception {
+        Intent newIntentData = new Intent();
+        doReturn(BrowserAuthenticationApi.Result.createAsAuthenticationError(
+                BrowserAuthenticationApi.Result.USER_DENIED_PERMISSION_ERROR_CODE,
+                ""))
+                .when(browserAuthenticationApi)
+                .getAuthenticationResultFrom(newIntentData);
+
+        target.startLineAuthentication();
+
+        Robolectric.getBackgroundThreadScheduler().runOneTask();
+        Robolectric.getForegroundThreadScheduler().runOneTask();
+
+        verify(browserAuthenticationApi, times(1))
+                .getRequest(activity, config, PKCE_CODE, LINE_AUTH_PARAMS);
+
+        target.handleIntentFromLineApp(newIntentData);
+
+        verify(activity, times(1)).onAuthenticationFinished(LineLoginResult.canceledError());
     }
 
     @Test
