@@ -10,10 +10,10 @@ group = "com.linecorp.linesdk"
 version = "5.9.0"
 
 android {
-    compileSdkVersion 33
+    compileSdk 33
 
     defaultConfig {
-        minSdkVersion 19
+        minSdkVersion 24
         targetSdkVersion 33
         versionCode 5_09_00
         versionName version
