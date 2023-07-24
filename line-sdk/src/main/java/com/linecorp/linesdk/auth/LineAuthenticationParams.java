@@ -64,11 +64,18 @@ public class LineAuthenticationParams implements Parcelable {
     @Nullable
     private final Locale uiLocale;
 
+    /**
+     * OPTIONAL. <br></br>
+     */
+    @Nullable
+    private final String promptBotID;
+
     private LineAuthenticationParams(final Builder builder) {
         scopes = builder.scopes;
         nonce = builder.nonce;
         botPrompt = builder.botPrompt;
         uiLocale = builder.uiLocale;
+        promptBotID = builder.promptBotID;
     }
 
     private LineAuthenticationParams(@NonNull final Parcel in) {
@@ -76,6 +83,7 @@ public class LineAuthenticationParams implements Parcelable {
         nonce = in.readString();
         botPrompt = readEnum(in, BotPrompt.class);
         uiLocale = (Locale) in.readSerializable();
+        promptBotID = in.readString();
     }
 
     /**
@@ -89,6 +97,7 @@ public class LineAuthenticationParams implements Parcelable {
         dest.writeString(nonce);
         writeEnum(dest, botPrompt);
         dest.writeSerializable(uiLocale);
+        dest.writeString(promptBotID);
     }
 
     /**
@@ -138,6 +147,15 @@ public class LineAuthenticationParams implements Parcelable {
     }
 
     /**
+     * Gets the Prompt Bot Id.
+     * @return the ID of prompt bot
+     */
+    @Nullable
+    public String getPromptBotID() {
+        return promptBotID;
+    }
+
+    /**
      * Represents an option to determine how to prompt the user to add a bot as a friend during the
      * login process.
      */
@@ -162,6 +180,8 @@ public class LineAuthenticationParams implements Parcelable {
         private String nonce;
         private BotPrompt botPrompt;
         private Locale uiLocale;
+
+        private String promptBotID;
 
         public Builder() {}
 
@@ -204,6 +224,11 @@ public class LineAuthenticationParams implements Parcelable {
          */
         public Builder uiLocale(final Locale val) {
             uiLocale = val;
+            return this;
+        }
+
+        public Builder promptBotID(final String botID) {
+            promptBotID = botID;
             return this;
         }
 
