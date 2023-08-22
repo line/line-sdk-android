@@ -1,8 +1,10 @@
 package com.linecorp.linesdk.internal;
 
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 
+import com.linecorp.android.security.encryption.StringCipher;
 import com.linecorp.android.security.encryption.StringCipherDeprecated;
 
 import java.util.concurrent.Executors;
@@ -16,7 +18,7 @@ public class EncryptorHolder {
     private static final int DEFAULT_ITERATION_COUNT = 5000;
     private static final String ENCRYPTION_SALT_SHARED_PREFERENCE_NAME
             = "com.linecorp.linesdk.sharedpreference.encryptionsalt";
-    private static final StringCipherDeprecated ENCRYPTOR = new StringCipherDeprecated(
+    private static final StringCipher ENCRYPTOR = new StringCipherDeprecated(
             ENCRYPTION_SALT_SHARED_PREFERENCE_NAME, DEFAULT_ITERATION_COUNT, true);
     private static volatile boolean s_isInitializationStarted = false;
 
@@ -33,7 +35,7 @@ public class EncryptorHolder {
     }
 
     @NonNull
-    public static StringCipherDeprecated getEncryptor() {
+    public static StringCipher getEncryptor() {
         return ENCRYPTOR;
     }
 

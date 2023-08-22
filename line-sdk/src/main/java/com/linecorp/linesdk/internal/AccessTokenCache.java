@@ -4,13 +4,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
-import com.linecorp.android.security.encryption.EncryptionException;
-import com.linecorp.android.security.encryption.StringCipherDeprecated;
-import com.linecorp.linesdk.utils.ObjectUtils;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
+
+import com.linecorp.android.security.encryption.EncryptionException;
+import com.linecorp.android.security.encryption.StringCipher;
+import com.linecorp.linesdk.utils.ObjectUtils;
 
 /**
  * Class to cache {@link InternalAccessToken}.
@@ -30,7 +30,7 @@ public class AccessTokenCache {
     @NonNull
     private final String sharedPreferenceKey;
     @NonNull
-    private final StringCipherDeprecated encryptor;
+    private final StringCipher encryptor;
 
     public AccessTokenCache(@NonNull Context context, @NonNull String channelId) {
         this(context.getApplicationContext(), channelId, EncryptorHolder.getEncryptor());
@@ -40,7 +40,7 @@ public class AccessTokenCache {
     public AccessTokenCache(
             @NonNull Context context,
             @NonNull String  channelId,
-            @NonNull StringCipherDeprecated encryptor) {
+            @NonNull StringCipher encryptor) {
         this.context = context;
         sharedPreferenceKey = SHARED_PREFERENCE_KEY_PREFIX + channelId;
         this.encryptor = encryptor;
