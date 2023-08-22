@@ -264,7 +264,7 @@ afterEvaluate {
                     }
                     developers {
                         developer {
-                            name = 'LINE Corporation'
+                            name = 'LY Corporation'
                             email = 'dl_oss_dev@linecorp.com'
                             url = 'https://engineering.linecorp.com/en/'
                         }
