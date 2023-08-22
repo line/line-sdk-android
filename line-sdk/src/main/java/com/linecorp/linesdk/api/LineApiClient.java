@@ -83,7 +83,7 @@ public interface LineApiClient {
     LineApiResponse<LineProfile> getProfile();
 
     /**
-     * Gets the friendship status between the bot (which is linked to the current channel) and the user.
+     * Gets the friendship status between the LINE Official Account (which is linked to the current channel) and the user.
      *
      * @return A {@link LineApiResponse} object. If the API call is successful, the
      * {@link LineApiResponse} object contains a {@link LineFriendshipStatus} object
@@ -248,7 +248,7 @@ public interface LineApiClient {
      * <li>The recipient has turned off messages from the channel.</li>
      * <li>The recipient hasn't authorized the channel to use their profile information and has
      * turned off messages from unauthorized channels.</li>
-     * <li>The current user is not a friend of the recipient, who is a human and not a bot.</li>
+     * <li>The current user is not a friend of the recipient, who is a human and not a LINE Official Account.</li>
      * </ul>
      * <p>
      * To call this method, you need a channel with the <code>MESSAGE</code> permission and an
@@ -288,7 +288,7 @@ public interface LineApiClient {
      * <li>The recipient has turned off messages from the channel.</li>
      * <li>The recipient hasn't authorized the channel to use their profile information and has
      * turned off messages from unauthorized channels.</li>
-     * <li>The current user is not a friend of the recipient, who is a human and not a bot.</li>
+     * <li>The current user is not a friend of the recipient, who is a human and not a LINE Official Account.</li>
      * </ul>
      * <p>
      * To call this method, you need a channel with the <code>MESSAGE</code> permission and an
@@ -328,7 +328,7 @@ public interface LineApiClient {
      * <li>The recipient has turned off messages from the channel.</li>
      * <li>The recipient hasn't authorized the channel to use their profile information and has
      * turned off messages from unauthorized channels.</li>
-     * <li>The current user is not a friend of the recipient, who is a human and not a bot.</li>
+     * <li>The current user is not a friend of the recipient, who is a human and not a LINE Official Account.</li>
      * </ul>
      * <p>
      * To call this method, you need a channel with the <code>MESSAGE</code> permission and an
