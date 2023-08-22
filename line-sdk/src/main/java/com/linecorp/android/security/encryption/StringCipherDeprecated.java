@@ -48,7 +48,7 @@ import javax.crypto.spec.SecretKeySpec;
  * We recommend that you initialize an instance of this class beforehand and cache it.
  */
 @WorkerThread
-public class StringCipherDeprecated {
+public class StringCipherDeprecated implements StringCipher {
     // for PBKDF
     private static final int DEFAULT_ITERATIONS = 10000;
 
@@ -112,6 +112,7 @@ public class StringCipherDeprecated {
         }
     }
 
+    @Override
     public void initialize(@NonNull Context context) {
         synchronized (syncObject) {
             if (secretKeys == null) {
@@ -120,6 +121,7 @@ public class StringCipherDeprecated {
         }
     }
 
+    @Override
     @NonNull
     public String encrypt(@NonNull Context context, @NonNull String plainText) {
         synchronized (syncObject) {
@@ -161,6 +163,7 @@ public class StringCipherDeprecated {
         }
     }
 
+    @Override
     @NonNull
     public String decrypt(@NonNull Context context, @NonNull String b64CipherText) {
         synchronized (syncObject) {
