@@ -3,16 +3,16 @@ package com.linecorp.linesdk;
 import android.content.Context;
 import androidx.annotation.NonNull;
 
-import com.linecorp.android.security.encryption.StringCipher;
+import com.linecorp.android.security.encryption.StringCipherDeprecated;
 
 /**
- * Test implementation of {@link StringCipher}.
+ * Test implementation of {@link StringCipherDeprecated}.
  */
-public class TestStringCipher extends StringCipher {
+public class TestStringCipherDeprecated extends StringCipherDeprecated {
     private static final String SHARED_PREFERENCE_NAME = "testSharedPreferenceForEncryptionSalt";
     private static final String ENCRYPTED_DATA_SUFFIX = "-encrypted";
 
-    public TestStringCipher() {
+    public TestStringCipherDeprecated() {
         super(SHARED_PREFERENCE_NAME);
     }
 

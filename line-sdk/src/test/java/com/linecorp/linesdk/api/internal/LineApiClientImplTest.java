@@ -11,7 +11,7 @@ import com.linecorp.linesdk.LineFriendshipStatus;
 import com.linecorp.linesdk.LineProfile;
 import com.linecorp.linesdk.Scope;
 import com.linecorp.linesdk.TestConfig;
-import com.linecorp.linesdk.TestStringCipher;
+import com.linecorp.linesdk.TestStringCipherDeprecated;
 import com.linecorp.linesdk.api.LineApiClient;
 import com.linecorp.linesdk.internal.AccessTokenCache;
 import com.linecorp.linesdk.internal.AccessTokenVerificationResult;
@@ -69,7 +69,7 @@ public class LineApiClientImplTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         accessTokenCache = new AccessTokenCache(
-                RuntimeEnvironment.application, CHANNEL_ID, new TestStringCipher());
+                RuntimeEnvironment.application, CHANNEL_ID, new TestStringCipherDeprecated());
         target = new LineApiClientImpl(
                 CHANNEL_ID,
                 internalOauthApiClient,

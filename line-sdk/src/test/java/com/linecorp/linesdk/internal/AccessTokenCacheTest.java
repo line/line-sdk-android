@@ -2,10 +2,9 @@ package com.linecorp.linesdk.internal;
 
 import android.content.Context;
 
-import com.linecorp.android.security.encryption.StringCipher;
-import com.linecorp.linesdk.BuildConfig;
+import com.linecorp.android.security.encryption.StringCipherDeprecated;
 import com.linecorp.linesdk.TestConfig;
-import com.linecorp.linesdk.TestStringCipher;
+import com.linecorp.linesdk.TestStringCipherDeprecated;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -26,11 +25,11 @@ public class AccessTokenCacheTest {
     private static final String CHANNEL_ID1 = "1";
     private static final String CHANNEL_ID2 = "2";
 
-    private StringCipher encryptor;
+    private StringCipherDeprecated encryptor;
 
     @Before
     public void setUp() {
-        encryptor = new TestStringCipher();
+        encryptor = new TestStringCipherDeprecated();
     }
 
     @Test

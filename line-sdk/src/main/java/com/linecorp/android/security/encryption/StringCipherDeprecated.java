@@ -5,11 +5,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.provider.Settings;
+import android.text.TextUtils;
+import android.util.Base64;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
-import android.text.TextUtils;
-import android.util.Base64;
 
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
@@ -47,7 +48,7 @@ import javax.crypto.spec.SecretKeySpec;
  * We recommend that you initialize an instance of this class beforehand and cache it.
  */
 @WorkerThread
-public class StringCipher {
+public class StringCipherDeprecated {
     // for PBKDF
     private static final int DEFAULT_ITERATIONS = 10000;
 
@@ -79,7 +80,7 @@ public class StringCipher {
     @Nullable
     private SecretKeys secretKeys;
 
-    public StringCipher(@NonNull String sharedPreferenceName) {
+    public StringCipherDeprecated(@NonNull String sharedPreferenceName) {
         this(sharedPreferenceName, DEFAULT_ITERATIONS, false);
     }
 
@@ -92,7 +93,7 @@ public class StringCipher {
                      Note : This field should always be false as it is deprecated and
                      returns UNKNOWN in some cases from Android SDK >= 27
      */
-    public StringCipher(
+    public StringCipherDeprecated(
             @NonNull String sharedPreferenceName,
             int pbkdf2IterationCount,
             boolean isSerialIncludedInDevicePackageSpecificId) {
