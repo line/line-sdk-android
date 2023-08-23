@@ -223,7 +223,7 @@ public class StringCipherDeprecated implements StringCipher {
         SecretKey encryptionKey = new SecretKeySpec(
                 Arrays.copyOfRange(keyBytes, 0, AES_KEY_SIZE_IN_BIT / 8), "AES");
         SecretKey integrityKey = new SecretKeySpec(
-                Arrays.copyOfRange(keyBytes, HMAC_KEY_SIZE_IN_BIT / 8, keyBytes.length), "HmacSHA256");
+                Arrays.copyOfRange(keyBytes, AES_KEY_SIZE_IN_BIT / 8, keyBytes.length), "HmacSHA256");
         return new SecretKeys(encryptionKey, integrityKey);
     }
 
