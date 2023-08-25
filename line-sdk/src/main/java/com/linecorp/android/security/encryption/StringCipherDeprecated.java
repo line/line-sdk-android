@@ -165,11 +165,11 @@ public class StringCipherDeprecated implements StringCipher {
 
     @Override
     @NonNull
-    public String decrypt(@NonNull Context context, @NonNull String b64CipherText) {
+    public String decrypt(@NonNull Context context, @NonNull String cipherText) {
         synchronized (syncObject) {
             initialize(context);
             try {
-                byte[] cipherTextAndMac = Base64.decode(b64CipherText, Base64.DEFAULT);
+                byte[] cipherTextAndMac = Base64.decode(cipherText, Base64.DEFAULT);
                 // get mac, last 32 bytes
                 int idx = cipherTextAndMac.length - HMAC_SIZE_IN_BYTE;
                 byte[] mac = Arrays.copyOfRange(cipherTextAndMac, idx, cipherTextAndMac.length);
