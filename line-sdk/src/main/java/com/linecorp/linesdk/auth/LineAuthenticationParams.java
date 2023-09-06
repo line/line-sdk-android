@@ -156,18 +156,18 @@ public class LineAuthenticationParams implements Parcelable {
     }
 
     /**
-     * Represents an option to determine how to prompt the user to add a bot as a friend during the
-     * login process.
+     * Represents an option to determine how to prompt the user to add a LINE Official Account
+     * as a friend during the login process.
      */
     public enum BotPrompt {
         /**
-         * Includes an option to add a bot as a friend in the consent screen.
+         * Includes an option to add a LINE Official Account as a friend in the consent screen.
          */
         normal,
 
         /**
-         * Opens a new screen to add a bot as a friend after the user agrees to the permissions in
-         * the consent screen.
+         * Opens a new screen to add a LINE Official Account as a friend after the user agrees to
+         * the permissions in the consent screen.
          */
         aggressive
     }
@@ -207,8 +207,8 @@ public class LineAuthenticationParams implements Parcelable {
         }
 
         /**
-         * Sets the option to determine how to prompt the user to add a bot as a friend.
-         * @param val The option to determine how to prompt the user to add a bot as a friend.
+         * Sets the option to determine how to prompt the user to add a LINE Official Account as a friend.
+         * @param val The option to determine how to prompt the user to add a LINE Official Account as a friend.
          * @return The builder itself.
          */
         public Builder botPrompt(final BotPrompt val) {

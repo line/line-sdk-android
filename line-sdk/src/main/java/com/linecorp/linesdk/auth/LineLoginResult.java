@@ -174,10 +174,10 @@ public class LineLoginResult implements Parcelable {
     }
 
     /**
-     * Gets the friendship status of the user and the bot linked to your LINE Login channel.
+     * Gets the friendship status of the user and the LINE Official Account linked to your LINE Login channel.
      *
-     * @return True if the user has added the bot as a friend and has not blocked the bot; false
-     * otherwise.
+     * @return True if the user has added the LINE Official Account as a friend and
+     *         has not blocked the LINE Official Account; false otherwise.
      */
     @NonNull
     public Boolean getFriendshipStatusChanged() {

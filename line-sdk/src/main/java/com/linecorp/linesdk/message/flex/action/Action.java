@@ -11,7 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * These are types of actions for your bot to take when a user taps a button or an image in a message.
+ * These are types of actions for your LINE Official Account to take when a user taps a button or an image in a message.
  * <p>
  * <li> Postback action</li>
  * <li> Message action</li>

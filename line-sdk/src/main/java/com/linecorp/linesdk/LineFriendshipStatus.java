@@ -1,23 +1,23 @@
 package com.linecorp.linesdk;
 
 /**
- * Represents the friendship status between a bot and a user.
+ * Represents the friendship status between a LINE Official Account and a user.
  */
 public class LineFriendshipStatus {
     private boolean friendFlag;
 
     /**
      * Constructs a new {@link LineFriendshipStatus} instance.
-     * @param friendFlag Whether the bot is a friend of the user or not.
+     * @param friendFlag Whether the LINE Official Account is a friend of the user or not.
      */
     public LineFriendshipStatus(final boolean friendFlag) {
         this.friendFlag = friendFlag;
     }
 
     /**
-     * Gets the friendship status of the user and the bot linked to your LINE Login channel.
-     * @return True if the user has added the bot as a friend and has not blocked the bot; false
-     * otherwise.
+     * Gets the friendship status of the user and the LINE Official Account linked to your LINE Login channel.
+     * @return True if the user has added the LINE Official Account as a friend and has not blocked
+     *         the LINE Official Account; false otherwise.
      */
     public boolean isFriend() {
         return friendFlag;
