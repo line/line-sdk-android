@@ -3,7 +3,6 @@ package com.linecorp.android.security.encryption
 import android.content.Context
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
-import android.util.Base64
 import java.security.KeyStore
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
@@ -40,10 +39,7 @@ class StringAesCipher : StringCipher {
             throw EncryptionException("Failed to encrypt!", e)
         }
 
-        val encryptedText = encryptedByteArray.encodeBase64()
-        val initialVector = cipher.iv.encodeBase64()
-
-        return CipherData(encryptedText, initialVector).toString()
+        return CipherData(encryptedByteArray, cipher.iv).toString()
     }
 
     override fun decrypt(context: Context, cipherText: String): String {
@@ -53,11 +49,11 @@ class StringAesCipher : StringCipher {
             throw EncryptionException("Failed to retrieve secret key!", e)
         }
         val cipherData = CipherData.from(cipherText)
-        val ivSpec = IvParameterSpec(cipherData.initialVector.decodeBase64())
+        val ivSpec = IvParameterSpec(cipherData.initialVector)
         try {
             return Cipher.getInstance(TRANSFORMATION_FORMAT)
                 .apply { init(Cipher.DECRYPT_MODE, secretKey, ivSpec) }
-                .run { doFinal(cipherData.encryptedString.decodeBase64()) }
+                .run { doFinal(cipherData.encryptedByteArray) }
                 .let {
                     String(it)
                 }
@@ -110,7 +106,3 @@ class StringAesCipher : StringCipher {
             "$AES_ALGORITHM_NAME/$AES_KEY_BLOCK_MODE/$AES_KEY_PADDING"
     }
 }
-
-private fun ByteArray.encodeBase64(): String = Base64.encodeToString(this, Base64.NO_WRAP)
-
-private fun String.decodeBase64(): ByteArray = Base64.decode(this, Base64.NO_WRAP)
