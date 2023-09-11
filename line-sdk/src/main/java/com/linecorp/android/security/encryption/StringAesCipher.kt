@@ -5,7 +5,6 @@ import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import android.security.keystore.KeyProperties.PURPOSE_DECRYPT
 import android.security.keystore.KeyProperties.PURPOSE_ENCRYPT
-import android.security.keystore.KeyProperties.PURPOSE_SIGN
 import android.security.keystore.KeyProperties.PURPOSE_VERIFY
 import java.security.KeyStore
 import java.security.MessageDigest
@@ -64,11 +63,10 @@ class StringAesCipher : StringCipher {
             val secretKey = getAesSecretKey()
 
             val cipherData = CipherData.from(cipherText)
-            val ivSpec = IvParameterSpec(cipherData.initialVector)
 
-            if (!cipherData.checkHmacValue(hmac)) {
-                throw SecurityException("Cipher text has been tampered with.")
-            }
+            cipherData.verifyHmacValue(hmac)
+
+            val ivSpec = IvParameterSpec(cipherData.initialVector)
 
             return Cipher.getInstance(TRANSFORMATION_FORMAT)
                 .apply { init(Cipher.DECRYPT_MODE, secretKey, ivSpec) }
@@ -76,7 +74,6 @@ class StringAesCipher : StringCipher {
                 .let {
                     String(it)
                 }
-
         } catch (e: Exception) {
             throw EncryptionException("Failed to decrypt", e)
         }
@@ -112,7 +109,7 @@ class StringAesCipher : StringCipher {
             .getInstance(KeyProperties.KEY_ALGORITHM_AES, ANDROID_KEY_STORE)
         val keyGenParameterSpec = KeyGenParameterSpec.Builder(
             AES_KEY_ALIAS,
-            PURPOSE_ENCRYPT or PURPOSE_DECRYPT /* or PURPOSE_VERIFY or PURPOSE_SIGN */
+            PURPOSE_ENCRYPT or PURPOSE_DECRYPT
         )
             .setKeySize(KEY_SIZE_IN_BIT)
             .setBlockModes(KeyProperties.BLOCK_MODE_CBC)
@@ -130,7 +127,7 @@ class StringAesCipher : StringCipher {
             .getInstance(KeyProperties.KEY_ALGORITHM_HMAC_SHA256, ANDROID_KEY_STORE)
         val keyGenParameterSpec = KeyGenParameterSpec.Builder(
             INTEGRITY_KEY_ALIAS,
-            PURPOSE_VERIFY or PURPOSE_SIGN
+            PURPOSE_VERIFY
         )
             .build()
 
@@ -145,13 +142,20 @@ class StringAesCipher : StringCipher {
         initialVector: ByteArray
     ): ByteArray = doFinal(encryptedData + initialVector)
 
-    private fun CipherData.checkHmacValue(mac: Mac): Boolean {
+    /**
+     * Validate the HMAC value
+     *
+     * @throws SecurityException if the HMAC value doesn't match with [encryptedData]
+     */
+    private fun CipherData.verifyHmacValue(mac: Mac) {
         val expectedHmacValue: ByteArray = mac.calculateHmacValue(
             encryptedData = encryptedData,
             initialVector = initialVector
         )
 
-        return MessageDigest.isEqual(expectedHmacValue, hmacValue)
+        if (!MessageDigest.isEqual(expectedHmacValue, hmacValue)) {
+            throw SecurityException("Cipher text has been tampered with.")
+        }
     }
 
     companion object {
