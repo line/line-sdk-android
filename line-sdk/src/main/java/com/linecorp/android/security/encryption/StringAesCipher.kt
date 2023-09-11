@@ -8,6 +8,7 @@ import android.security.keystore.KeyProperties.PURPOSE_ENCRYPT
 import android.security.keystore.KeyProperties.PURPOSE_SIGN
 import android.security.keystore.KeyProperties.PURPOSE_VERIFY
 import java.security.KeyStore
+import java.security.MessageDigest
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
 import javax.crypto.Mac
@@ -64,6 +65,10 @@ class StringAesCipher : StringCipher {
 
             val cipherData = CipherData.from(cipherText)
             val ivSpec = IvParameterSpec(cipherData.initialVector)
+
+            if (!cipherData.checkHmacValue(hmac)) {
+                throw SecurityException("Cipher text has been tampered with.")
+            }
 
             return Cipher.getInstance(TRANSFORMATION_FORMAT)
                 .apply { init(Cipher.DECRYPT_MODE, secretKey, ivSpec) }
@@ -139,6 +144,15 @@ class StringAesCipher : StringCipher {
         encryptedData: ByteArray,
         initialVector: ByteArray
     ): ByteArray = doFinal(encryptedData + initialVector)
+
+    private fun CipherData.checkHmacValue(mac: Mac): Boolean {
+        val expectedHmacValue: ByteArray = mac.calculateHmacValue(
+            encryptedData = encryptedData,
+            initialVector = initialVector
+        )
+
+        return MessageDigest.isEqual(expectedHmacValue, hmacValue)
+    }
 
     companion object {
         private const val AES_KEY_ALIAS =
