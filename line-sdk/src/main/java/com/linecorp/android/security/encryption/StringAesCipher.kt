@@ -5,6 +5,7 @@ import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import android.security.keystore.KeyProperties.PURPOSE_DECRYPT
 import android.security.keystore.KeyProperties.PURPOSE_ENCRYPT
+import android.security.keystore.KeyProperties.PURPOSE_SIGN
 import android.security.keystore.KeyProperties.PURPOSE_VERIFY
 import java.security.KeyStore
 import java.security.MessageDigest
@@ -135,7 +136,7 @@ class StringAesCipher : StringCipher {
             .getInstance(KeyProperties.KEY_ALGORITHM_HMAC_SHA256, ANDROID_KEY_STORE)
         val keyGenParameterSpec = KeyGenParameterSpec.Builder(
             INTEGRITY_KEY_ALIAS,
-            PURPOSE_VERIFY
+            PURPOSE_SIGN or PURPOSE_VERIFY
         )
             .build()
 
