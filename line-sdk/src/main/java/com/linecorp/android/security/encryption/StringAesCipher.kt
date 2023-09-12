@@ -27,7 +27,11 @@ class StringAesCipher : StringCipher {
     private lateinit var hmac: Mac
 
     override fun initialize(context: Context) {
-        if (!::hmac.isInitialized) {
+        if (::hmac.isInitialized) {
+            return
+        }
+
+        synchronized(this) {
             getAesSecretKey()
             val integrityKey = getIntegrityKey()
 
@@ -38,44 +42,48 @@ class StringAesCipher : StringCipher {
     }
 
     override fun encrypt(context: Context, plainText: String): String {
-        initialize(context)
+        synchronized(this) {
+            initialize(context)
 
-        try {
-            val secretKey = getAesSecretKey()
+            try {
+                val secretKey = getAesSecretKey()
 
-            val cipher = Cipher.getInstance(TRANSFORMATION_FORMAT).apply {
-                init(Cipher.ENCRYPT_MODE, secretKey)
+                val cipher = Cipher.getInstance(TRANSFORMATION_FORMAT).apply {
+                    init(Cipher.ENCRYPT_MODE, secretKey)
+                }
+                val encryptedData: ByteArray = cipher.doFinal(plainText.toByteArray())
+
+                return CipherData(
+                    encryptedData = encryptedData,
+                    initialVector = cipher.iv,
+                    hmacValue = hmac.calculateHmacValue(encryptedData, cipher.iv)
+                ).toCipherDataString()
+            } catch (e: Exception) {
+                throw EncryptionException("Failed to encrypt", e)
             }
-            val encryptedData: ByteArray = cipher.doFinal(plainText.toByteArray())
-
-            return CipherData(
-                encryptedData = encryptedData,
-                initialVector = cipher.iv,
-                hmacValue = hmac.calculateHmacValue(encryptedData, cipher.iv)
-            ).toCipherDataString()
-        } catch (e: Exception) {
-            throw EncryptionException("Failed to encrypt", e)
         }
     }
 
     override fun decrypt(context: Context, cipherText: String): String {
-        try {
-            val secretKey = getAesSecretKey()
+        synchronized(this) {
+            try {
+                val secretKey = getAesSecretKey()
 
-            val cipherData = CipherData.from(cipherText)
+                val cipherData = CipherData.from(cipherText)
 
-            cipherData.verifyHmacValue(hmac)
+                cipherData.verifyHmacValue(hmac)
 
-            val ivSpec = IvParameterSpec(cipherData.initialVector)
+                val ivSpec = IvParameterSpec(cipherData.initialVector)
 
-            return Cipher.getInstance(TRANSFORMATION_FORMAT)
-                .apply { init(Cipher.DECRYPT_MODE, secretKey, ivSpec) }
-                .run { doFinal(cipherData.encryptedData) }
-                .let {
-                    String(it)
-                }
-        } catch (e: Exception) {
-            throw EncryptionException("Failed to decrypt", e)
+                return Cipher.getInstance(TRANSFORMATION_FORMAT)
+                    .apply { init(Cipher.DECRYPT_MODE, secretKey, ivSpec) }
+                    .run { doFinal(cipherData.encryptedData) }
+                    .let {
+                        String(it)
+                    }
+            } catch (e: Exception) {
+                throw EncryptionException("Failed to decrypt", e)
+            }
         }
     }
 
