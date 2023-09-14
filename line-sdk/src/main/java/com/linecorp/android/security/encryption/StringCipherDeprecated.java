@@ -133,7 +133,7 @@ public class StringCipherDeprecated implements StringCipher {
                 IvParameterSpec ivSpec = new IvParameterSpec(iv);
 
                 // encrypt first
-                cipher.init(Cipher.ENCRYPT_MODE, secretKeys.getEncryptionKey(), ivSpec);
+                cipher.init(Cipher.ENCRYPT_MODE, secretKeys.encryptionKey, ivSpec);
                 byte[] cipherText = cipher.doFinal(plainText.getBytes("UTF-8"));
 
                 // result is IV || ciphertext || MAC
@@ -144,7 +144,7 @@ public class StringCipherDeprecated implements StringCipher {
                 System.arraycopy(cipherText, 0, result, idx, cipherText.length);
 
                 // calculate MAC of IV || cipher text
-                hmac.init(secretKeys.getIntegrityKey());
+                hmac.init(secretKeys.integrityKey);
                 hmac.update(result, 0, iv.length + cipherText.length);
                 byte[] mac = hmac.doFinal();
 
@@ -174,7 +174,7 @@ public class StringCipherDeprecated implements StringCipher {
                 int idx = cipherTextAndMac.length - HMAC_SIZE_IN_BYTE;
                 byte[] mac = Arrays.copyOfRange(cipherTextAndMac, idx, cipherTextAndMac.length);
                 // calculate MAC again
-                hmac.init(secretKeys.getIntegrityKey());
+                hmac.init(secretKeys.integrityKey);
                 hmac.update(cipherTextAndMac, 0, cipherTextAndMac.length - HMAC_SIZE_IN_BYTE);
                 byte[] calcMac = hmac.doFinal();
 
@@ -185,7 +185,7 @@ public class StringCipherDeprecated implements StringCipher {
 
                 // only decrypt if MAC checks out
                 IvParameterSpec ivSpec = new IvParameterSpec(cipherTextAndMac, 0, IV_SIZE_IN_BYTE);
-                cipher.init(Cipher.DECRYPT_MODE, secretKeys.getEncryptionKey(), ivSpec);
+                cipher.init(Cipher.DECRYPT_MODE, secretKeys.encryptionKey, ivSpec);
                 byte[] plaintextBytes = cipher.doFinal(
                         cipherTextAndMac,
                         IV_SIZE_IN_BYTE,
@@ -256,5 +256,19 @@ public class StringCipherDeprecated implements StringCipher {
                 .putString(SALT_SHARED_PREFERENCE_KEY, Base64.encodeToString(salt, Base64.DEFAULT))
                 .apply();
         return salt;
+    }
+
+    private static class SecretKeys {
+        @NonNull
+        private final SecretKey encryptionKey;
+        @NonNull
+        private final SecretKey integrityKey;
+
+        SecretKeys(
+                @NonNull SecretKey encryptionKey,
+                @NonNull SecretKey integrityKey) {
+            this.encryptionKey = encryptionKey;
+            this.integrityKey = integrityKey;
+        }
     }
 }
