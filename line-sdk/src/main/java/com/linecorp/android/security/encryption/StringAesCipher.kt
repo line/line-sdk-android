@@ -58,7 +58,7 @@ class StringAesCipher : StringCipher {
                     encryptedData = encryptedData,
                     initialVector = cipher.iv,
                     hmacValue = hmac.calculateHmacValue(encryptedData, cipher.iv)
-                ).toCipherDataString()
+                ).encodeToBase64String()
             } catch (e: Exception) {
                 throw EncryptionException("Failed to encrypt", e)
             }
@@ -70,7 +70,7 @@ class StringAesCipher : StringCipher {
             try {
                 val secretKey = getAesSecretKey()
 
-                val cipherData = CipherData.from(cipherText)
+                val cipherData = CipherData.decodeFromBase64String(cipherText)
 
                 cipherData.verifyHmacValue(hmac)
 

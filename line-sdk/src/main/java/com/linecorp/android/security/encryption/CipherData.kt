@@ -7,7 +7,7 @@ class CipherData(
     val initialVector: ByteArray,
     val hmacValue: ByteArray,
 ) {
-    fun toCipherDataString(): String =
+    fun encodeToBase64String(): String =
         "${encryptedData.encodeBase64()}$SEPARATOR" +
             "${initialVector.encodeBase64()}$SEPARATOR" +
             hmacValue.encodeBase64()
@@ -19,7 +19,7 @@ class CipherData(
         private const val INDEX_HMAC = 2
         private const val SIZE = 3
 
-        fun from(cipherDataString: String): CipherData =
+        fun decodeFromBase64String(cipherDataString: String): CipherData =
             cipherDataString
                 .split(SEPARATOR)
                 .takeIf { it.size == SIZE }
