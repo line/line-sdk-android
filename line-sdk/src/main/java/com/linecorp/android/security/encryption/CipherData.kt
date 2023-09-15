@@ -8,29 +8,23 @@ class CipherData(
     val hmacValue: ByteArray,
 ) {
     fun encodeToBase64String(): String =
-        "${encryptedData.encodeBase64()}$SEPARATOR" +
-            "${initialVector.encodeBase64()}$SEPARATOR" +
-            hmacValue.encodeBase64()
+        listOf(encryptedData, initialVector, hmacValue)
+            .joinToString(SEPARATOR) { it.encodeBase64() }
 
     companion object {
         private const val SEPARATOR = ";"
-        private const val INDEX_ENCRYPTED_DATA = 0
-        private const val INDEX_IV = 1
-        private const val INDEX_HMAC = 2
         private const val SIZE = 3
 
-        fun decodeFromBase64String(cipherDataString: String): CipherData =
-            cipherDataString
-                .split(SEPARATOR)
-                .takeIf { it.size == SIZE }
-                ?.run {
-                    CipherData(
-                        encryptedData = get(INDEX_ENCRYPTED_DATA).decodeBase64(),
-                        initialVector = get(INDEX_IV).decodeBase64(),
-                        hmacValue = get(INDEX_HMAC).decodeBase64()
-                    )
-                }
-                ?: throw IllegalArgumentException("Failed to split encrypted text `$cipherDataString`")
+        fun decodeFromBase64String(cipherDataBase64String: String): CipherData {
+            val parts = cipherDataBase64String.split(SEPARATOR)
+            require(parts.size == SIZE) { "Failed to split encrypted text `$cipherDataBase64String`" }
+
+            return CipherData(
+                encryptedData = parts[0].decodeBase64(),
+                initialVector = parts[1].decodeBase64(),
+                hmacValue = parts[2].decodeBase64()
+            )
+        }
     }
 }
 
