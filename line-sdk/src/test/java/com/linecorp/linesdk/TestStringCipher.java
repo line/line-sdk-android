@@ -1,19 +1,19 @@
 package com.linecorp.linesdk;
 
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 
-import com.linecorp.android.security.encryption.StringCipherDeprecated;
+import com.linecorp.android.security.encryption.StringCipher;
 
 /**
- * Test implementation of {@link StringCipherDeprecated}.
+ * Test implementation of {@link StringCipher}.
  */
-public class TestStringCipherDeprecated extends StringCipherDeprecated {
-    private static final String SHARED_PREFERENCE_NAME = "testSharedPreferenceForEncryptionSalt";
+public class TestStringCipher implements StringCipher {
     private static final String ENCRYPTED_DATA_SUFFIX = "-encrypted";
 
-    public TestStringCipherDeprecated() {
-        super(SHARED_PREFERENCE_NAME);
+    public TestStringCipher() {
+        super();
     }
 
     @Override

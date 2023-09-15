@@ -13,7 +13,7 @@ import com.linecorp.linesdk.LineIdToken;
 import com.linecorp.linesdk.LineProfile;
 import com.linecorp.linesdk.Scope;
 import com.linecorp.linesdk.TestConfig;
-import com.linecorp.linesdk.TestStringCipherDeprecated;
+import com.linecorp.linesdk.TestStringCipher;
 import com.linecorp.linesdk.auth.LineAuthenticationConfig;
 import com.linecorp.linesdk.auth.LineAuthenticationParams;
 import com.linecorp.linesdk.auth.LineLoginResult;
@@ -128,7 +128,7 @@ public class LineAuthenticationControllerTest {
         MockitoAnnotations.initMocks(this);
         config = new LineAuthenticationConfig.Builder(CHANNEL_ID).build();
         accessTokenCache = new AccessTokenCache(
-                RuntimeEnvironment.application, CHANNEL_ID, new TestStringCipherDeprecated());
+                RuntimeEnvironment.application, CHANNEL_ID, new TestStringCipher());
         LineAuthenticationStatus authenticationStatus = new LineAuthenticationStatus();
         authenticationStatus.setOpenIdNonce(NONCE);
 
