@@ -13,11 +13,13 @@ class CipherData(
 
     companion object {
         private const val SEPARATOR = ";"
-        private const val SIZE = 3
+        private const val SIZE_DATA_TYPES = 3
 
         fun decodeFromBase64String(cipherDataBase64String: String): CipherData {
             val parts = cipherDataBase64String.split(SEPARATOR)
-            require(parts.size == SIZE) { "Failed to split encrypted text `$cipherDataBase64String`" }
+            require(parts.size == SIZE_DATA_TYPES) {
+                "Failed to split encrypted text `$cipherDataBase64String`"
+            }
 
             return CipherData(
                 encryptedData = parts[0].decodeBase64(),

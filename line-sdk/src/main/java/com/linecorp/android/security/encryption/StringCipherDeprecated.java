@@ -46,7 +46,10 @@ import javax.crypto.spec.SecretKeySpec;
  * Either first access of {@link #encrypt(Context, String)}, {@link #decrypt(Context, String)} or
  * {@link #initialize(Context)} is very slow because there is secret key generation with PBKDF2.
  * We recommend that you initialize an instance of this class beforehand and cache it.
+ *
+ * @deprecated This class is obsolete. Use {@link StringAesCipher} as its replacement.
  */
+@Deprecated
 @WorkerThread
 public class StringCipherDeprecated implements StringCipher {
     // for PBKDF
