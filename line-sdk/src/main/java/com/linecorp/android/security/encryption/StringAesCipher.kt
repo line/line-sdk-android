@@ -111,7 +111,9 @@ class StringAesCipher : StringCipher {
     }
 
     /**
-     * Create AES key in AndroidKeyStore
+     * Create a new AES key in the Android KeyStore. This key will be used for
+     * encrypting and decrypting data. The key is generated with a size of 256 bits,
+     * using the CBC block mode and PKCS7 padding.
      */
     private fun createAesKey(): SecretKey {
         val keyGenerator = KeyGenerator
