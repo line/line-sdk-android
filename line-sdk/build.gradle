@@ -7,7 +7,7 @@ apply plugin: 'maven-publish'
 apply plugin: 'signing'
 
 group = "com.linecorp.linesdk"
-version = "5.9.0"
+version = "5.9.1"
 
 android {
     compileSdk 33
