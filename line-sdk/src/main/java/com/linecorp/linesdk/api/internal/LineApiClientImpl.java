@@ -2,6 +2,9 @@ package com.linecorp.linesdk.api.internal;
 
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.linecorp.linesdk.FriendSortField;
 import com.linecorp.linesdk.GetFriendsResponse;
 import com.linecorp.linesdk.GetGroupsResponse;
@@ -28,9 +31,6 @@ import com.linecorp.linesdk.openchat.OpenChatRoomJoinType;
 import com.linecorp.linesdk.openchat.OpenChatRoomStatus;
 
 import java.util.List;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 /**
  * Implementation of {@link LineApiClient}.

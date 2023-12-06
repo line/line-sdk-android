@@ -5,11 +5,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.provider.Settings;
+import android.text.TextUtils;
+import android.util.Base64;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
-import android.text.TextUtils;
-import android.util.Base64;
 
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
@@ -45,9 +46,12 @@ import javax.crypto.spec.SecretKeySpec;
  * Either first access of {@link #encrypt(Context, String)}, {@link #decrypt(Context, String)} or
  * {@link #initialize(Context)} is very slow because there is secret key generation with PBKDF2.
  * We recommend that you initialize an instance of this class beforehand and cache it.
+ *
+ * @deprecated This class is obsolete. Use {@link StringAesCipher} as its replacement.
  */
+@Deprecated
 @WorkerThread
-public class StringCipher {
+public class StringCipherDeprecated implements StringCipher {
     // for PBKDF
     private static final int DEFAULT_ITERATIONS = 10000;
 
@@ -79,7 +83,7 @@ public class StringCipher {
     @Nullable
     private SecretKeys secretKeys;
 
-    public StringCipher(@NonNull String sharedPreferenceName) {
+    public StringCipherDeprecated(@NonNull String sharedPreferenceName) {
         this(sharedPreferenceName, DEFAULT_ITERATIONS, false);
     }
 
@@ -92,7 +96,7 @@ public class StringCipher {
                      Note : This field should always be false as it is deprecated and
                      returns UNKNOWN in some cases from Android SDK >= 27
      */
-    public StringCipher(
+    public StringCipherDeprecated(
             @NonNull String sharedPreferenceName,
             int pbkdf2IterationCount,
             boolean isSerialIncludedInDevicePackageSpecificId) {
@@ -111,6 +115,7 @@ public class StringCipher {
         }
     }
 
+    @Override
     public void initialize(@NonNull Context context) {
         synchronized (syncObject) {
             if (secretKeys == null) {
@@ -119,6 +124,7 @@ public class StringCipher {
         }
     }
 
+    @Override
     @NonNull
     public String encrypt(@NonNull Context context, @NonNull String plainText) {
         synchronized (syncObject) {
@@ -160,12 +166,13 @@ public class StringCipher {
         }
     }
 
+    @Override
     @NonNull
-    public String decrypt(@NonNull Context context, @NonNull String b64CipherText) {
+    public String decrypt(@NonNull Context context, @NonNull String cipherText) {
         synchronized (syncObject) {
             initialize(context);
             try {
-                byte[] cipherTextAndMac = Base64.decode(b64CipherText, Base64.DEFAULT);
+                byte[] cipherTextAndMac = Base64.decode(cipherText, Base64.DEFAULT);
                 // get mac, last 32 bytes
                 int idx = cipherTextAndMac.length - HMAC_SIZE_IN_BYTE;
                 byte[] mac = Arrays.copyOfRange(cipherTextAndMac, idx, cipherTextAndMac.length);
@@ -219,7 +226,7 @@ public class StringCipher {
         SecretKey encryptionKey = new SecretKeySpec(
                 Arrays.copyOfRange(keyBytes, 0, AES_KEY_SIZE_IN_BIT / 8), "AES");
         SecretKey integrityKey = new SecretKeySpec(
-                Arrays.copyOfRange(keyBytes, HMAC_KEY_SIZE_IN_BIT / 8, keyBytes.length), "HmacSHA256");
+                Arrays.copyOfRange(keyBytes, AES_KEY_SIZE_IN_BIT / 8, keyBytes.length), "HmacSHA256");
         return new SecretKeys(encryptionKey, integrityKey);
     }
 

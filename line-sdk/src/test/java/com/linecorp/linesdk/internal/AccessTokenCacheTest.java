@@ -3,7 +3,6 @@ package com.linecorp.linesdk.internal;
 import android.content.Context;
 
 import com.linecorp.android.security.encryption.StringCipher;
-import com.linecorp.linesdk.BuildConfig;
 import com.linecorp.linesdk.TestConfig;
 import com.linecorp.linesdk.TestStringCipher;
 

@@ -4,13 +4,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
-import com.linecorp.android.security.encryption.EncryptionException;
-import com.linecorp.android.security.encryption.StringCipher;
-import com.linecorp.linesdk.utils.ObjectUtils;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
+
+import com.linecorp.android.security.encryption.EncryptionException;
+import com.linecorp.android.security.encryption.StringCipher;
+import com.linecorp.linesdk.utils.ObjectUtils;
 
 /**
  * Class to cache {@link InternalAccessToken}.

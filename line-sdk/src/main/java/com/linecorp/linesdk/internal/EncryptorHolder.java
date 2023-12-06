@@ -1,8 +1,10 @@
 package com.linecorp.linesdk.internal;
 
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 
+import com.linecorp.android.security.encryption.StringAesCipher;
 import com.linecorp.android.security.encryption.StringCipher;
 
 import java.util.concurrent.Executors;
@@ -13,11 +15,7 @@ import java.util.concurrent.Executors;
  */
 public class EncryptorHolder {
     // TODO: Change to be able to specify the iteration count by LINE SDK user.
-    private static final int DEFAULT_ITERATION_COUNT = 5000;
-    private static final String ENCRYPTION_SALT_SHARED_PREFERENCE_NAME
-            = "com.linecorp.linesdk.sharedpreference.encryptionsalt";
-    private static final StringCipher ENCRYPTOR = new StringCipher(
-            ENCRYPTION_SALT_SHARED_PREFERENCE_NAME, DEFAULT_ITERATION_COUNT, true);
+    private static final StringCipher ENCRYPTOR = new StringAesCipher();
     private static volatile boolean s_isInitializationStarted = false;
 
     private EncryptorHolder() {
