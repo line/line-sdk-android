@@ -46,7 +46,7 @@ dependencies {
 
 A pre-defined LINE login button is provided. You can add it to the user interface of your app to provide your users with a quick way to log in as below
 
-### Add login buton to layout xml
+### Add login button to layout xml
 
 
 ```xml
