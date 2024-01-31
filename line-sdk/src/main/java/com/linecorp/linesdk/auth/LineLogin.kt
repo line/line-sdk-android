@@ -4,6 +4,21 @@ import android.content.Context
 import android.content.Intent
 import androidx.activity.result.contract.ActivityResultContract
 
+/**
+ * ActivityResultContract of [LineLoginApi] that performs LINE Login.
+ *
+ * Usage
+ * First, register for activity result contract
+ * ```kotlin
+ * val lineLogin = registerForActivityResult(LineLogin()) { result: LineLoginResult ->
+ *     // Handle the returned result
+ * }
+ * ```
+ * Then launch the login
+ * ```
+ * lineLogin.launch()
+ * ```
+ */
 class LineLogin : ActivityResultContract<LineLogin.Input, LineLoginResult>() {
 
     data class Input(
