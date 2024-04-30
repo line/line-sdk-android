@@ -69,7 +69,6 @@ dependencies {
     implementation "androidx.core:core-ktx:${ver.androidx.core}"
     implementation "androidx.exifinterface:exifinterface:${ver.androidx.exifinterface}"
     implementation "androidx.legacy:legacy-support-v4:${ver.androidx.legacy}"
-    implementation "androidx.lifecycle:lifecycle-extensions:${ver.androidx.lifecycle}"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:${ver.androidx.lifecycle}"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${ver.androidx.lifecycle}"
 
