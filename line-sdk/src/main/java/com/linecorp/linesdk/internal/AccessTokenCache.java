@@ -8,8 +8,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 
-import com.linecorp.android.security.encryption.EncryptionException;
-import com.linecorp.android.security.encryption.StringCipher;
+import com.linecorp.linesdk.internal.security.encryption.EncryptionException;
+import com.linecorp.linesdk.internal.security.encryption.StringCipher;
 import com.linecorp.linesdk.utils.ObjectUtils;
 
 /**

@@ -5,7 +5,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
 
-import com.linecorp.android.security.TLSSocketFactory;
+import com.linecorp.linesdk.internal.security.TLSSocketFactory;
 import com.linecorp.linesdk.BuildConfig;
 import com.linecorp.linesdk.LineApiError;
 import com.linecorp.linesdk.LineApiResponse;
