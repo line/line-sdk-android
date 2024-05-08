@@ -8,7 +8,7 @@ import androidx.annotation.IntegerRes
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.linecorp.linesdk.R
 import com.linecorp.linesdk.databinding.OpenChatInfoFragmentBinding
 import com.linecorp.linesdk.openchat.addAfterTextChangedAction
@@ -51,7 +51,7 @@ class OpenChatInfoFragment : Fragment() {
     }
 
     private fun setupViewModel() {
-        viewModel = ViewModelProviders.of(requireActivity()).get(OpenChatInfoViewModel::class.java)
+        viewModel = ViewModelProvider(requireActivity()).get(OpenChatInfoViewModel::class.java)
         binding.viewModel = viewModel
 
         viewModel.chatroomName.observe(this, Observer { name ->

@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.linecorp.linesdk.ActionResult
 import com.linecorp.linesdk.Constants
 import com.linecorp.linesdk.LineApiError
@@ -52,7 +51,7 @@ class CreateOpenChatActivity : AppCompatActivity() {
 
     private fun initViewModel() {
         val sharedPreferences = getSharedPreferences("openchat", Context.MODE_PRIVATE)
-        viewModel = ViewModelProviders.of(
+        viewModel = ViewModelProvider(
             this,
             object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
