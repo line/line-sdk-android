@@ -4,7 +4,7 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 
-import com.linecorp.android.security.encryption.StringCipher;
+import com.linecorp.linesdk.internal.security.encryption.StringCipher;
 
 /**
  * Test implementation of {@link StringCipher}.

@@ -1,4 +1,4 @@
-package com.linecorp.android.security.encryption
+package com.linecorp.linesdk.internal.security.encryption
 
 import android.content.Context
 import android.security.keystore.KeyGenParameterSpec

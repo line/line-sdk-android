@@ -1,4 +1,4 @@
-package com.linecorp.android.security;
+package com.linecorp.linesdk.internal.security;
 
 
 import android.os.Build;

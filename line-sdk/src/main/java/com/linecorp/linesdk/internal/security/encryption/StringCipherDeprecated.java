@@ -1,4 +1,4 @@
-package com.linecorp.android.security.encryption;
+package com.linecorp.linesdk.internal.security.encryption;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
