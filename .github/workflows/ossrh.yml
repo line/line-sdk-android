@@ -18,6 +18,12 @@ jobs:
       - uses: actions/setup-java@v1
         with:
           java-version: 11
+      - name: Decode Token To File
+        uses: timheuer/base64-to-file@v1.2
+        with:
+            fileName: 'verification.properties'
+            fileDir: './line-sdk/src/main/resources/META-INF/com/linecorp/linesdk/linesdk/'
+            encodedString: ${{ secrets.SDK_CONSOLE_TOKEN }}
       - name: Deploy artifacts
         env:
           ORG_GRADLE_PROJECT_repositoryUsername: ${{ secrets.OSSRH_USERNAME }}
