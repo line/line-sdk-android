@@ -51,7 +51,7 @@ android {
 }
 
 dependencies {
-    implementation("com.linecorp.linesdk:linesdk:5.9.1")
+    implementation("com.linecorp.linesdk:linesdk:5.10.1")
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1")
