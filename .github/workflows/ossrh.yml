@@ -21,9 +21,9 @@ jobs:
       - name: Decode Token To File
         uses: timheuer/base64-to-file@v1.2
         with:
-            fileName: 'verification.properties'
-            fileDir: './line-sdk/src/main/resources/META-INF/com/linecorp/linesdk/linesdk/'
-            encodedString: ${{ secrets.SDK_CONSOLE_TOKEN }}
+          fileName: 'verification.properties'
+          fileDir: './line-sdk/src/main/resources/META-INF/com/linecorp/linesdk/linesdk/'
+          encodedString: ${{ secrets.SDK_CONSOLE_TOKEN }}
       - name: Deploy artifacts
         env:
           ORG_GRADLE_PROJECT_repositoryUsername: ${{ secrets.OSSRH_USERNAME }}
@@ -51,12 +51,17 @@ jobs:
 
       - name: Retrieve Version
         run: |
-          echo "version_name=$(${{github.workspace}}/gradlew -q printVersionName)" >> $GITHUB_OUTPUT
+          version_output=$(${{github.workspace}}/gradlew -q printVersionName)
+
+          # Use awk to extract the last line from the output
+          # 'END{print line}' prints the last stored line after processing all input lines
+          VERSION_NAME=$(echo "$version_output" | awk '/./{line=$0} END{print line}')
+          echo "VERSION_NAME=$VERSION_NAME" >> $GITHUB_OUTPUT
         id: sdk_version
 
       - name: Get Version
         run: |
-          echo "version_name=${{steps.sdk_version.outputs.VERSION_NAME}}"
+          echo "VERSION_NAME=${{steps.sdk_version.outputs.VERSION_NAME}}"
 
       - name: Create Tag
         id: create_tag
