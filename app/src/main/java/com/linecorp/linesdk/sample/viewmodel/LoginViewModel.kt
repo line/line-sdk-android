@@ -10,6 +10,9 @@ import androidx.lifecycle.viewModelScope
 import com.linecorp.linesdk.LineProfile
 import com.linecorp.linesdk.Scope
 import com.linecorp.linesdk.auth.LineAuthenticationParams
+import com.linecorp.linesdk.auth.LineAuthenticationParams.WebAuthenticationMethod
+import com.linecorp.linesdk.auth.LineAuthenticationParams.WebAuthenticationMethod.email
+import com.linecorp.linesdk.auth.LineAuthenticationParams.WebAuthenticationMethod.qrCode
 import com.linecorp.linesdk.auth.LineLoginApi
 import com.linecorp.linesdk.auth.LineLoginResult
 import java.util.Locale
@@ -46,11 +49,18 @@ class LoginViewModel(context: Context, channelId: String) :
         nonce: String? = null,
         botPrompt: LineAuthenticationParams.BotPrompt? = null,
         uiLocale: Locale? = null,
-        onlyWebLogin: Boolean = false
+        forceWebLogin: Boolean = false,
+        qrCodeLogin: Boolean = false
     ): Intent {
-        val loginAuthParam = createLoginAuthParam(scopes, nonce, botPrompt, uiLocale)
+        val loginAuthParam = createLoginAuthParam(
+            scopes,
+            nonce,
+            botPrompt,
+            uiLocale,
+            webAuthMethod = if (qrCodeLogin) qrCode else email
+        )
 
-        return if (onlyWebLogin) {
+        return if (forceWebLogin) {
             LineLoginApi.getLoginIntentWithoutLineAppAuth(
                 context,
                 channelId,
@@ -119,12 +129,14 @@ class LoginViewModel(context: Context, channelId: String) :
         scopes: List<Scope>,
         nonce: String?,
         botPrompt: LineAuthenticationParams.BotPrompt?,
-        uiLocale: Locale?
+        uiLocale: Locale?,
+        webAuthMethod: WebAuthenticationMethod
     ): LineAuthenticationParams = LineAuthenticationParams.Builder()
         .scopes(scopes)
         .nonce(nonce)
         .uiLocale(uiLocale)
         .botPrompt(botPrompt)
+        .initialWebAuthenticationMethod(webAuthMethod)
         .build()
 
     private fun fetchAndUpdateUserProfile() {
