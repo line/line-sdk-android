@@ -70,12 +70,20 @@ public class LineAuthenticationParams implements Parcelable {
     @Nullable
     private final String promptBotID;
 
+    /**
+     * OPTIONAL. <br></br>
+     * The initial web authentication method to be used when starting the login process.
+     */
+    @Nullable
+    private final WebAuthenticationMethod webAuthMethod;
+
     private LineAuthenticationParams(final Builder builder) {
         scopes = builder.scopes;
         nonce = builder.nonce;
         botPrompt = builder.botPrompt;
         uiLocale = builder.uiLocale;
         promptBotID = builder.promptBotID;
+        webAuthMethod = builder.webAuthMethod;
     }
 
     private LineAuthenticationParams(@NonNull final Parcel in) {
@@ -84,6 +92,7 @@ public class LineAuthenticationParams implements Parcelable {
         botPrompt = readEnum(in, BotPrompt.class);
         uiLocale = (Locale) in.readSerializable();
         promptBotID = in.readString();
+        webAuthMethod = readEnum(in, WebAuthenticationMethod.class);
     }
 
     /**
@@ -98,6 +107,7 @@ public class LineAuthenticationParams implements Parcelable {
         writeEnum(dest, botPrompt);
         dest.writeSerializable(uiLocale);
         dest.writeString(promptBotID);
+        writeEnum(dest, webAuthMethod);
     }
 
     /**
@@ -155,6 +165,11 @@ public class LineAuthenticationParams implements Parcelable {
         return promptBotID;
     }
 
+    @Nullable
+    public WebAuthenticationMethod getInitialWebAuthenticationMethod() {
+        return webAuthMethod;
+    }
+
     /**
      * Represents an option to determine how to prompt the user to add a LINE Official Account
      * as a friend during the login process.
@@ -173,6 +188,14 @@ public class LineAuthenticationParams implements Parcelable {
     }
 
     /**
+     * The method used for the authentication when using the web authentication flow.
+     */
+    public enum WebAuthenticationMethod {
+        email,
+        qrCode
+    }
+
+    /**
      * Represents a builder to construct LineAuthenticationParams objects.
      */
     public static final class Builder {
@@ -180,8 +203,8 @@ public class LineAuthenticationParams implements Parcelable {
         private String nonce;
         private BotPrompt botPrompt;
         private Locale uiLocale;
-
         private String promptBotID;
+        private WebAuthenticationMethod webAuthMethod;
 
         public Builder() {}
 
@@ -229,6 +252,14 @@ public class LineAuthenticationParams implements Parcelable {
 
         public Builder promptBotID(final String botID) {
             promptBotID = botID;
+            return this;
+        }
+
+        /**
+         * Specifies the initial web authentication method to be used when starting the login process.
+         */
+        public Builder initialWebAuthenticationMethod(final WebAuthenticationMethod method) {
+            webAuthMethod = method;
             return this;
         }
 

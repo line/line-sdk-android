@@ -24,6 +24,7 @@ import com.linecorp.linesdk.LineApiError;
 import com.linecorp.linesdk.Scope;
 import com.linecorp.linesdk.auth.LineAuthenticationConfig;
 import com.linecorp.linesdk.auth.LineAuthenticationParams;
+import com.linecorp.linesdk.auth.LineAuthenticationParams.WebAuthenticationMethod;
 import com.linecorp.linesdk.internal.pkce.CodeChallengeMethod;
 import com.linecorp.linesdk.internal.pkce.PKCECode;
 
@@ -180,7 +181,17 @@ import static com.linecorp.linesdk.utils.UriUtils.buildParams;
         if (params.getUILocale() != null) {
             loginQueryParams.put("ui_locales", params.getUILocale().toString());
         }
-        return appendQueryParams(config.getWebLoginPageUrl(), loginQueryParams);
+
+        Uri loginPageUrl = config.getWebLoginPageUrl();
+        Uri.Builder urlBuilder = loginPageUrl.buildUpon();
+        if (params.getInitialWebAuthenticationMethod() == WebAuthenticationMethod.qrCode) {
+            if (loginPageUrl.getFragment() != null)  {
+                throw new AssertionError("Multiple fragment is not yet supported. Require review or report to developer.");
+            }
+            urlBuilder.encodedFragment("/qr");
+        }
+
+        return appendQueryParams(urlBuilder, loginQueryParams).build();
     }
 
     @VisibleForTesting
