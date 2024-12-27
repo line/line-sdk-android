@@ -20,6 +20,10 @@ The LINE SDK supports the OpenID Connect 1.0 specification. You can get ID token
 ### Pre-request
 Create your own LINE Channel and follow the instructions [here](https://developers.line.biz/en/docs/android-sdk/integrate-line-login/) to link your app to your channel.
 
+#### Package signatures
+
+Package signatures are crucial for enhancing authentication interactions between your app and the LINE app. This field is optional; however, you can configure it by referring to the [Set Package Signatures section](https://developers.line.biz/en/docs/line-login-sdks/android-sdk/integrate-line-login/#set-package-signatures) on the [LINE Developers site](https://developers.line.biz).
+
 ### Gradle
 
 Add mavenCentral to your repositories if it's not added yet.
@@ -56,7 +60,7 @@ A pre-defined LINE login button is provided. You can add it to the user interfac
     android:layout_height="wrap_content" />
 ```
 
-### Use it in codes
+### Use it in code
 ```java
 LoginButton loginButton = rootView.findViewById(R.id.line_login_btn);
 
@@ -93,6 +97,11 @@ loginButton.addLoginListener(new LoginListener() {
 
 ```
 
+### Handle errors due to incorrect package signatures
+
+In the `onLoginFailure` callback, `result.responseCode` will be `AUTHENTICATION_AGENT_ERROR` if the package signatures configured in the LINE Channel are incorrect.
+
+To resolve this issue, you can either clear the package signatures field or configure it with the correct package signatures.
 
 For more information, refer to the [LINE SDK for Android guide](https://developers.line.biz/en/docs/android-sdk/) on the [LINE Developers site](https://developers.line.biz).
 
