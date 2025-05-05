@@ -35,7 +35,7 @@ jobs:
       - name: Build debug APK
         run: bash ./gradlew :line-sdk:assembleDebug --stacktrace
       - name: Upload APK
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: line-sdk
           path: line-sdk/build/outputs/aar/line-sdk-*-debug.aar
