@@ -6,7 +6,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.linecorp.linesdk.R;
-import com.squareup.picasso.Picasso;
+import com.linecorp.linesdk.image.LineSdkImageConfig;
 
 
 public class UserThumbnailView extends ConstraintLayout  {
@@ -24,7 +24,13 @@ public class UserThumbnailView extends ConstraintLayout  {
 
         int thumbnailResId = (targetUser.getType() == TargetUser.Type.FRIEND) ?
                                      R.drawable.friend_thumbnail : R.drawable.group_thumbnail;
-        Picasso.get().load(targetUser.getPictureUri()).placeholder(thumbnailResId).into(imageView);
+        String imageUrl = targetUser.getPictureUri() != null ? 
+                targetUser.getPictureUri().toString() : null;
+        LineSdkImageConfig.getImageLoader().loadImage(
+                imageUrl,
+                imageView,
+                thumbnailResId
+        );
     }
 
     private void init() {
