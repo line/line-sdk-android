@@ -12,9 +12,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.linecorp.linesdk.R
 import com.linecorp.linesdk.databinding.ProfileInfoFragmentBinding
 import com.linecorp.linesdk.openchat.addAfterTextChangedAction
-import kotlinx.android.synthetic.main.activity_create_open_chat.toolbar
-import kotlinx.android.synthetic.main.profile_info_fragment.displayNameEditText
-import kotlinx.android.synthetic.main.profile_info_fragment.displayNameGuide
 
 class ProfileInfoFragment : Fragment() {
 
@@ -54,16 +51,16 @@ class ProfileInfoFragment : Fragment() {
     }
 
     private fun setupProfileNameGuide() {
-        displayNameGuide.text = resources.getString(R.string.openchat_create_profile_input_guide, viewModel.chatroomName.value)
+        binding.displayNameGuide.text = resources.getString(R.string.openchat_create_profile_input_guide, viewModel.chatroomName.value)
     }
 
     private fun setupProfileName() =
-        displayNameEditText.addAfterTextChangedAction { name ->
+        binding.displayNameEditText.addAfterTextChangedAction { name ->
             viewModel.profileName.value = name
         }
 
     private fun setupToolbar() {
-        val toolbar = requireActivity().toolbar.apply {
+        val toolbar = (requireActivity() as CreateOpenChatActivity).getToolbar().apply {
             title = getString(R.string.openchat_create_profile_title)
             menu.clear()
             inflateMenu(R.menu.menu_profile_info)

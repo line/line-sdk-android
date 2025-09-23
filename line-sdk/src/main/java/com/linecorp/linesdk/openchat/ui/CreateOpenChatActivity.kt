@@ -19,11 +19,13 @@ import com.linecorp.linesdk.R
 import com.linecorp.linesdk.api.LineApiClient
 import com.linecorp.linesdk.api.LineApiClientBuilder
 import com.linecorp.linesdk.auth.internal.LineAppVersion
+import com.linecorp.linesdk.databinding.ActivityCreateOpenChatBinding
 import com.linecorp.linesdk.openchat.OpenChatRoomInfo
-import kotlinx.android.synthetic.main.activity_create_open_chat.progressBar
 
 class CreateOpenChatActivity : AppCompatActivity() {
     private enum class CreateOpenChatStep { ChatroomInfo, UserProfile }
+
+    private lateinit var binding: ActivityCreateOpenChatBinding
 
     private val lineApiClient: LineApiClient by lazy {
         val channelId = intent.getStringExtra(ARG_CHANNEL_ID).orEmpty()
@@ -37,7 +39,8 @@ class CreateOpenChatActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_create_open_chat)
+        binding = ActivityCreateOpenChatBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         initViewModel()
 
@@ -48,6 +51,8 @@ class CreateOpenChatActivity : AppCompatActivity() {
     }
 
     fun goToNextScreen() = addFragment(CreateOpenChatStep.UserProfile)
+
+    fun getToolbar() = binding.toolbar
 
     private fun initViewModel() {
         val sharedPreferences = getSharedPreferences("openchat", Context.MODE_PRIVATE)
@@ -80,7 +85,7 @@ class CreateOpenChatActivity : AppCompatActivity() {
         })
 
         viewModel.isCreatingChatRoom.observe(this, Observer { isCreatingChatRoom ->
-            progressBar.visibility = if (isCreatingChatRoom) VISIBLE else GONE
+            binding.progressBar.visibility = if (isCreatingChatRoom) VISIBLE else GONE
         })
 
         viewModel.shouldShowAgreementWarning.observe(this, Observer { shouldShowWarning ->

@@ -12,14 +12,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.linecorp.linesdk.R
 import com.linecorp.linesdk.databinding.OpenChatInfoFragmentBinding
 import com.linecorp.linesdk.openchat.addAfterTextChangedAction
-import kotlinx.android.synthetic.main.activity_create_open_chat.toolbar
-import kotlinx.android.synthetic.main.open_chat_info_fragment.categoryLabelTextView
-import kotlinx.android.synthetic.main.open_chat_info_fragment.descriptionEditText
-import kotlinx.android.synthetic.main.open_chat_info_fragment.descriptionMaxTextView
-import kotlinx.android.synthetic.main.open_chat_info_fragment.nameEditText
-import kotlinx.android.synthetic.main.open_chat_info_fragment.nameMaxTextView
-import kotlinx.android.synthetic.main.open_chat_info_fragment.searchIncludedCheckBox
-import kotlinx.android.synthetic.main.open_chat_info_fragment.searchIncludedContainer
 
 class OpenChatInfoFragment : Fragment() {
 
@@ -55,18 +47,18 @@ class OpenChatInfoFragment : Fragment() {
         binding.viewModel = viewModel
 
         viewModel.chatroomName.observe(this, Observer { name ->
-            nameMaxTextView.text =
+            binding.nameMaxTextView.text =
                 generateTextLengthLimitString(name, R.integer.max_chatroom_name_length)
         })
 
         viewModel.description.observe(this, Observer { name ->
-            descriptionMaxTextView.text =
+            binding.descriptionMaxTextView.text =
                 generateTextLengthLimitString(name, R.integer.max_chatroom_description_length)
         })
 
         viewModel.category.observe(this, Observer { category ->
             category?.resourceId?.let { resourceId ->
-                categoryLabelTextView.text = resources.getString(resourceId)
+                binding.categoryLabelTextView.text = resources.getString(resourceId)
             }
         })
     }
@@ -80,7 +72,7 @@ class OpenChatInfoFragment : Fragment() {
     }
 
     private fun setupToolbar() {
-        val toolbar = requireActivity().toolbar.apply {
+        val toolbar = (requireActivity() as CreateOpenChatActivity).getToolbar().apply {
             title = getString(R.string.openchat_create_room_title)
             menu.clear()
             inflateMenu(R.menu.menu_openchat_info)
@@ -107,15 +99,15 @@ class OpenChatInfoFragment : Fragment() {
     }
 
     private fun setupSearchOption() {
-        searchIncludedCheckBox.setOnCheckedChangeListener { _, isChecked ->
+        binding.searchIncludedCheckBox.setOnCheckedChangeListener { _, isChecked ->
             viewModel.isSearchIncluded.value = isChecked
         }
 
-        searchIncludedContainer.setOnClickListener { searchIncludedCheckBox.toggle() }
+        binding.searchIncludedContainer.setOnClickListener { binding.searchIncludedCheckBox.toggle() }
     }
 
     private fun setupCategoryLabel() {
-        categoryLabelTextView.setOnClickListener { showCategorySelectionDialog() }
+        binding.categoryLabelTextView.setOnClickListener { showCategorySelectionDialog() }
     }
 
     private fun showCategorySelectionDialog() =
@@ -127,10 +119,10 @@ class OpenChatInfoFragment : Fragment() {
             .show()
 
     private fun setupDescription() =
-        descriptionEditText.addAfterTextChangedAction(viewModel.description::setValue)
+        binding.descriptionEditText.addAfterTextChangedAction(viewModel.description::setValue)
 
     private fun setupName() =
-        nameEditText.addAfterTextChangedAction(viewModel.chatroomName::setValue)
+        binding.nameEditText.addAfterTextChangedAction(viewModel.chatroomName::setValue)
 
     private fun getResourceInt(@IntegerRes resId: Int): Int =
         requireActivity().resources.getInteger(resId)
