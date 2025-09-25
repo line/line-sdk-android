@@ -65,6 +65,7 @@ dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:${ver.kotlin}"
 
+    implementation "androidx.activity:activity-ktx:${ver.androidx.activity}"
     implementation "androidx.annotation:annotation:${ver.androidx.annotation}"
     implementation "androidx.appcompat:appcompat:${ver.androidx.appcompat}"
     implementation "androidx.browser:browser:${ver.androidx.browser}"
