@@ -1,5 +1,6 @@
 package com.linecorp.linesdk.sample.ui.theme
 
+import android.annotation.SuppressLint
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -71,6 +72,7 @@ private val DarkColors = darkColorScheme(
 )
 
 @Composable
+@SuppressLint("NewApi")
 fun LineSdkAndroidTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
     dynamicColor: Boolean = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S,

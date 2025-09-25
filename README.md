@@ -105,6 +105,25 @@ To resolve this issue, you can either clear the package signatures field or conf
 
 For more information, refer to the [LINE SDK for Android guide](https://developers.line.biz/en/docs/android-sdk/) on the [LINE Developers site](https://developers.line.biz).
 
+# Known Issues
+
+## Motorola Android Devices Login Issue
+
+We've identified an issue affecting LINE Login functionality specifically on Motorola Android devices. The problem is caused by the Phishing detection feature in the Moto Secure app that comes pre-installed on these devices.
+
+### Solution for Developers
+
+If your users report login failures on Motorola devices, please guide them through these steps:
+
+1. Open the Moto Secure app on their Motorola device
+1. Navigate to "Phishing detection"
+1. Temporarily disable this feature
+1. Attempt to log in to your app using LINE Login
+1. Once login is successful, they can safely re-enable the "Phishing detection" feature
+
+Consider displaying them when detecting login failures on Motorola devices to improve user experience.
+
+We are investigating the root cause and its solution.
 
 # Try the starter app
 To have a quick look at the features of the LINE SDK, try our starter app by following the steps below:
