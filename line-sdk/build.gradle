@@ -65,11 +65,16 @@ dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:${ver.kotlin}"
 
+    // Coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:${ver.coroutines}"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:${ver.coroutines}"
+
     implementation "androidx.annotation:annotation:${ver.androidx.annotation}"
     implementation "androidx.appcompat:appcompat:${ver.androidx.appcompat}"
     implementation "androidx.browser:browser:${ver.androidx.browser}"
     implementation "androidx.constraintlayout:constraintlayout:${ver.androidx.constraintlayout}"
     implementation "androidx.core:core-ktx:${ver.androidx.core}"
+    implementation "androidx.collection:collection-ktx:${ver.androidx.collection}"
     implementation "androidx.exifinterface:exifinterface:${ver.androidx.exifinterface}"
     implementation "androidx.legacy:legacy-support-v4:${ver.androidx.legacy}"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:${ver.androidx.lifecycle}"
@@ -86,7 +91,7 @@ dependencies {
     implementation("com.madgag.spongycastle:prov:${ver.spongycastle}") {
         exclude group: 'junit', module: 'junit'
     }
-    implementation "com.squareup.picasso:picasso:${ver.picasso}"
+
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     // for tests
@@ -312,6 +317,3 @@ nexusStaging {
     username = name
     password = pw
 }
-
-
-
