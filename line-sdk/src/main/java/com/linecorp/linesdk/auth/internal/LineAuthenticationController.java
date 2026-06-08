@@ -243,7 +243,8 @@ import androidx.annotation.VisibleForTesting;
             try {
                 accessTokenCache.saveAccessToken(accessToken);
             } catch (final Exception e) {
-                return LineLoginResult.internalError(e.getMessage());
+                return LineLoginResult.internalError(
+                        e.getMessage() != null ? e.getMessage() : e.toString());
             }
 
             final LineIdToken idToken = issueAccessTokenResult.getIdToken();

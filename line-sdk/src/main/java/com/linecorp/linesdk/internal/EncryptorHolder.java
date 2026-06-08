@@ -49,10 +49,10 @@ public class EncryptorHolder {
         public void run() {
             try {
                 ENCRYPTOR.initialize(context);
-            } catch (Throwable t) {
-                // Pre-initialization is only a latency optimization; a broken device Keystore
-                // must not crash the host app on this background thread.
-                Log.w(TAG, "Encryptor pre-initialization failed; will lazy-init later", t);
+            } catch (Exception e) {
+                // Pre-init is only a latency optimization; a broken Keystore must not crash the
+                // host app on this background thread.
+                Log.w(TAG, "Encryptor pre-init failed", e);
             }
         }
     }
