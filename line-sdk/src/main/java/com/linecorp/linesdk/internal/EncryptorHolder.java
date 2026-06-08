@@ -1,6 +1,7 @@
 package com.linecorp.linesdk.internal;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -14,6 +15,7 @@ import java.util.concurrent.Executors;
  * This class prevents to generate secret keys repeatedly because it is very slow.
  */
 public class EncryptorHolder {
+    private static final String TAG = "EncryptorHolder";
     // TODO: Change to be able to specify the iteration count by LINE SDK user.
     private static final StringCipher ENCRYPTOR = new StringAesCipher();
     private static volatile boolean s_isInitializationStarted = false;
@@ -45,7 +47,13 @@ public class EncryptorHolder {
 
         @Override
         public void run() {
-            ENCRYPTOR.initialize(context);
+            try {
+                ENCRYPTOR.initialize(context);
+            } catch (Throwable t) {
+                // Pre-initialization is only a latency optimization; a broken device Keystore
+                // must not crash the host app on this background thread.
+                Log.w(TAG, "Encryptor pre-initialization failed; will lazy-init later", t);
+            }
         }
     }
 }
