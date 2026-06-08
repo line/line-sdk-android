@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
+import androidx.annotation.NonNull;
+
 import com.linecorp.linesdk.LineAccessToken;
 import com.linecorp.linesdk.LineApiError;
 import com.linecorp.linesdk.LineApiResponse;
@@ -24,10 +26,13 @@ import com.linecorp.linesdk.internal.OpenIdDiscoveryDocument;
 import com.linecorp.linesdk.internal.nwclient.LineAuthenticationApiClient;
 import com.linecorp.linesdk.internal.nwclient.TalkApiClient;
 import com.linecorp.linesdk.internal.pkce.PKCECode;
+import com.linecorp.linesdk.internal.security.encryption.EncryptionException;
+import com.linecorp.linesdk.internal.security.encryption.StringCipher;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -36,6 +41,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
+import java.security.ProviderException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -109,6 +115,30 @@ public class LineAuthenticationControllerTest {
                     .build();
 
     private static final Intent LOGIN_INTENT = new Intent();
+
+    private static class ThrowingStringCipher implements StringCipher {
+        @Override
+        public void initialize(@NonNull Context context) {
+            throw failure();
+        }
+
+        @NonNull
+        @Override
+        public String encrypt(@NonNull Context context, @NonNull String plainText) {
+            throw failure();
+        }
+
+        @NonNull
+        @Override
+        public String decrypt(@NonNull Context context, @NonNull String cipherText) {
+            throw failure();
+        }
+
+        private static EncryptionException failure() {
+            return new EncryptionException("keystore failure",
+                    new ProviderException("Keystore key generation failed"));
+        }
+    }
 
     private LineAuthenticationController target;
 
@@ -228,6 +258,46 @@ public class LineAuthenticationControllerTest {
 
         verify(activity, times(1)).onAuthenticationFinished(
                 LineLoginResult.error(LineApiResponseCode.INTERNAL_ERROR, LineApiError.DEFAULT));
+    }
+
+    @Test
+    public void testKeystoreErrorOfSavingAccessToken() throws Exception {
+        AccessTokenCache failingCache = new AccessTokenCache(
+                RuntimeEnvironment.application, CHANNEL_ID, new ThrowingStringCipher());
+        LineAuthenticationStatus status = new LineAuthenticationStatus();
+        status.setOpenIdNonce(NONCE);
+        target = Mockito.spy(new LineAuthenticationController(
+                activity, config, authApiClient, talkApiClient, browserAuthenticationApi,
+                failingCache, status, LINE_AUTH_PARAMS));
+        doReturn(PKCE_CODE).when(target).createPKCECode();
+        doReturn(new BrowserAuthenticationApi.Request(
+                LOGIN_INTENT, null /* startActivityOption */, REDIRECT_URI, false))
+                .when(browserAuthenticationApi)
+                .getRequest(any(Context.class), any(LineAuthenticationConfig.class),
+                        any(PKCECode.class), any(LineAuthenticationParams.class));
+
+        Intent newIntentData = new Intent();
+        doReturn(BrowserAuthenticationApi.Result.createAsSuccess(REQUEST_TOKEN_STR, false))
+                .when(browserAuthenticationApi)
+                .getAuthenticationResultFrom(newIntentData);
+        doReturn(LineApiResponse.createAsSuccess(ISSUE_ACCESS_TOKEN_RESULT))
+                .when(authApiClient)
+                .issueAccessToken(CHANNEL_ID, REQUEST_TOKEN_STR, PKCE_CODE, REDIRECT_URI);
+        doReturn(LineApiResponse.createAsSuccess(ACCOUNT_INFO))
+                .when(talkApiClient)
+                .getProfile(ACCESS_TOKEN);
+
+        target.startLineAuthentication();
+        Robolectric.getBackgroundThreadScheduler().runOneTask();
+        Robolectric.getForegroundThreadScheduler().runOneTask();
+
+        target.handleIntentFromLineApp(newIntentData);
+        Robolectric.getBackgroundThreadScheduler().runOneTask();
+        Robolectric.getForegroundThreadScheduler().runOneTask();
+
+        ArgumentCaptor<LineLoginResult> captor = ArgumentCaptor.forClass(LineLoginResult.class);
+        verify(activity, times(1)).onAuthenticationFinished(captor.capture());
+        assertEquals(LineApiResponseCode.INTERNAL_ERROR, captor.getValue().getResponseCode());
     }
 
     @Test

@@ -238,8 +238,14 @@ import androidx.annotation.VisibleForTesting;
                 userId = lineProfile.getUserId();
             }
 
-            // Cache the acquired access token
-            accessTokenCache.saveAccessToken(accessToken);
+            // Cache the acquired access token. A broken device Keystore can throw here, so treat a
+            // persistence failure as a login failure instead of crashing the background task.
+            try {
+                accessTokenCache.saveAccessToken(accessToken);
+            } catch (final Exception e) {
+                return LineLoginResult.internalError(
+                        e.getMessage() != null ? e.getMessage() : e.toString());
+            }
 
             final LineIdToken idToken = issueAccessTokenResult.getIdToken();
             if (idToken != null) {
