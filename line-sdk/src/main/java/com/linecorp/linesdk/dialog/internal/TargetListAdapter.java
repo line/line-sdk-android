@@ -11,7 +11,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.linecorp.linesdk.R;
-import com.squareup.picasso.Picasso;
+import com.linecorp.linesdk.image.LineSdkImageConfig;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,9 +54,13 @@ public class TargetListAdapter extends RecyclerView.Adapter<TargetListAdapter.Ta
             int placeholderResId =
                     (targetUser.getType() == TargetUser.Type.FRIEND)? R.drawable.friend_thumbnail : R.drawable.group_thumbnail;
 
-            Picasso.get().load(targetUser.getPictureUri())
-                    .placeholder(placeholderResId)
-                    .into(imageView);
+            String imageUrl = targetUser.getPictureUri() != null ? 
+                    targetUser.getPictureUri().toString() : null;
+            LineSdkImageConfig.getImageLoader().loadImage(
+                    imageUrl,
+                    imageView,
+                    placeholderResId
+            );
         }
 
         private SpannableString createHighlightTextSpan(String text, String toBeHighLighted) {
